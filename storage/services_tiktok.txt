@@ -1,0 +1,172 @@
+ID	| NAMA	| HARGA/1000	| MIN	| MAX	| KATEGORI
+----------------------------------------------------------------------------------------------------
+1051	| Paket FYP TikTok Buzzer Indonesia | Max 1K - Views + Likes + Random Comments + Saves / Favorite + Shared To Story	| Rp 500000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+935	| TikTok Buzzer Indonesia Followers | Max 1K	| Rp 200000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+1081	| TikTok Buzzer Indonesia Followers | Max 1K - Gender Akun Perempuan	| Rp 200000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+1082	| TikTok Buzzer Indonesia Followers | Max 1K - Gender Akun Laki Laki	| Rp 200000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+936	| TikTok Buzzer Indonesia Likes | Max 1K	| Rp 125000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+937	| TikTok Buzzer Indonesia Repost - Posting Ulang | Max 1K	| Rp 125000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+989	| TikTok Buzzer Indonesia Saves / Favorite | Max 1K	| Rp 125000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+990	| TikTok Buzzer Indonesia Shared To Story | Max 1K	| Rp 250000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+938	| TikTok Buzzer Indonesia Custom Comments | Max 1K	| Rp 250000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+1083	| TikTok Buzzer Indonesia Custom Comments | Max 1K - Gender Akun Perempuan	| Rp 250000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+1084	| TikTok Buzzer Indonesia Custom Comments | Max 1K - Gender Akun Laki Laki	| Rp 250000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+939	| TikTok Buzzer Indonesia Random Comments | Max 1K	| Rp 250000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+1091	| TikTok Buzzer Indonesia Random Comments | Max 1K - Gender Perempuan	| Rp 250000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+1092	| TikTok Buzzer Indonesia Random Comments | Max 1K - Gender Laki Laki	| Rp 250000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+1063	| TikTok Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | Max 1K	| Rp 250000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+1085	| TikTok Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | Max 1K - Gender Akun Perempuan	| Rp 250000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+1086	| TikTok Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | Max 1K - Gender Akun Laki Laki	| Rp 250000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+957	| TikTok Buzzer Indonesia Likes + Custom Comments | Max 1K	| Rp 325000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+1087	| TikTok Buzzer Indonesia Likes + Custom Comments | Max 1K - Gender Akun Perempuan	| Rp 325000.00	| 10	| 20	| TikTok Buzzer Indonesia 🇮🇩
+1088	| TikTok Buzzer Indonesia Likes + Custom Comments | Max 1K - Gender Akun Laki Laki	| Rp 325000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+958	| TikTok Buzzer Indonesia Likes + Random Comments | Max 1K	| Rp 325000.00	| 10	| 1000	| TikTok Buzzer Indonesia 🇮🇩
+1089	| TikTok Buzzer Indonesia Likes + Random Comments | Max 1K - Gender Akun Perempuan	| Rp 325000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+1090	| TikTok Buzzer Indonesia Likes + Random Comments | Max 1K - Gender Akun Laki Laki	| Rp 325000.00	| 10	| 500	| TikTok Buzzer Indonesia 🇮🇩
+731	| TikTok Paket FYP Indonesia | Views 100% - Likes 10% - Saves 10% - Shares 10%	| Rp 8500.00	| 100	| 30000	| TikTok Paket FYP Indonesia 🇮🇩
+944	| TikTok Followers Indonesian | Max 1K - Refill 30 Days - Follow From Buzzer Indonesia 🇮🇩	| Rp 100000.00	| 20	| 1000	| TikTok Followers Indonesia 🇮🇩
+821	| TikTok Followers Indonesian | Max 10K - Refill No - HQ	| Rp 55000.00	| 50	| 10000	| TikTok Followers Indonesia 🇮🇩
+951	| TikTok Followers Indonesian | Max 2K - Refill 30 Days - High Quality Indonesia 🇮🇩	| Rp 75000.00	| 50	| 3000	| TikTok Followers Indonesia 🇮🇩
+1	| TikTok Followers Indonesian | Max 5K - Refill 30 Days - HQ	| Rp 80000.00	| 50	| 5000	| TikTok Followers Indonesia 🇮🇩
+742	| TikTok Followers Indonesian | Max 10K - Refill 30 Days - HQ Real	| Rp 125000.00	| 20	| 20000	| TikTok Followers Indonesia 🇮🇩
+232	| TikTok Likes Indonesian | Max 10K - Refill 30 Days	| Rp 22500.00	| 50	| 10000	| TikTok Likes Indonesia 🇮🇩
+728	| TikTok Saves Indonesian | Max 3K - Bonus Views	| Rp 15000.00	| 100	| 3000	| TikTok Saves/Favorite Indonesia 🇮🇩
+730	| TikTok Shares Indonesian | Max 10K - Bonus Views	| Rp 15000.00	| 100	| 10000	| TikTok Shares Indonesia 🇮🇩
+729	| TikTok Views Indonesian | Max 50K - Mobile APP Data	| Rp 3000.00	| 500	| 1000000	| TikTok Views Indonesia | NO DROP 🇮🇩
+368	| TikTok Views Video Indonesia | Max 10K	| Rp 5000.00	| 100	| 10000	| TikTok Views Indonesia | NO DROP 🇮🇩
+1049	| TikTok Comments Indonesian RANDOM | Max 1K	| Rp 235000.00	| 10	| 1000	| TikTok Comments Indonesia 🇮🇩
+1050	| TikTok Comments Indonesian CUSTOM | Max 1K	| Rp 235000.00	| 10	| 1000	| TikTok Comments Indonesia 🇮🇩
+489	| TikTok Report Spam Account | No Refill 🚫	| Rp 21281.00	| 1000	| 1000000	| TikTok Report
+490	| TikTok Report Spam Video | No Refill 🚫	| Rp 21281.00	| 1000	| 1000000	| TikTok Report
+748	| TikTok Followers | Max 500K - No Refill - HQ Profile	| Rp 20430.00	| 10	| 1000000	| TikTok Followers | No Refill
+775	| TikTok Followers | Max 500K - No Refill - HQ Account - INSTANT 🚀	| Rp 22548.00	| 10	| 5000000	| TikTok Followers | No Refill
+873	| TikTok Followers | Max 1M - No Refill - Instart Start 🚀⚠️	| Rp 25844.00	| 10	| 1000000	| TikTok Followers | No Refill
+46	| TikTok Followers | Max 1M - No Refill - INSTANT	| Rp 26559.00	| 10	| 10000000	| TikTok Followers | No Refill
+875	| TikTok Followers | Max 1M - No Refill - HQ Account - LOW DROP - INSTANT 🚀	| Rp 26559.00	| 10	| 1000000	| TikTok Followers | No Refill
+867	| TikTok Followers | Max 10M - No Refill 🚀	| Rp 28602.00	| 10	| 10000000	| TikTok Followers | No Refill
+658	| TikTok Followers | Max 1M - No Refill - HQ Profile - INSTANT 🚀	| Rp 28602.00	| 10	| 5000000	| TikTok Followers | No Refill
+885	| TikTok Followers | Max 10M - No Refill - HQ Account - INSTANT 🚀	| Rp 32688.00	| 10	| 10000000	| TikTok Followers | No Refill
+564	| TikTok Followers | Max 1M - No Refill - HQ Profile	| Rp 41064.00	| 10	| 10000000	| TikTok Followers | No Refill
+566	| TikTok Followers | Max 10M - No Refill - HQ Profile	| Rp 41268.00	| 10	| 10000000	| TikTok Followers | No Refill
+657	| TikTok Followers | Max 1M - No Refill - HQ Profile	| Rp 43311.00	| 50	| 10000000	| TikTok Followers | No Refill
+941	| TikTok Followers | Max 100K - No Refill - HQ Account - LOW DROP 10-30% 🚀	| Rp 61289.00	| 10	| 100000	| TikTok Followers | No Refill
+940	| TikTok Followers | Max 50K - No Refill - HQ Account - LOW DROP 5-20% 🚀	| Rp 101127.00	| 10	| 50000	| TikTok Followers | No Refill
+565	| TikTok Followers | Max 1M - Refill 30 Days ♻️	| Rp 37023.00	| 10	| 10000000	| TikTok Followers | Refill Guaranteed
+751	| TikTok Followers | Max 5M - Refill 30 Days ♻️	| Rp 15936.00	| 10	| 5000000	| TikTok Followers | Refill Guaranteed
+646	| TikTok Followers | Max 10M - Refill 30 Days - HQ - FAST ♻️	| Rp 29695.00	| 10	| 1000000	| TikTok Followers | Refill Guaranteed
+876	| TikTok Followers | Max 1M - Auto Refill 30 Days - HQ Accounts - LOW DROP - INSTANT ♻️⚡️🚀	| Rp 27581.00	| 10	| 1000000	| TikTok Followers | Refill Guaranteed
+9	| TikTok Followers | Max 100K - Refill 30 Days	| Rp 29623.00	| 5	| 100000	| TikTok Followers | Refill Guaranteed
+4	| TikTok Followers | Max 1M - Refill 30 Days - HQ Accounts ♻️⚡️	| Rp 30236.00	| 10	| 1000000	| TikTok Followers | Refill Guaranteed
+438	| TikTok Followers | Max 1M - Refill 30 Days - HQ - INSTANT ♻️	| Rp 39436.00	| 50	| 1000000	| TikTok Followers | Refill Guaranteed
+47	| TikTok Followers | Max 10M - Refill 30 Days - HQ ♻️	| Rp 65576.00	| 10	| 400000	| TikTok Followers | Refill Guaranteed
+750	| TikTok Followers | Max 1M - Refill 30 Days - HQ Accounts - INSTANT ♻️⚡️🚀	| Rp 50564.00	| 10	| 1000000	| TikTok Followers | Refill Guaranteed
+10	| TikTok Followers | Max 100K - Refill Auto 30 Days 💧♻️	| Rp 61447.00	| 10	| 100000	| TikTok Followers | Refill Guaranteed
+943	| TikTok Followers | Max 100K - Refill 30 Days - HQ Account - LOW DROP 10-30% ♻️ 🚀	| Rp 81719.00	| 10	| 100000	| TikTok Followers | Refill Guaranteed
+656	| TikTok Followers | Max 100K - Refill 30 Days - HQ ♻️	| Rp 98944.00	| 100	| 100000	| TikTok Followers | Refill Guaranteed
+942	| TikTok Followers | Max 50K - Refill 30 Days - HQ Account - LOW DROP 5-20% ♻️ 🚀	| Rp 132793.00	| 10	| 50000	| TikTok Followers | Refill Guaranteed
+48	| TikTok Followers | From Verifed Account - Max 100	| Rp 61288920.00	| 1	| 100	| TikTok Followers | Verifed Account
+550	| TikTok Likes | Max 1M - No Refill - Low Quality ⚠️	| Rp 246.00	| 10	| 1000000	| TikTok Likes | No Refill
+823	| TikTok Likes | Max 1M - No Refill ⚡	| Rp 307.00	| 10	| 5000000	| TikTok Likes | No Refill
+439	| TikTok Likes | Max 5M - No Refill - FAST ⛔️⚡️	| Rp 348.00	| 10	| 5000000	| TikTok Likes | No Refill
+8	| TikTok Likes | Max 150K - No Refill	| Rp 497.00	| 10	| 1000000	| TikTok Likes | No Refill
+6	| TikTok Likes | Max 20K - No Refill	| Rp 1277.00	| 100	| 20000	| TikTok Likes | No Refill
+897	| TikTok Likes | Max 1M - No Refill - Low Drop - INSTANT 🚀	| Rp 1471.00	| 10	| 3000000	| TikTok Likes | No Refill
+883	| TikTok Likes | Max 1M - No Refill - High Quality - Low Drop ⚠️ 🚀	| Rp 1635.00	| 10	| 1000000	| TikTok Likes | No Refill
+569	| TikTok Likes | Max 1M - No Refill - Bonus Views - FAST ⚡🚀	| Rp 1921.00	| 10	| 1000000	| TikTok Likes | No Refill
+7	| TikTok Likes | Max 100K - No Refill - Bonus Views + Saves ⚡	| Rp 2759.00	| 10	| 100000	| TikTok Likes | No Refill
+437	| TikTok Likes | Max 100K - No Refill - Slow💧⛔️	| Rp 3860.00	| 10	| 2000000	| TikTok Likes | No Refill
+767	| TikTok Likes | Max 1M - Refill 30 Days ♻️💧⛔️ 🚀	| Rp 266.00	| 10	| 5000000	| TikTok Likes | Refill Guaranteed
+611	| TikTok Likes | Max 100M - Refill 30 Days - FAST ♻️💧	| Rp 368.00	| 10	| 5000000	| TikTok Likes | Refill Guaranteed
+824	| TikTok Likes | Max 1M - Refill 30 Days ♻️⚡	| Rp 409.00	| 10	| 5000000	| TikTok Likes | Refill Guaranteed
+783	| TikTok Likes | Max 20M - Refill 30 Days - Real Users ♻️ 🚀	| Rp 1063.00	| 10	| 20000000	| TikTok Likes | Refill Guaranteed
+884	| TikTok Likes | Max 1M - Refill 30 Days - High Quality - Low Drop ♻️ 🚀	| Rp 1839.00	| 10	| 1000000	| TikTok Likes | Refill Guaranteed
+572	| TikTok Likes | Max 500K - Refill 30 Days ♻️💧⛔️	| Rp 2525.00	| 10	| 1000000	| TikTok Likes | Refill Guaranteed
+5	| TikTok Likes | Max 100K - Refill 30 Days ♻️💧⛔️	| Rp 7199.00	| 10	| 100000	| TikTok Likes | Refill Guaranteed
+563	| TikTok Likes | Max 100K - Refill 30 Days - Real Users ♻️💧	| Rp 12258.00	| 10	| 100000	| TikTok Likes | Refill Guaranteed
+864	| TikTok Views | Max Unlimited - Auto Refill 15 Days ♻️	| Rp 1296.00	| 10000	| 100000000	| TikTok Video Views | Refill Guaranteed
+865	| TikTok Views | Max Unlimited - Auto Refill 30 Days ♻️	| Rp 1064.00	| 10000	| 100000000	| TikTok Video Views | Refill Guaranteed
+704	| TikTok Views | Max Unlimited - Refill 30 Days - No Drop	| Rp 1208.00	| 100	| 2147483647	| TikTok Video Views | NO DROP
+706	| TikTok Views | Max Unlimited - Refill Lifetime - No Drop	| Rp 20430.00	| 100	| 2147483647	| TikTok Video Views | NO DROP
+746	| TikTok Views | Max Unlimited - No Refill - No Drop	| Rp 1358.00	| 100	| 2147483647	| TikTok Video Views | NO DROP
+747	| TikTok Views | Max Unlimited - Refill Lifetime - No Drop ♻️	| Rp 1296.00	| 100	| 10000000	| TikTok Video Views | NO DROP
+961	| TikTok Views | Max 500M	| Rp 600.00	| 100	| 2147483647	| TikTok Video Views
+115	| TikTok Views | Max Unlimited - FAST - EMERGENCY - WORKING	| Rp 864.00	| 100	| 2147483647	| TikTok Video Views
+444	| TikTok Views | Max 200M 🚀	| Rp 1131.00	| 100	| 2147483647	| TikTok Video Views
+3	| TikTok Views | Max 1M - INSTANT	| Rp 1142.00	| 100	| 10000000	| TikTok Video Views
+586	| TikTok Views | Max 100M - INSTANT	| Rp 1440.00	| 500	| 2147483647	| TikTok Video Views
+440	| TikTok Views | Max Unlimited - FASTEST	| Rp 1769.00	| 100	| 2147483647	| TikTok Video Views
+621	| TikTok Views | Max Unlimited - Cheap Services	| Rp 2564.00	| 100	| 2147483647	| TikTok Video Views
+690	| Tiktok Views | Retention Views Up To 60% - Best For SEO - Video Max Duration 30 Second	| Rp 7592.00	| 1000	| 100000	| TikTok Video Views | SEO | Watchtime
+691	| Tiktok Views | Retention Views Up To 60% - Best For SEO - Video Max Duration 60 Second	| Rp 9490.00	| 1000	| 100000	| TikTok Video Views | SEO | Watchtime
+692	| Tiktok Views | Retention Views Up To 60% - Best For SEO - Video Max Duration 90 Second	| Rp 11388.00	| 1000	| 100000	| TikTok Video Views | SEO | Watchtime
+693	| Tiktok Views | Retention Views Up To 60% - Best For SEO - Video Max Duration 120 Second	| Rp 13286.00	| 1000	| 100000	| TikTok Video Views | SEO | Watchtime
+694	| Tiktok Views | Retention Views Up To 60% - Best For SEO - Video Max Duration 150 Second	| Rp 15184.00	| 1000	| 100000	| TikTok Video Views | SEO | Watchtime
+695	| Tiktok Views | Retention Views Up To 60% - Best For SEO - Video Max Duration 180 Second	| Rp 17082.00	| 1000	| 100000	| TikTok Video Views | SEO | Watchtime
+294	| TikTok Views + %30 Likes + Impressions | Max 1M	| Rp 1851.00	| 100	| 2147483647	| TikTok Video Views + Likes + Shares + Saves
+295	| TikTok Views + %40 Likes + Impressions | Max 1M	| Rp 20416.00	| 5	| 100000	| TikTok Video Views + Likes + Shares + Saves
+296	| TikTok Views + %50 Likes + Impressions | Max 1M	| Rp 21452.00	| 10	| 100000	| TikTok Video Views + Likes + Shares + Saves
+297	| Tiktok Views 100% + 10% HQ Likes | Max 100K	| Rp 818.00	| 200	| 100000	| TikTok Video Views + Likes + Shares + Saves
+298	| Tiktok Views 100% + 20% HQ Likes | Max 100K	| Rp 1226.00	| 200	| 100000	| TikTok Video Views + Likes + Shares + Saves
+299	| Tiktok Views 100% + 30% HQ Likes | Max 100K	| Rp 1635.00	| 200	| 100000	| TikTok Video Views + Likes + Shares + Saves
+300	| Tiktok Views 100% + 40% HQ Likes | Max 100K	| Rp 2043.00	| 200	| 100000	| TikTok Video Views + Likes + Shares + Saves
+301	| Tiktok Views 100% + 50% HQ Likes | Max 100K	| Rp 2452.00	| 200	| 100000	| TikTok Video Views + Likes + Shares + Saves
+302	| Tiktok Views 100% + 100% HQ Likes| Max 100K	| Rp 4699.00	| 200	| 100000	| TikTok Video Views + Likes + Shares + Saves
+786	| TikTok Video Comments | EMOJI - Max 10K - INSTANT 🚀	| Rp 13280.00	| 10	| 10000	| TikTok Video Comments
+38	| TikTok Video Comments | CUSTOM - Max 100K - INSTANT	| Rp 14301.00	| 1	| 5000	| TikTok Video Comments
+37	| TikTok Video Comments | RANDOM - Max 100K - INSTANT	| Rp 16344.00	| 10	| 10000	| TikTok Video Comments
+39	| TikTok Video Comments | EMOJI - Max 100K - INSTANT	| Rp 26559.00	| 1	| 100000	| TikTok Video Comments
+35	| TikTok Video Comments | CUSTOM - Max 1K	| Rp 122578.00	| 5	| 1000	| TikTok Video Comments
+36	| TikTok Video Comments | CUSTOM - Max 150K	| Rp 195104.00	| 10	| 160000	| TikTok Video Comments
+899	| TikTok Video Comment Likes | Max 1M - INSTANT	| Rp 3065.00	| 10	| 1000000	| TikTok Video Comments Likes
+710	| TikTok Verified Comments | 1 Comment Emoji Random With Verified Account ✅	| Rp 2767.00	| 1	| 1	| TikTok Video Comments | From Verified Account
+711	| TikTok Verified Comments | 2 Comment Emoji Random With Verified Account ✅	| Rp 11705.00	| 1	| 1	| TikTok Video Comments | From Verified Account
+712	| TikTok Verified Comments | 3 Comment Emoji Random With Verified Account ✅	| Rp 13833.00	| 1	| 1	| TikTok Video Comments | From Verified Account
+713	| TikTok Verified Comments | 4 Comment Emoji Random With Verified Account ✅	| Rp 42349.00	| 1	| 1	| TikTok Video Comments | From Verified Account
+714	| TikTok Verified Comments | 5 Comment Emoji Random With Verified Account ✅	| Rp 50862.00	| 1	| 1	| TikTok Video Comments | From Verified Account
+785	| TikTok Video Saves | Max 100M - Refill 30 Days 🔥♻️	| Rp 76.00	| 100	| 2147483647	| TikTok Video Saves/Favorite
+636	| TikTok Video Saves | Max 100M - Refill 30 Days 🔥♻️🚀	| Rp 184.00	| 10	| 2147483647	| TikTok Video Saves/Favorite
+11	| TikTok Video Saves | Max 100K - Refill 30 Days 🔥	| Rp 2057.00	| 10	| 100000	| TikTok Video Saves/Favorite
+900	| TikTok Video Reposts | Max 500K - HQ Accounts - Refill No 🚀	| Rp 12054.00	| 1	| 500000	| TikTok Video Repost
+609	| TikTok Video Shares | Max 10M - INSTANT	| Rp 246.00	| 10	| 2147483647	| TikTok Video Shares
+898	| TikTok Video Shares | Max 10M - FAST 💧⛔	| Rp 767.00	| 10	| 10000000	| TikTok Video Shares
+34	| TikTok Video Shares | Max 100M	| Rp 1644.00	| 10	| 100000000	| TikTok Video Shares
+314	| TikTok Story Likes | Max 100K - Real	| Rp 3012.00	| 10	| 100000	| TikTok Story Views/Share/Likes
+313	| TikTok Story Likes | Max 30K	| Rp 5193.00	| 50	| 30000	| TikTok Story Views/Share/Likes
+315	| TikTok Story Views | Max 50K	| Rp 5401.00	| 100	| 50000	| TikTok Story Views/Share/Likes
+316	| TikTok Story Share | Max 50K	| Rp 5401.00	| 10	| 50000	| TikTok Story Views/Share/Likes
+784	| TikTok Live Comments CUSTOM | Max 1M - Real - INSTANT 🚀	| Rp 14301.00	| 10	| 1000000	| TikTok Livestream Comments
+317	| TikTok Live Comments CUSTOM | Max 5K - Real - INSTANT	| Rp 24516.00	| 10	| 5000	| TikTok Livestream Comments
+318	| TikTok Live Comments Emoji | Max 5K - Real - INSTANT	| Rp 24516.00	| 10	| 5000	| TikTok Livestream Comments
+319	| TikTok Live Comments RANDOM | Max 5K - Real - INSTANT	| Rp 24516.00	| 10	| 5000	| TikTok Livestream Comments
+778	| TikTok Live Comments CUSTOM | Max 1M - Real - Natural Proses	| Rp 97041.00	| 10	| 1000000	| TikTok Livestream Comments
+777	| TikTok Live Stream Likes ❤️ | Max 500M - INSTANT 🚀	| Rp 82.00	| 10	| 2147483647	| TikTok Livestream Likes
+551	| TikTok Live Stream Likes PK Battle Point ❤️ | Max 100M - INSTANT	| Rp 2452.00	| 100	| 2147483647	| TikTok Livestream Likes | PK Battle Point
+303	| TikTok Live Stream Views | Max 100K - 15 Minutes - Natural Increase - Views 60-90% Stay	| Rp 112364.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+304	| TikTok Live Stream Views | Max 100K - 30 Minutes - Natural Increase - Views 60-90% Stay	| Rp 224727.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+305	| TikTok Live Stream Views | Max 100K - 60 Minutes - Natural Increase - Views 60-90% Stay	| Rp 449453.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+306	| TikTok Live Stream Views | Max 100K - 90 Minutes - Natural Increase - Views 60-90% Stay	| Rp 674179.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+307	| TikTok Live Stream Views | Max 100K - 120 Minutes - Natural Increase - Views 60-90% Stay	| Rp 898905.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+308	| TikTok Live Stream Views | Max 100K - 180 Minutes - Natural Increase - Views 60-90% Stay	| Rp 1348357.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+309	| TikTok Live Stream Views | Max 100K - 240 Minutes - Natural Increase - Views 60-90% Stay	| Rp 1797809.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+310	| TikTok Live Stream Views | Max 100K - 300 Minutes - Natural Increase - Views 60-90% Stay	| Rp 2247261.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+311	| TikTok Live Stream Views | Max 100K - 360 Minutes - Natural Increase - Views 60-90% Stay	| Rp 2696713.00	| 50	| 100000	| TikTok Livestream Views | Server 3
+588	| TikTok Live Stream Views | 30 Minutes - Max 100K - INSTANT	| Rp 47806.00	| 10	| 30000	| TikTok Livestream Views | Server 5
+589	| TikTok Live Stream Views | 60 Minutes - Max 100K - INSTANT	| Rp 95611.00	| 10	| 30000	| TikTok Livestream Views | Server 5
+590	| TikTok Live Stream Views | 90 Minutes - Max 100K - INSTANT	| Rp 143417.00	| 10	| 30000	| TikTok Livestream Views | Server 5
+591	| TikTok Live Stream Views | 120 Minutes - Max 100K - INSTANT	| Rp 191222.00	| 10	| 30000	| TikTok Livestream Views | Server 5
+592	| TikTok Live Stream Views | 180 Minutes - Max 100K - INSTANT	| Rp 286833.00	| 10	| 30000	| TikTok Livestream Views | Server 5
+593	| TikTok Live Stream Views | 240 Minutes - Max 100K - INSTANT	| Rp 382443.00	| 10	| 30000	| TikTok Livestream Views | Server 5
+696	| TikTok Live Stream Views | 15 Minutes - Max 100K - SUPER FAST 💧	| Rp 19336.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+697	| TikTok Live Stream Views | 30 Minutes - Max 100K - SUPER FAST 💧	| Rp 47178.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+698	| TikTok Live Stream Views | 60 Minutes - Max 100K - SUPER FAST 💧	| Rp 93842.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+699	| TikTok Live Stream Views | 90 Minutes - Max 100K - SUPER FAST 💧	| Rp 140634.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+700	| TikTok Live Stream Views | 120 Minutes - Max 100K - SUPER FAST 💧	| Rp 187937.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+701	| TikTok Live Stream Views | 180 Minutes - Max 100K - SUPER FAST 💧	| Rp 282034.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+702	| TikTok Live Stream Views | 240 Minutes - Max 100K - SUPER FAST 💧	| Rp 374852.00	| 50	| 100000	| TikTok Livestream Views | Server 7
+825	| TikTok Live Stream Views | 15 Minutes - Max 15K - Emergency Server	| Rp 140454.00	| 50	| 15000	| TikTok Livestream Views | Server 9
+826	| TikTok Live Stream Views | 30 Minutes - Max 15K - Emergency Server	| Rp 280908.00	| 50	| 15000	| TikTok Livestream Views | Server 9
+827	| TikTok Live Stream Views | 60 Minutes - Max 15K - Emergency Server	| Rp 561816.00	| 50	| 15000	| TikTok Livestream Views | Server 9
+828	| TikTok Live Stream Views | 90 Minutes - Max 15K - Emergency Server	| Rp 842723.00	| 50	| 15000	| TikTok Livestream Views | Server 9
+829	| TikTok Live Stream Views | 120 Minutes - Max 15K - Emergency Server	| Rp 1123631.00	| 50	| 15000	| TikTok Livestream Views | Server 9
+830	| TikTok Live Stream Views | 180 Minutes - Max 15K - Emergency Server	| Rp 1685446.00	| 50	| 15000	| TikTok Livestream Views | Server 9
+831	| TikTok Live Stream Views | 240 Minutes - Max 15K - Emergency Server	| Rp 2247261.00	| 50	| 15000	| TikTok Livestream Views | Server 9

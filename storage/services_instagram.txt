@@ -1,0 +1,159 @@
+ID	| NAMA	| HARGA/1000	| MIN	| MAX	| KATEGORI
+----------------------------------------------------------------------------------------------------
+1061	| Instagram Buzzer Indonesia Followers From Verified Account - Centang Biru ✅	| Rp 20000000.00	| 1	| 10	| Instagram Buzzer Indonesia 🇮🇩
+1074	| Instagram Buzzer Indonesia Custom Comments | From Verified Akun - Centang Biru ✅	| Rp 2000000.00	| 1	| 5	| Instagram Buzzer Indonesia 🇮🇩
+1075	| Instagram Buzzer Indonesia Random Comments | From Verified Akun - Centang Biru ✅	| Rp 2000000.00	| 1	| 5	| Instagram Buzzer Indonesia 🇮🇩
+1076	| Instagram Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | From Verified Akun - Centang Biru ✅	| Rp 2000000.00	| 1	| 5	| Instagram Buzzer Indonesia 🇮🇩
+930	| Instagram Buzzer Indonesia Followers | Max 1K	| Rp 200000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1077	| Instagram Buzzer Indonesia Followers | Max 1K - Gender Akun Perempuan	| Rp 200000.00	| 10	| 500	| Instagram Buzzer Indonesia 🇮🇩
+1078	| Instagram Buzzer Indonesia Followers | Max 1K - Gender Akun Laki Laki	| Rp 200000.00	| 10	| 500	| Instagram Buzzer Indonesia 🇮🇩
+931	| Instagram Buzzer Indonesia Likes | Max 1K	| Rp 125000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+932	| Instagram Buzzer Indonesia Repost | Max 1K	| Rp 125000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+991	| Instagram Buzzer Indonesia Saves / Favorite | Max 1K	| Rp 125000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+992	| Instagram Buzzer Indonesia Shared To Story | Max 1K	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+933	| Instagram Buzzer Indonesia Custom Comments | Max 1K	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1066	| Instagram Buzzer Indonesia Custom Comments | Max 1K - Gender Akun Perempuan	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1067	| Instagram Buzzer Indonesia Custom Comments | Max 1K - Gender Akun Laki Laki	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+934	| Instagram Buzzer Indonesia Random Comments | Max 1K	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1079	| Instagram Buzzer Indonesia Random Comments | Max 1K - Gender Perempuan	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1080	| Instagram Buzzer Indonesia Random Comments | Max 1K - Gender Laki Laki	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1062	| Instagram Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | Max 1K	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1070	| Instagram Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | Max 1K - Gender Akun Perempuan	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1071	| Instagram Buzzer Indonesia Mix Positive Emoji Comments 👍🤩🎉🔥❤️🥰👏🏻🥳😍❤️‍🔥💯 | Max 1K - Gender Akun Laki Laki	| Rp 250000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+953	| Instagram Buzzer Indonesia Likes + Custom Comments | Max 1K	| Rp 325000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1068	| Instagram Buzzer Indonesia Likes + Custom Comments | Max 1K - Gender Akun Perempuan	| Rp 325000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1069	| Instagram Buzzer Indonesia Likes + Custom Comments | Max 1K - Gender Akun Laki Laki	| Rp 325000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+954	| Instagram Buzzer Indonesia Likes + Random Comments | Max 1K	| Rp 325000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1072	| Instagram Buzzer Indonesia Likes + Random Comments | Max 1K - Gender Akun Perempuan	| Rp 325000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+1073	| Instagram Buzzer Indonesia Likes + Random Comments | Max 1K - Gender Akun Laki Laki	| Rp 325000.00	| 10	| 1000	| Instagram Buzzer Indonesia 🇮🇩
+366	| Instagram Post Report | No Refill 🚫	| Rp 21281.00	| 1000	| 1000000	| Instagram Report
+367	| Instagram Account Report | No Refill 🚫	| Rp 21281.00	| 1000	| 1000000	| Instagram Report
+832	| Instagram Paket Likes and Repost Indonesian | Max 500 - Refill No	| Rp 32500.00	| 100	| 500	| Instagram Paket | Indonesia 🇮🇩
+13	| Instagram Followers Indonesia | Max 1K - Refill 30 Days - Follow From Buzzer Indonesia 🇮🇩	| Rp 100000.00	| 20	| 1000	| Instagram Followers | Indonesia 🇮🇩
+659	| Instagram Followers Indonesia | Max 5K - Refill 7 Days 🇮🇩 ♻️🔥	| Rp 22500.00	| 100	| 3000	| Instagram Followers | Indonesia 🇮🇩
+465	| Instagram Followers Indonesia | Max 5K - Refill 15 Days 🇮🇩 ♻️🔥	| Rp 27500.00	| 100	| 3000	| Instagram Followers | Indonesia 🇮🇩
+509	| Instagram Followers Indonesia | Max 5K - Refill 30 Days 🇮🇩 ♻️🔥	| Rp 32500.00	| 100	| 5000	| Instagram Followers | Indonesia 🇮🇩
+12	| Instagram Followers Indonesia | Max 10K - Refill 30 Days - Low Drop - HQ - INSTANT 🇮🇩 ♻️🔥	| Rp 40000.00	| 50	| 10000	| Instagram Followers | Indonesia 🇮🇩
+952	| Instagram Followers Indonesian | Max 2K - Refill 30 Days - High Quality Indonesia 🇮🇩	| Rp 75000.00	| 50	| 2000	| Instagram Followers | Indonesia 🇮🇩
+804	| Instagram Followers Indonesia | Max 10K - Auto Refill 30 Days 🇮🇩 ♻️	| Rp 82500.00	| 100	| 10000	| Instagram Followers | Indonesia 🇮🇩
+17	| Instagram Followers | Max 100K - No Refill	| Rp 4536.00	| 50	| 100000	| Instagram Followers | No Refill
+608	| Instagram Followers | Max 20K - No Refill ⚠️	| Rp 3804.00	| 100	| 50000	| Instagram Followers | No Refill
+971	| Instagram Followers | Max 100K - No Refill - HQ Account - Instant	| Rp 4742.00	| 100	| 100000	| Instagram Followers | No Refill
+908	| Instagram Followers | Max 10K - No Refill - Low Quality	| Rp 4291.00	| 100	| 10000	| Instagram Followers | No Refill
+881	| Instagram Followers | Max 100K - No Refill - Old Account ⚠️ 🚀	| Rp 8826.00	| 50	| 100000	| Instagram Followers | No Refill
+18	| Instagram Followers | Max 10M - No Refill	| Rp 11886.00	| 100	| 10000000	| Instagram Followers | No Refill
+844	| Instagram Followers | Max 100K - No Refill - HQ Account	| Rp 14301.00	| 100	| 100000	| Instagram Followers | No Refill
+856	| Instagram Followers | Max 50K - HQ Account - Low Drop - No Refill ⚠️ 🚀	| Rp 22641.00	| 50	| 50000	| Instagram Followers | No Refill
+739	| Instagram Followers | Max 5M - HQ Account - No Refill ⚠️	| Rp 41026.00	| 50	| 5000000	| Instagram Followers | No Refill
+552	| Instagram Followers | Max 5M - No Refill	| Rp 45967.00	| 10	| 5000000	| Instagram Followers | No Refill
+768	| Instagram Followers | Max 500K - No Refill - FAST ⚠️ 🚀	| Rp 48010.00	| 10	| 500000	| Instagram Followers | No Refill
+463	| Instagram Followers | Max 500K - No Refill - HQ	| Rp 71504.00	| 10	| 5000000	| Instagram Followers | No Refill
+20	| Instagram Followers | Max 100K - Refill 30 Days - Old Account ♻️	| Rp 5145.00	| 50	| 100000	| Instagram Followers | Refill Guaranteed 30 Days
+19	| Instagram Followers | Max 5M - Refill 30 Days ♻️	| Rp 9602.00	| 10	| 5000000	| Instagram Followers | Refill Guaranteed 30 Days
+882	| Instagram Followers | Max 100K - Refill 30 Days - Old Account - Real ♻️⚡🚀	| Rp 11110.00	| 50	| 100000	| Instagram Followers | Refill Guaranteed 30 Days
+738	| Instagram Followers | Max 1M - Refill 30 Days - Real Account ♻️ 🚀	| Rp 14301.00	| 10	| 100000	| Instagram Followers | Refill Guaranteed 30 Days
+868	| Instagram Followers | Max 30K - Refill 30 Days - Old Account - Real Account ♻️⚡⭐🚀	| Rp 19307.00	| 20	| 30000	| Instagram Followers | Refill Guaranteed 30 Days
+22	| Instagram Followers | Max 100K - Refill 30 Days - HQ Account - Natural Progress♻️	| Rp 30441.00	| 50	| 100000	| Instagram Followers | Refill Guaranteed 30 Days
+464	| Instagram Followers | Max 10M - Refill 30 Days - HQ - Low Drop ♻️⚡	| Rp 38975.00	| 10	| 1000000	| Instagram Followers | Refill Guaranteed 30 Days
+606	| Instagram Followers | Max 5M - Refill 30 Days - HQ Account ♻️⚡	| Rp 46155.00	| 10	| 1000000	| Instagram Followers | Refill Guaranteed 30 Days
+647	| Instagram Followers | Max 5M - Refill 30 Days - Old Account - Real Account ♻️⚡⭐	| Rp 49032.00	| 10	| 5000000	| Instagram Followers | Refill Guaranteed 30 Days
+459	| Instagram Followers | Max 1M - Refill 30 Days - Old Account ♻️⚡	| Rp 52096.00	| 10	| 500000	| Instagram Followers | Refill Guaranteed 30 Days
+855	| Instagram Followers | Max 500K - Refill 30 Days - Old Account - Real Account ♻️⚡⭐ 🚀	| Rp 63843.00	| 10	| 1000000	| Instagram Followers | Refill Guaranteed 30 Days
+21	| Instagram Followers | Max 300K - Refill 30 Days ♻️💧⛔	| Rp 63843.00	| 20	| 300000	| Instagram Followers | Refill Guaranteed 30 Days
+733	| Instagram Followers | Max 10M - Refill 30 Days - Old Account - Real Account ♻️⚡⭐ 🚀	| Rp 72526.00	| 10	| 10000000	| Instagram Followers | Refill Guaranteed 30 Days
+320	| Instagram Power Likes | Max 75K - Real Users 🔥🔥	| Rp 6129.00	| 10	| 75000	| Instagram POWER Likes
+321	| Instagram Power Likes | Max 5K - Real Users 🔥🔥	| Rp 9194.00	| 50	| 5000	| Instagram POWER Likes
+322	| Instagram Power Likes | Max 10K - Real Users 🔥🔥	| Rp 6129.00	| 50	| 10000	| Instagram POWER Likes
+323	| Instagram Power Likes | Max 50K - Real Users 🔥🔥🔥🔥	| Rp 30853.00	| 10	| 100000	| Instagram POWER Likes
+324	| Instagram Power Likes | Max 5K - Real Users 🔥🔥🔥🔥	| Rp 10215.00	| 50	| 5000	| Instagram POWER Likes
+325	| Instagram Power Likes | Max 5K - Real Users - No Drop 🔥🔥🔥	| Rp 9194.00	| 10	| 5000	| Instagram POWER Likes
+846	| Instagram Auto Likes Indonesian | Max 1K - Duration 7 Days - Limit 20 Post/7 Days - Read Description	| Rp 200000.00	| 100	| 1000	| Instagram Auto Likes | Indonesia 🇮🇩
+847	| Instagram Auto Likes Indonesian | Max 1K - Duration 14 Days - Limit 40 Post/14 Days - Read Description	| Rp 400000.00	| 100	| 1000	| Instagram Auto Likes | Indonesia 🇮🇩
+848	| Instagram Auto Likes Indonesian | Max 1K - Duration 30 Days - Limit 90 Post/30 Days - Read Description	| Rp 800000.00	| 100	| 1000	| Instagram Auto Likes | Indonesia 🇮🇩
+849	| Instagram Auto Likes Indonesian | Max 1K - Duration 30 Days - Unlimited Post/Reels - Read Description	| Rp 3000000.00	| 100	| 1000	| Instagram Auto Likes | Indonesia 🇮🇩
+16	| Instagram Likes Indonesia | Max 1K 🇮🇩	| Rp 10000.00	| 100	| 500	| Instagram Likes | Indonesia 🇮🇩
+903	| Instagram Likes | Max 1M - No Refill - High Quality - Cheap ⚠️ 🚀	| Rp 1083.00	| 100	| 1000000	| Instagram Likes | No Refill
+820	| Instagram Likes | Max 1M - INSTANT START	| Rp 1390.00	| 100	| 1000000	| Instagram Likes | No Refill
+466	| Instagram Likes | Max 500K - HQ - Cheap ⛔	| Rp 1443.00	| 10	| 200000	| Instagram Likes | No Refill
+886	| Instagram Likes | Max 1M - HQ - Cheap ⚠️ 🚀	| Rp 2719.00	| 100	| 1000000	| Instagram Likes | No Refill
+842	| Instagram Likes | Max 100K - High Quality - Cheap 🚀	| Rp 2810.00	| 10	| 100000	| Instagram Likes | No Refill
+655	| Instagram Likes | Max 1M ⛔ ⚡	| Rp 3678.00	| 100	| 500000	| Instagram Likes | No Refill
+209	| Instagram Likes | Max 500K - LQ -  FAST	| Rp 8172.00	| 100	| 500000	| Instagram Likes | No Refill
+208	| Instagram Likes | Max 100K - INSTANT	| Rp 9398.00	| 100	| 1000000	| Instagram Likes | No Refill
+207	| Instagram Likes | Max 5M - No Refill - HQ Account	| Rp 12885.00	| 10	| 3000000	| Instagram Likes | No Refill
+49	| Instagram Likes | Max 100K - No Refill - Real Account	| Rp 14710.00	| 100	| 1000000	| Instagram Likes | No Refill
+843	| Instagram Likes | Max 1M - Refill 30 Days - HQ Account - INSTANT ♻️	| Rp 1410.00	| 100	| 1000000	| Instagram Likes | Refill Guaranteed
+801	| Instagram Likes | Max 500K - Refill 90 Days - HQ Account - Super Fast ♻️💧	| Rp 2305.00	| 1	| 1000000	| Instagram Likes | Refill Guaranteed
+800	| Instagram Likes | Max 500K - Refill 30 Days - HQ Account ♻️💧	| Rp 6947.00	| 10	| 5000000	| Instagram Likes | Refill Guaranteed
+371	| Instagram Likes Real Users | Max 50K - No Refill - Speed 10K/Days	| Rp 11033.00	| 1	| 10000000	| Instagram Likes | Real Users
+369	| Instagram Likes Real Users | Max 300K - Refill 30 Days - Speed 5K/Hours	| Rp 6538.00	| 10	| 300000	| Instagram Likes | Real Users
+374	| Instagram Likes Real Users | Max 50K - Refill 30 Days - Speed 50K/Days 💧⛔️♻️	| Rp 6718.00	| 10	| 50000	| Instagram Likes | Real Users
+373	| Instagram Likes Real Users | Max 10K - Refill 30 Days - Speed 100K/Days - Asian 🔥🔥	| Rp 6129.00	| 30	| 30000	| Instagram Likes | Real Users
+372	| Instagram Likes Real Users | Max 100K - Refill 30 Days - Speed 20K/Days - Asian 🔥	| Rp 7764.00	| 10	| 100000	| Instagram Likes | Real Users
+63	| Instagram Likes Reels | Max 5K	| Rp 6129.00	| 50	| 5000	| Instagram Likes | Reels
+62	| Instagram Likes Reels | Max 20K - Instant	| Rp 6129.00	| 20	| 20000	| Instagram Likes | Reels
+51	| Instagram Likes | SPLIT Like For Last 10 Post - Max: 1M	| Rp 6129.00	| 1000	| 100000	| Instagram Likes | SPLIT
+52	| Instagram Likes | SPLIT Like For Last 20 Post - Max: 1M	| Rp 6129.00	| 2000	| 100000	| Instagram Likes | SPLIT
+53	| Instagram Likes | SPLIT Like For Last 30 Post - Max: 1M	| Rp 6129.00	| 3000	| 100000	| Instagram Likes | SPLIT
+54	| Instagram Likes | SPLIT Like For Last 40 Post - Max: 1M	| Rp 6129.00	| 4000	| 100000	| Instagram Likes | SPLIT
+55	| Instagram Likes | SPLIT Like For Last 50 Post - Max: 1M	| Rp 6129.00	| 5000	| 100000	| Instagram Likes | SPLIT
+56	| Instagram Likes | SPLIT Like For Last 100 Post - Max: 1M	| Rp 6129.00	| 10000	| 100000	| Instagram Likes | SPLIT
+57	| Instagram Likes | SPLIT Like For Last 200 Post - Max: 1M	| Rp 6129.00	| 20000	| 200000	| Instagram Likes | SPLIT
+58	| Instagram Likes | SPLIT Like For Last 300 Post - Max: 1M	| Rp 6129.00	| 30000	| 200000	| Instagram Likes | SPLIT
+59	| Instagram Likes | SPLIT Like For Last 400 Post - Max: 1M	| Rp 6129.00	| 40000	| 200000	| Instagram Likes | SPLIT
+60	| Instagram Likes | SPLIT Like For Last 500 Post - Max: 1M	| Rp 6129.00	| 50000	| 200000	| Instagram Likes | SPLIT
+822	| Instagram Repost Indonesian | Max 1K - Refill No	| Rp 25000.00	| 100	| 500	| Instagram Repost | Indonesia 🇮🇩
+799	| Instagram Repost | Max 100K - Real Users - Work On Post and Reels	| Rp 143008.00	| 50	| 100000	| Instagram Repost
+50	| Instagram Video Views | Max 200M - INSTANT ⚡️	| Rp 17.00	| 100	| 2147483647	| Instagram Video Views | Normal - Reels - TV
+177	| Instagram Video Views | Max Unlimited - Super Fast ⚡️⚡	| Rp 21.00	| 50	| 2147483647	| Instagram Video Views | Normal - Reels - TV
+519	| Instagram Video Views | Max 10M - INSTANT ⚡️⚡	| Rp 88.00	| 100	| 2147483647	| Instagram Video Views | Normal - Reels - TV
+709	| Instagram Video Views | Max 500M - INSTANT ⚡️	| Rp 92.00	| 100	| 50000000	| Instagram Video Views | Normal - Reels - TV
+206	| Instagram Video Views | Max Unlimited ⚡️⚡	| Rp 123.00	| 100	| 2147483647	| Instagram Video Views | Normal - Reels - TV
+205	| Instagram Video Views | Max Unlimited - Super Fast Speed ⚡️⚡	| Rp 164.00	| 100	| 2147483647	| Instagram Video Views | Normal - Reels - TV
+650	| Instagram Video Views | Max 2M - Super Fast - Recomend ⚡️⚡	| Rp 164.00	| 100	| 25000000	| Instagram Video Views | Normal - Reels - TV
+326	| Instagram Comments Indonesian CUSTOM | Max 1K	| Rp 235000.00	| 10	| 1000	| Instagram Comments Indonesia 🇮🇩
+1048	| Instagram Comments Indonesian RANDOM | Max 1K	| Rp 235000.00	| 10	| 1000	| Instagram Comments Indonesia 🇮🇩
+715	| Instagram Verified Comments | 1 Comment Emoji Random With Verified Account ✅	| Rp 2129.00	| 1	| 1	| Instagram Comments | From Verified Account
+716	| Instagram Verified Comments | 2 Comment Emoji Random With Verified Account ✅	| Rp 3831.00	| 1	| 1	| Instagram Comments | From Verified Account
+717	| Instagram Verified Comments | 3 Comment Emoji Random With Verified Account ✅	| Rp 4895.00	| 1	| 1	| Instagram Comments | From Verified Account
+718	| Instagram Verified Comments | 4 Comment Emoji Random With Verified Account ✅	| Rp 5959.00	| 1	| 1	| Instagram Comments | From Verified Account
+719	| Instagram Verified Comments | 5 Comment Emoji Random With Verified Account ✅	| Rp 7449.00	| 1	| 1	| Instagram Comments | From Verified Account
+1047	| Instagram Comments Random | Max 10K - No Refill - FAST 🚀	| Rp 6171.00	| 10	| 10000	| Instagram Comments Random
+904	| Instagram Comments Random | Max: 10K - No Refill - INSTANT 🚀	| Rp 9194.00	| 50	| 10000	| Instagram Comments Random
+64	| Instagram Comments Random | Max: 20K - No Refill - INSTANT 🥇	| Rp 61289.00	| 10	| 20000	| Instagram Comments Random
+1046	| Instagram Comments Custom | Max 10K - No Refill - FAST 🚀	| Rp 6171.00	| 10	| 10000	| Instagram Comments Custom
+905	| Instagram Comments Custom | Max: 10K - No Refill - INSTANT 🚀	| Rp 10624.00	| 10	| 10000	| Instagram Comments Custom
+65	| Instagram Comments Custom | Max: 5K - No Refill - INSTANT 🥇	| Rp 61289.00	| 10	| 5000	| Instagram Comments Custom
+68	| Instagram Comments Positive Emoji | Max 200K - Emoji: 😘💞💐🏵️😍🤩🥰😘😚🤯❤️🤎💜💙💓💋🫂	| Rp 61289.00	| 10	| 200000	| Instagram Comments Emoji
+69	| Instagram Comments Negative Emoji | Max 200K - Emoji:  🤬😡😠😤😮‍💨🙄😒💩👿😈🤡🖕	| Rp 61289.00	| 10	| 200000	| Instagram Comments Emoji
+70	| Instagram Comments Mix Emoji | Max 200K	| Rp 61289.00	| 10	| 200000	| Instagram Comments Emoji
+610	| Instagram Comment Likes | Max 50K - Instant Start	| Rp 40860.00	| 10	| 50000	| Instagram Comments Likes
+401	| Instagram Story Views | Max 50K - All Story - Start 1 Hours	| Rp 1406.00	| 50	| 40000	| Instagram Story Views
+399	| Instagram Story Views | Max 40K - All Story - Start 1-6 Hours💧⛔	| Rp 1533.00	| 50	| 10000	| Instagram Story Views
+71	| Instagram Story Views | Max 10K - All Story	| Rp 2043.00	| 100	| 10000	| Instagram Story Views
+72	| Instagram Story Views | Max 10K - All Story ⚡️⭐🔥	| Rp 2350.00	| 10	| 10000	| Instagram Story Views
+73	| Instagram Story Likes | Max 100K	| Rp 4597.00	| 100	| 100000	| Instagram Story Likes
+74	| Instagram Story Likes | Max 5K	| Rp 16344.00	| 100	| 5000	| Instagram Story Likes
+363	| Instagram Impressions Photo + Explore + Home | Max 1M	| Rp 920.00	| 10	| 1000000	| Instagram Impressions
+361	| Instagram Reach + Impression | Max - 70K - INSTANT	| Rp 981.00	| 10	| 1000000	| Instagram Impressions
+362	| Instagram Impressions | Max 1M	| Rp 1426.00	| 10	| 1000000	| Instagram Impressions
+364	| Instagram Impressions EXPLORE - HOME - LOCATION - PROFILE | Max 10M	| Rp 1431.00	| 10	| 1000000	| Instagram Impressions
+365	| Instagram Impression Home+ Explore + Discover Others | Max 100K	| Rp 1469.00	| 10	| 1000000	| Instagram Impressions
+360	| Instagram Impressions + Reach + Profile Visits | Max: 1M - INSTANT 💧	| Rp 2595.00	| 10	| 1000000	| Instagram Impressions
+389	| Instagram Reach + Impressions - Max 300K💧⛔️	| Rp 1022.00	| 10	| 1000000	| Instagram Reach
+390	| Instagram Reach + EXPLORE Impressions | Max 40K💧⛔️	| Rp 1022.00	| 10	| 1000000	| Instagram Reach
+391	| Instagram Reach + Impressions | Max 1M ⛔💧	| Rp 1029.00	| 10	| 1000000	| Instagram Reach
+392	| Instagram Reach + Impressions | Max 5M💧	| Rp 1727.00	| 10	| 1000000	| Instagram Reach
+393	| Instagram Profile Reach | Max 100K ⛔️💧	| Rp 1931.00	| 10	| 1000000	| Instagram Reach
+394	| Instagram Reach + Impression | Max 100K ⛔️💧	| Rp 1661.00	| 10	| 1000000	| Instagram Reach
+395	| Instagram Video Reach | Max 30K💧	| Rp 7355.00	| 10	| 1000000	| Instagram Reach
+396	| Instagram Reach + Impressions | Max 100K	| Rp 10215.00	| 10	| 1000000	| Instagram Reach
+397	| Instagram Reach + Impressions + Profile Visits | Max 100K	| Rp 11237.00	| 10	| 1000000	| Instagram Reach
+398	| Instagram Reach + Impressions | Max 100K⚡️💧🔥	| Rp 16600.00	| 10	| 1000000	| Instagram Reach
+388	| Instagram Saves | Max 100K	| Rp 47.00	| 5	| 100000	| Instagram Saves
+116	| Instagram Shares | Max 10M - Best Services 💧⛔	| Rp 368.00	| 100	| 10000000	| Instagram Shares
+75	| Instagram Shares | Max 1M 💧⛔	| Rp 5108.00	| 10	| 1000000	| Instagram Shares
+797	| Instagram Channel Member | Max 1M - No Refill - Real Users	| Rp 11237.00	| 10	| 1000000	| Instagram Channel Member
+798	| Instagram Channel Member | Max 1M - Refill 90 Days - Real Users	| Rp 14301.00	| 10	| 1000000	| Instagram Channel Member
+386	| Instagram Live Views Likes | Max 50K	| Rp 3882.00	| 100	| 50000	| Instagram Live Video Likes
+631	| Website Traffic from Instagram	| Rp 5353.00	| 100	| 1000000	| Website Traffic | WorldWide + Refferer
