@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestore — Social Media Growth Otomatis</title>
+<title>nuestore — Social Media Growth Otomatis</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #03050a;
-  --s1: #070b12;
-  --s2: #0b1120;
-  --ink: #ddeeff;
-  --ink2: #6688aa;
-  --ink3: #334455;
-  --gold: #c8a96e;
-  --gold2: #e8c98e;
-  --gold3: #f5e4c0;
-  --teal: #22d3c8;
-  --rose: #ff6b9d;
-  --border: rgba(200,169,110,0.12);
-  --border2: rgba(200,169,110,0.25);
+  --bg: #000000;
+  --s1: #0a0b10;
+  --s2: #12141c;
+  --ink: #ffffff;
+  --ink2: #a0a5b5;
+  --ink3: #555969;
+  --primary: #0bd4fd;
+  --primary2: #5ce4ff;
+  --primary3: #b0f2ff;
+  --secondary: #ff007f;
+  --accent: #ff5eb0;
+  --border: rgba(11,212,253,0.15);
+  --border2: rgba(11,212,253,0.3);
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -34,8 +34,8 @@ body{
 
 /* ── CURSOR ── */
 .cur,.cur-t{position:fixed;pointer-events:none;z-index:9999;border-radius:50%}
-.cur{width:8px;height:8px;background:var(--gold);mix-blend-mode:screen;transition:transform .15s}
-.cur-t{width:32px;height:32px;border:1px solid rgba(200,169,110,.5);top:-16px;left:-16px;transition:all .18s cubic-bezier(.25,.46,.45,.94)}
+.cur{width:8px;height:8px;background:var(--primary);mix-blend-mode:screen;transition:transform .15s}
+.cur-t{width:32px;height:32px;border:1px solid rgba(0,195,255,.5);top:-16px;left:-16px;transition:all .18s cubic-bezier(.25,.46,.45,.94)}
 
 /* ── STARFIELD ── */
 .stars{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
@@ -66,18 +66,18 @@ nav{
   backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
 }
-.logo{font-weight:700;font-size:1.25rem;letter-spacing:.5px;color:var(--gold2)}
+.logo{font-weight:700;font-size:1.25rem;letter-spacing:.5px;color:var(--primary2)}
 .logo em{font-style:normal;color:var(--ink);opacity:.5}
 .nav-pill{
   display:flex;align-items:center;gap:10px;
   padding:10px 22px;
   border:1px solid var(--border2);border-radius:100px;
-  font-size:.82rem;font-weight:500;color:var(--gold2);
+  font-size:.82rem;font-weight:500;color:var(--primary2);
   text-decoration:none;
-  background:rgba(200,169,110,.04);
+  background:rgba(0,195,255,.04);
   transition:all .3s;cursor:none;
 }
-.nav-pill:hover{background:rgba(200,169,110,.1);border-color:var(--gold);color:var(--gold3)}
+.nav-pill:hover{background:rgba(0,195,255,.1);border-color:var(--primary);color:var(--primary3)}
 
 /* ── HERO ── */
 .hero{
@@ -93,15 +93,15 @@ nav{
   padding:7px 20px;
   border:1px solid var(--border2);border-radius:100px;
   font-size:.72rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--gold);margin-bottom:36px;
+  color:var(--primary);margin-bottom:36px;
   animation:up .9s ease both;
 }
 .dot-live{
-  width:6px;height:6px;background:var(--teal);border-radius:50%;
-  box-shadow:0 0 8px var(--teal);
+  width:6px;height:6px;background:var(--secondary);border-radius:50%;
+  box-shadow:0 0 8px var(--secondary);
   animation:livepulse 1.8s ease infinite;
 }
-@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--teal)}50%{opacity:.3;box-shadow:0 0 12px var(--teal)}}
+@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--secondary)}50%{opacity:.3;box-shadow:0 0 12px var(--secondary)}}
 
 h1.headline{
   font-weight:800;
@@ -111,7 +111,7 @@ h1.headline{
   animation:up .9s ease .1s both;
 }
 .headline .shimmer{
-  background:linear-gradient(105deg,var(--gold) 0%,var(--gold3) 35%,var(--teal) 60%,var(--gold2) 100%);
+  background:linear-gradient(105deg,var(--primary) 0%,var(--primary3) 35%,var(--secondary) 60%,var(--primary2) 100%);
   background-size:300% auto;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   animation:shim 5s linear infinite,up .9s ease .1s both;
@@ -129,12 +129,12 @@ h1.headline{
 .btn-gold{
   display:inline-flex;align-items:center;gap:10px;
   padding:15px 34px;
-  background:linear-gradient(135deg,var(--gold),#a07830);
+  background:linear-gradient(135deg,var(--primary),#007bb5);
   color:#0a0600;border-radius:8px;
   font-family:'Poppins',sans-serif;font-weight:600;font-size:.9rem;
   text-decoration:none;cursor:none;
   transition:transform .3s,box-shadow .3s;
-  box-shadow:0 0 32px rgba(200,169,110,.2);
+  box-shadow:0 0 32px rgba(0,195,255,.2);
   position:relative;overflow:hidden;
 }
 .btn-gold::before{
@@ -142,7 +142,7 @@ h1.headline{
   background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
   opacity:0;transition:opacity .3s;
 }
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 0 48px rgba(200,169,110,.4)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 0 48px rgba(0,195,255,.4)}
 .btn-gold:hover::before{opacity:1}
 
 .btn-ghost{
@@ -153,7 +153,7 @@ h1.headline{
   font-family:'Poppins',sans-serif;font-weight:500;font-size:.9rem;
   text-decoration:none;cursor:none;transition:all .3s;
 }
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.04)}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary);background:rgba(0,195,255,.04)}
 
 /* ── TICKER ── */
 .ticker-wrap{
@@ -168,7 +168,7 @@ h1.headline{
   display:flex;align-items:center;gap:10px;white-space:nowrap;
   font-size:.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);
 }
-.ticker-item .t-accent{color:var(--gold);font-weight:600}
+.ticker-item .t-accent{color:var(--primary);font-weight:600}
 
 /* ── STATS ── */
 .stats{position:relative;z-index:2;padding:80px 64px;display:flex;justify-content:center}
@@ -185,14 +185,14 @@ h1.headline{
 .stat:last-child{border-right:none}
 .stat::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
   transform:scaleX(0);transition:transform .5s ease;
 }
 .stat:hover{background:var(--s2)}
 .stat:hover::before{transform:scaleX(1)}
 .stat-n{
   font-weight:700;font-size:2.2rem;letter-spacing:-1px;
-  background:linear-gradient(135deg,var(--gold2),var(--teal));
+  background:linear-gradient(135deg,var(--primary2),var(--secondary));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   display:block;margin-bottom:4px;
 }
@@ -201,7 +201,7 @@ h1.headline{
 /* ── SECTION BASE ── */
 .sec{position:relative;z-index:2;padding:100px 64px}
 .sec-max{max-width:1080px;margin:0 auto}
-.tag{font-size:.68rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.tag{font-size:.68rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:14px}
 .sec-h{font-weight:700;font-size:clamp(1.8rem,3.5vw,2.8rem);letter-spacing:-1px;line-height:1.1;margin-bottom:14px}
 .sec-sub{font-size:.95rem;font-weight:300;color:var(--ink2);max-width:440px;line-height:1.8}
 
@@ -219,7 +219,7 @@ h1.headline{
 .plat-card .bg-num{
   position:absolute;bottom:-20px;right:-10px;
   font-weight:800;font-size:9rem;line-height:1;letter-spacing:-5px;
-  opacity:.03;color:var(--gold);pointer-events:none;font-style:italic;
+  opacity:.03;color:var(--primary);pointer-events:none;font-style:italic;
 }
 .plat-icon{
   width:64px;height:64px;border-radius:18px;
@@ -235,7 +235,7 @@ h1.headline{
 .pill{
   font-size:.68rem;font-weight:500;letter-spacing:.5px;
   padding:5px 12px;border-radius:100px;
-  background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.18);color:var(--gold);
+  background:rgba(0,195,255,.07);border:1px solid rgba(0,195,255,.18);color:var(--primary);
 }
 
 /* ── WHY US ── */
@@ -248,17 +248,17 @@ h1.headline{
 }
 .why-card::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
   opacity:0;transition:opacity .4s;
 }
 .why-card:hover{border-color:var(--border2);transform:translateY(-3px)}
 .why-card:hover::after{opacity:1}
 .why-ico{
   width:48px;height:48px;border-radius:12px;
-  background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.14);
+  background:rgba(0,195,255,.06);border:1px solid rgba(0,195,255,.14);
   display:flex;align-items:center;justify-content:center;margin-bottom:20px;
 }
-.why-ico svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.why-ico svg{width:22px;height:22px;stroke:var(--primary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .why-card h3{font-weight:600;font-size:1.05rem;margin-bottom:10px}
 .why-card p{font-size:.855rem;font-weight:300;color:var(--ink2);line-height:1.75}
 
@@ -270,11 +270,11 @@ h1.headline{
 .step-left{display:flex;flex-direction:column;align-items:center}
 .step-num{
   width:56px;height:56px;border-radius:50%;
-  border:1px solid var(--gold);
+  border:1px solid var(--primary);
   display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:1rem;color:var(--gold);
+  font-weight:700;font-size:1rem;color:var(--primary);
   background:var(--bg);flex-shrink:0;position:relative;z-index:1;
-  box-shadow:0 0 24px rgba(200,169,110,.12);
+  box-shadow:0 0 24px rgba(0,195,255,.12);
 }
 .step-line{width:1px;flex:1;margin-top:8px;background:linear-gradient(180deg,var(--border2),transparent)}
 .step-body{padding-top:14px}
@@ -288,13 +288,13 @@ h1.headline{
   padding:32px;transition:border-color .3s,transform .3s;
 }
 .testi-card:hover{border-color:var(--border2);transform:translateY(-4px)}
-.stars{color:var(--gold);font-size:.78rem;letter-spacing:2px;margin-bottom:16px}
+.stars{color:var(--primary);font-size:.78rem;letter-spacing:2px;margin-bottom:16px}
 .testi-q{font-size:.86rem;font-weight:300;color:var(--ink2);line-height:1.75;margin-bottom:20px;font-style:italic}
-.testi-q::before{content:'\201C';font-size:1.4rem;line-height:0;vertical-align:-.3em;color:var(--gold);opacity:.5;margin-right:2px}
+.testi-q::before{content:'\201C';font-size:1.4rem;line-height:0;vertical-align:-.3em;color:var(--primary);opacity:.5;margin-right:2px}
 .testi-auth{display:flex;align-items:center;gap:12px}
 .testi-av{
   width:36px;height:36px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),#7a5020);
+  background:linear-gradient(135deg,var(--primary),#7a5020);
   display:flex;align-items:center;justify-content:center;
   font-weight:600;font-size:.75rem;color:#0a0600;
 }
@@ -309,7 +309,7 @@ h1.headline{
   padding:22px 0;cursor:none;
   font-weight:500;font-size:.95rem;transition:color .3s;
 }
-.faq-q-row:hover{color:var(--gold)}
+.faq-q-row:hover{color:var(--primary)}
 .faq-toggle{
   width:28px;height:28px;flex-shrink:0;
   border:1px solid var(--border2);border-radius:50%;
@@ -317,7 +317,7 @@ h1.headline{
   font-size:.85rem;color:var(--ink2);
   transition:all .3s;margin-left:20px;
 }
-.faq-item.open .faq-toggle{border-color:var(--gold);color:var(--gold);transform:rotate(45deg)}
+.faq-item.open .faq-toggle{border-color:var(--primary);color:var(--primary);transform:rotate(45deg)}
 .faq-ans{
   font-size:.87rem;font-weight:300;color:var(--ink2);line-height:1.8;
   max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;
@@ -334,12 +334,12 @@ h1.headline{
 }
 .cta-box::before{
   content:'';position:absolute;top:-1px;left:25%;right:25%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
 }
 .cta-box::after{
   content:'';position:absolute;
   width:400px;height:400px;
-  background:radial-gradient(circle,rgba(200,169,110,.06) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(0,195,255,.06) 0%,transparent 70%);
   top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;
 }
 .cta-box h2{font-weight:700;font-size:clamp(1.7rem,3.5vw,2.6rem);letter-spacing:-1px;margin-bottom:14px;position:relative;z-index:1}
@@ -365,11 +365,11 @@ footer{
   border-top:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
 }
-.f-logo{font-weight:700;font-size:1rem;color:var(--gold)}
+.f-logo{font-weight:700;font-size:1rem;color:var(--primary)}
 .f-copy{font-size:.75rem;color:var(--ink3)}
 .f-links{display:flex;gap:24px}
 .f-links a{font-size:.76rem;color:var(--ink3);text-decoration:none;transition:color .3s}
-.f-links a:hover{color:var(--gold)}
+.f-links a:hover{color:var(--primary)}
 
 /* ── REVEAL ── */
 .rv{opacity:0;transform:translateY(28px);transition:all .75s cubic-bezier(.22,1,.36,1)}
@@ -389,7 +389,107 @@ footer{
   .stat:last-child{border-bottom:none}
   footer{padding:28px 24px;flex-direction:column;text-align:center}
   .cta-box{padding:48px 28px}
+  .float-wrap {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    flex-direction: row;
+    justify-content: space-between;
+    transform: none;
+    gap: 8px;
+  }
+  .float-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 4px;
+    gap: 4px;
+    border-radius: 100px;
+  }
+  .float-icon {
+    width: 22px;
+    height: 22px;
+    background: transparent;
+  }
+  .float-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+  .float-text span {
+    display: none;
+  }
+  .float-text strong {
+    font-size: 0.8rem;
+  }
 }
+
+/* ── FLOATING BUTTONS ── */
+.float-wrap {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  z-index: 9999;
+}
+.float-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 6px 6px;
+  border-radius: 100px;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  color: #fff !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  cursor: pointer;
+}
+.float-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.1);
+}
+.float-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.2);
+}
+.float-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.float-text strong {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+.float-text span {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  color: rgba(255,255,255,0.8);
+}
+.float-wa {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.float-tg {
+  background: linear-gradient(135deg, #0088cc, #005f8f);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.float-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #fff;
+}
+
 </style>
 </head>
 <body>
@@ -403,7 +503,7 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <div class="logo">Nuestore</div>
+  <img src="/images/logo-png.png" alt="nuestore" style="height:36px; width:auto; object-fit:contain;">
   <a href="#order" class="nav-pill">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.447c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
     Mulai Order
@@ -415,13 +515,13 @@ footer{
   <div class="hero-in">
     <div class="eyebrow"><div class="dot-live"></div>Proses Otomatis 24/7</div>
     <h1 class="headline">
-      Bersama <span class="shimmer">Nuestore</span>
+      Bersama <span class="shimmer">nuestore</span>
     </h1>
     <p>Akun sosial media Anda akan selalu tumbuh konsisten dengan layanan yang dirancang khusus sesuai kebutuhan Anda. Raih lebih banyak pengikut, keterlibatan tinggi, dan hasil yang nyata.</p>
     <div class="hero-btns">
-      <a href="https://t.me/Nuestore" class="btn-gold">
+      <a href="https://t.me/nuestorebot" class="btn-gold">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
-        Order via Telegram
+        Order via Bot Telegram
       </a>
       <a href="#platform" class="btn-ghost">Lihat Layanan</a>
     </div>
@@ -469,16 +569,16 @@ footer{
     </div>
     <div class="testi-grid rv2">
       <div class="testi-card" style="text-align:center; padding:48px 32px">
-        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--gold2)">Insight Meningkat</h3>
+        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Insight Meningkat</h3>
         <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Tingkatkan performa akun dengan layanan yang benar-benar berdampak pada jangkauan dan engagement Anda.</p>
       </div>
       <div class="testi-card" style="text-align:center; padding:48px 32px">
-        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--gold2)">Garansi 100%</h3>
+        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Garansi 100%</h3>
         <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Kami berani memberi jaminan karena yakin dengan kualitas layanan yang kami berikan.</p>
       </div>
       <div class="testi-card" style="text-align:center; padding:48px 32px">
-        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--gold2)">Respon Cepat</h3>
-        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Tidak perlu menunggu lama, tim Nuestore siap menanggapi setiap pertanyaan dan kebutuhan Anda.</p>
+        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Respon Cepat</h3>
+        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Tidak perlu menunggu lama, tim nuestore siap menanggapi setiap pertanyaan dan kebutuhan Anda.</p>
       </div>
     </div>
   </div>
@@ -489,8 +589,8 @@ footer{
   <div class="sec-max">
     <div class="rv">
       <div class="tag">Keunggulan</div>
-      <h2 class="sec-h">Kenapa Harus<br>Nuestore?</h2>
-      <p class="sec-sub">Mengapa ribuan pengguna memilih Nuestore sebagai solusi terbaik dan termudah untuk berkembang di sosial media.</p>
+      <h2 class="sec-h">Kenapa Harus<br>nuestore?</h2>
+      <p class="sec-sub">Mengapa ribuan pengguna memilih nuestore sebagai solusi terbaik dan termudah untuk berkembang di sosial media.</p>
     </div>
     <div class="why-grid rv2">
       <div class="why-card">
@@ -529,7 +629,7 @@ footer{
       <div class="step-row">
         <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Buka @Nuestore di Telegram</h4>
+          <h4>Buka @nuestorebot di Telegram</h4>
           <p>Ketuk /start dan bot akan menyapa kamu dengan menu lengkap. Tidak perlu daftar akun apapun.</p>
         </div>
       </div>
@@ -563,8 +663,8 @@ footer{
   <div class="sec-max">
     <div class="rv">
       <div class="tag">Testimoni</div>
-      <h2 class="sec-h">Kata Mereka<br>Tentang Nuestore</h2>
-      <p class="sec-sub">Lihat apa yang dikatakan pelanggan kami tentang pengalaman menggunakan layanan Nuestore.</p>
+      <h2 class="sec-h">Kata Mereka<br>Tentang nuestore</h2>
+      <p class="sec-sub">Lihat apa yang dikatakan pelanggan kami tentang pengalaman menggunakan layanan nuestore.</p>
     </div>
     <div class="testi-grid rv2">
       <div class="testi-card">
@@ -606,19 +706,15 @@ footer{
     <div class="faq-list rv2">
       <div class="faq-item">
         <div class="faq-q-row">Apakah Aman untuk Akun Saya? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Sangat aman. Kami hanya memerlukan username atau link profil Anda. Nuestore tidak pernah dan tidak akan pernah meminta password akun sosial media Anda.</div>
+        <div class="faq-ans">Sangat aman. Kami hanya memerlukan username atau link profil Anda. nuestore tidak pernah dan tidak akan pernah meminta password akun sosial media Anda.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q-row">Apa Perbedaan Layanan Refill dan No Refill? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Refill berarti isi ulang otomatis. Jika layanan memiliki fitur refill, Anda mendapat garansi isi ulang otomatis bila jumlah turun di bawah target dalam periode tertentu. Layanan no refill tidak memiliki garansi isi ulang.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q-row">Bagaimana Cara Menggunakan Layanan Nuestore? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Buka Telegram, cari @Nuestore, ketuk /start, pilih layanan, masukkan link target, dan bayar via QRIS. Pesanan diproses otomatis, selesai dalam hitungan menit.</div>
+        <div class="faq-q-row">Bagaimana Cara Menggunakan Layanan nuestore? <span class="faq-toggle">+</span></div>
+        <div class="faq-ans">Buka Telegram, cari @nuestorebot, ketuk /start, pilih layanan, masukkan link target, dan bayar via QRIS. Pesanan diproses otomatis, selesai dalam hitungan menit.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q-row">Bagaimana Jika Saya Mengalami Kendala? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Jika Anda memiliki kendala apapun, hubungi kami langsung via Telegram. Tim Nuestore siap membantu Anda secepatnya.</div>
+        <div class="faq-ans">Jika Anda memiliki kendala apapun, hubungi kami langsung via Telegram. Tim nuestore siap membantu Anda secepatnya.</div>
       </div>
     </div>
   </div>
@@ -628,11 +724,11 @@ footer{
 <div class="cta-wrap" id="order">
   <div class="cta-box rv">
     <h2>Pembayaran Paling Fleksibel</h2>
-    <p>Nuestore mendukung berbagai metode pembayaran, QRIS, GoPay, OVO, Dana, ShopeePay, dan seluruh mobile banking Indonesia.</p>
+    <p>nuestore mendukung berbagai metode pembayaran, QRIS, GoPay, OVO, Dana, ShopeePay, dan seluruh mobile banking Indonesia.</p>
     <div class="cta-btns">
-      <a href="https://t.me/Nuestore" class="btn-tg">
+      <a href="https://t.me/nuestorebot" class="btn-tg">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
-        Order di Telegram Sekarang
+        Order via Bot Telegram
       </a>
     </div>
   </div>
@@ -640,12 +736,12 @@ footer{
 
 <!-- FOOTER -->
 <footer>
-  <div class="f-logo">Nuestore</div>
-  <div class="f-copy">© 2025 Nuestore. All rights reserved.</div>
+  <div class="f-logo">nuestore</div>
+  <div class="f-copy">© 2023 nuestore. All rights reserved.</div>
   <div class="f-links">
     <a href="#">Syarat & Ketentuan</a>
     <a href="#">Privasi</a>
-    <a href="https://t.me/Nuestore">Kontak</a>
+    <a href="https://t.me/nuestorebot">Kontak</a>
   </div>
 </footer>
 
@@ -665,8 +761,8 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx-4+'px';c.style.top=my-4+'px'});
 (function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ct.style.left=rx+'px';ct.style.top=ry+'px';requestAnimationFrame(loop)})();
 document.querySelectorAll('a,button,.plat-card,.why-card,.faq-q-row,.testi-card').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{c.style.transform='scale(2.5)';ct.style.transform='scale(1.6)';ct.style.borderColor='var(--gold)'});
-  el.addEventListener('mouseleave',()=>{c.style.transform='';ct.style.transform='';ct.style.borderColor='rgba(200,169,110,.5)'});
+  el.addEventListener('mouseenter',()=>{c.style.transform='scale(2.5)';ct.style.transform='scale(1.6)';ct.style.borderColor='var(--primary)'});
+  el.addEventListener('mouseleave',()=>{c.style.transform='';ct.style.transform='';ct.style.borderColor='rgba(0,195,255,.5)'});
 });
 
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.08});
@@ -690,5 +786,29 @@ document.querySelectorAll('.btn-gold,.btn-tg,.btn-ghost').forEach(btn=>{
   btn.addEventListener('mouseleave',()=>{btn.style.transform=''});
 });
 </script>
+
+<!-- FLOATING CONTACTS -->
+<div class="float-wrap">
+  <a href="https://wa.me/628000000000" class="float-btn float-wa" target="_blank">
+    <div class="float-icon">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </div>
+    <div class="float-text">
+      <strong>Tanya CS</strong>
+      <span>WHATSAPP</span>
+    </div>
+  </a>
+
+  <a href="https://t.me/nuestorebot" class="float-btn float-tg" target="_blank">
+    <div class="float-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
+    </div>
+    <div class="float-text">
+      <strong>Order via Bot</strong>
+      <span>TELEGRAM</span>
+    </div>
+  </a>
+</div>
 </body>
 </html>
+
