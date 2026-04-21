@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>nuestore — Social Media Growth Otomatis</title>
+<link rel="icon" href="/images/logo-png.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -503,7 +504,9 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <img src="/images/logo-png.png" alt="nuestore" style="height:36px; width:auto; object-fit:contain;">
+  <a href="/" class="logo" style="text-decoration: none;">
+    <img src="/images/logo-png.png" alt="nuestore" style="height:36px; width:auto; object-fit:contain; display:block;">
+  </a>
   <a href="#order" class="nav-pill">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.447c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
     Mulai Order
@@ -736,7 +739,9 @@ footer{
 
 <!-- FOOTER -->
 <footer>
-  <div class="f-logo">nuestore</div>
+  <a href="/" class="f-logo" style="text-decoration: none;">
+    <img src="/images/logo-png.png" alt="nuestore" style="height:32px; width:auto; object-fit:contain; display:block;">
+  </a>
   <div class="f-copy">© 2023 nuestore. All rights reserved.</div>
   <div class="f-links">
     <a href="#">Syarat & Ketentuan</a>
