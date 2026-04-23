@@ -30,7 +30,7 @@ $bot->middleware(function (Nutgram $bot, $next) {
 // =============================================
 $bot->onCommand('start',    StartHandler::class);
 $bot->onCommand('order',    OrderConversation::class);
-$bot->onCommand('status',   StatusHandler::class);
+$bot->onCommand('status {id?}', StatusHandler::class); // {id?} agar bisa match /status uuid
 $bot->onCommand('services', ServicesHandler::class);
 $bot->onCommand('balance',  BalanceHandler::class);
 $bot->onCommand('report',   ReportHandler::class);

@@ -106,12 +106,8 @@ class ReportHandler
 
         $bot->sendMessage(text: $summary, parse_mode: 'Markdown');
 
-        // Generate CSV
-        $csvFilename = 'laporan_' . str_replace([' ', '/'], ['_', '-'], strtolower($periodLabel)) . '_' . Carbon::now()->format('Ymd_His') . '.csv';
-        $csvPath     = storage_path("app/{$csvFilename}");
-
-        $csvHandle = fopen($csvPath, 'w');
-
+        // Generate CSV in memory
+        $csvHandle = fopen('php://temp', 'r+');
         // BOM for UTF-8 Excel compatibility
         fprintf($csvHandle, chr(0xEF).chr(0xBB).chr(0xBF));
 
@@ -146,7 +142,15 @@ class ReportHandler
             ]);
         }
 
+        rewind($csvHandle);
+        $csvContent = stream_get_contents($csvHandle);
         fclose($csvHandle);
+
+        $csvFilename = 'laporan_' . str_replace([' ', '/'], ['_', '-'], strtolower($periodLabel)) . '_' . Carbon::now()->format('Ymd_His') . '.csv';
+        
+        // Simpan via storage (memastikan folder terbuat)
+        \Illuminate\Support\Facades\Storage::disk('local')->put($csvFilename, $csvContent);
+        $csvPath = \Illuminate\Support\Facades\Storage::disk('local')->path($csvFilename);
 
         // Kirim file CSV ke bot
         $bot->sendDocument(
