@@ -65,7 +65,7 @@ class StatusHandler
               . "━━━━━━━━━━━━━━━━━━━━━━━\n"
               . "🆔 Order ID: `{$transaction->id}`\n"
               . "📦 Service ID: {$transaction->service_id}\n"
-              . "🔗 Target: {$transaction->target_link}\n"
+              . "🔗 Target: `{$transaction->target_link}`\n"
               . "🔢 Qty: " . number_format($transaction->quantity ?? 0, 0, ',', '.') . "\n"
               . $noteText . "\n\n"
               . "💰 Tagih ke pelanggan: Rp {$totalFormatted}\n"
@@ -92,7 +92,11 @@ class StatusHandler
             }
         }
 
-        $bot->sendMessage(text: $text, parse_mode: 'Markdown');
+        $bot->sendMessage(
+            text: $text,
+            parse_mode: 'Markdown',
+            disable_web_page_preview: true
+        );
     }
 
     private function showActiveOrders(Nutgram $bot): void
@@ -125,12 +129,10 @@ class StatusHandler
         foreach ($activeOrders as $idx => $order) {
             $num = $idx + 1;
             $pid = $order->provider_order_id ?? '-';
-            // Limit link length
-            $link = strlen($order->target_link) > 30 ? substr($order->target_link, 0, 30) . '...' : $order->target_link;
             
             $text .= "{$num}. *ID:* `{$order->id}`\n";
-            $text .= "   🔗 Target: {$link}\n";
-            $text .= "   📦 Service: {$order->service_id} | Qty: {$order->quantity}\n";
+            $text .= "   🔗 Target: `{$order->target_link}`\n";
+            $text .= "   📦 Service ID: {$order->service_id} | Qty: {$order->quantity}\n";
 
             if ($pid !== '-' && isset($liveStatuses[$pid])) {
                 $live = $liveStatuses[$pid];
@@ -148,6 +150,10 @@ class StatusHandler
         $text .= "_(Menampilkan maks 15 order terbaru yang sedang proses)_\n";
         $text .= "Untuk cek detail satu order, ketik:\n`/status [Order ID]`";
 
-        $bot->sendMessage(text: $text, parse_mode: 'Markdown');
+        $bot->sendMessage(
+            text: $text,
+            parse_mode: 'Markdown',
+            disable_web_page_preview: true
+        );
     }
 }
