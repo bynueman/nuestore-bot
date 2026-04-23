@@ -35,10 +35,22 @@ $bot->onCommand('services', ServicesHandler::class);
 $bot->onCommand('balance',  BalanceHandler::class);
 $bot->onCommand('report',   ReportHandler::class);
 $bot->onCommand('help',     HelpHandler::class);
+$bot->onCommand('format', function (Nutgram $bot) {
+    $text = "📋 FORMAT ORDER\n"
+          . "Platform: Instagram\n"
+          . "Layanan: Followers ID\n"
+          . "Target: https://instagram.com/targetku\n"
+          . "Jumlah: 1000\n"
+          . "Catatan: -";
+
+    $bot->sendMessage("Salin format di bawah ini dan bagikan ke pelanggan/reseller. Jika sudah diisi, *paste* kembali ke saya untuk otomatis order!", parse_mode: 'Markdown');
+    $bot->sendMessage("`{$text}`\n\n_(Ketuk untuk menyalin)_", parse_mode: 'Markdown');
+});
 
 // =============================================
-// Persistent keyboard buttons
+// Persistent keyboard buttons & Regex Shortcuts
 // =============================================
+$bot->onText('(?is).*FORMAT ORDER.*', \App\Telegram\Conversations\ShortcutConversation::class);
 $bot->onText('🛒 Order',      OrderConversation::class);
 $bot->onText('💰 Saldo',      BalanceHandler::class);
 $bot->onText('📊 Laporan',    ReportHandler::class);
