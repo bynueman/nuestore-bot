@@ -17,6 +17,7 @@ class StartHandler
                 ->addRow(
                     KeyboardButton::make('🛒 Order'),
                     KeyboardButton::make('📋 Cek Status'),
+                    KeyboardButton::make('📝 Format Order')
                 )
                 ->addRow(
                     KeyboardButton::make('💰 Saldo'),
