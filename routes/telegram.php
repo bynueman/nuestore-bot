@@ -40,7 +40,7 @@ $bot->onCommand('format',   \App\Telegram\Handlers\FormatHandler::class);
 // =============================================
 // Persistent keyboard buttons & Regex Shortcuts
 // =============================================
-$bot->onText('(?is).*FORMAT ORDER.*', \App\Telegram\Conversations\ShortcutConversation::class);
+$bot->onText('(?is)^📋 FORMAT ORDER.*', \App\Telegram\Conversations\ShortcutConversation::class);
 $bot->onText('🛒 Order',           OrderConversation::class);
 $bot->onText('💰 Saldo',           BalanceHandler::class);
 $bot->onText('📊 Laporan',         ReportHandler::class);
