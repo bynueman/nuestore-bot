@@ -522,9 +522,9 @@ footer{
     </h1>
     <p>Akun sosial media Anda akan selalu tumbuh konsisten dengan layanan yang dirancang khusus sesuai kebutuhan Anda. Raih lebih banyak pengikut, keterlibatan tinggi, dan hasil yang nyata.</p>
     <div class="hero-btns">
-      <a href="https://t.me/nuestorebot" class="btn-gold">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
-        Order via Bot Telegram
+      <a href="https://wa.me/628000000000" class="btn-gold" target="_blank" style="background:linear-gradient(135deg, #25D366, #128C7E); box-shadow:0 0 32px rgba(37,211,102,.2);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Order via WhatsApp
       </a>
       <a href="#platform" class="btn-ghost">Lihat Layanan</a>
     </div>
@@ -632,29 +632,29 @@ footer{
       <div class="step-row">
         <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Buka @nuestorebot di Telegram</h4>
-          <p>Ketuk /start dan bot akan menyapa kamu dengan menu lengkap. Tidak perlu daftar akun apapun.</p>
+          <h4>Hubungi Kami via WhatsApp</h4>
+          <p>Ketuk tombol WhatsApp dan sampaikan layanan sosial media apa yang Anda butuhkan ke admin kami.</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Pilih layanan & masukkan link</h4>
-          <p>Ketik /order, pilih platform dan layanan, masukkan link profil atau konten target-mu.</p>
+          <h4>Pilih layanan & berikan link</h4>
+          <p>Admin akan memberikan pilihan layanan dan harga. Cukup berikan link profil atau konten target-mu.</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
         <div class="step-body">
           <h4>Bayar via QRIS</h4>
-          <p>Bot mengirimkan QRIS langsung ke chat. Scan dengan e-wallet atau mobile banking favoritmu.</p>
+          <p>Admin akan mengirimkan tagihan QRIS / E-Wallet langsung ke chat. Transaksi 100% aman.</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">4</div></div>
         <div class="step-body">
           <h4>Pesanan diproses otomatis</h4>
-          <p>Sistem langsung memproses pesananmu. Bot mengirim notifikasi saat pesanan selesai.</p>
+          <p>Sistem langsung memproses pesanan saat pembayaran dikonfirmasi. Admin akan menginfokan statusnya.</p>
         </div>
       </div>
     </div>
@@ -713,11 +713,11 @@ footer{
       </div>
       <div class="faq-item">
         <div class="faq-q-row">Bagaimana Cara Menggunakan Layanan nuestore? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Buka Telegram, cari @nuestorebot, ketuk /start, pilih layanan, masukkan link target, dan bayar via QRIS. Pesanan diproses otomatis, selesai dalam hitungan menit.</div>
+        <div class="faq-ans">Hubungi admin kami di WhatsApp, pilih layanan yang Anda mau, masukkan link target, dan bayar via QRIS. Tim kami akan langsung memproses pesanan Anda.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q-row">Bagaimana Jika Saya Mengalami Kendala? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Jika Anda memiliki kendala apapun, hubungi kami langsung via Telegram. Tim nuestore siap membantu Anda secepatnya.</div>
+        <div class="faq-ans">Jika Anda memiliki kendala apapun, hubungi kami langsung via WhatsApp. Tim nuestore siap membantu Anda secepatnya.</div>
       </div>
     </div>
   </div>
@@ -729,9 +729,9 @@ footer{
     <h2>Pembayaran Paling Fleksibel</h2>
     <p>nuestore mendukung berbagai metode pembayaran, QRIS, GoPay, OVO, Dana, ShopeePay, dan seluruh mobile banking Indonesia.</p>
     <div class="cta-btns">
-      <a href="https://t.me/nuestorebot" class="btn-tg">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
-        Order via Bot Telegram
+      <a href="https://wa.me/628000000000" class="btn-tg" target="_blank" style="background:linear-gradient(135deg, #25D366, #128C7E); box-shadow:0 0 32px rgba(37,211,102,.2);">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Order via WhatsApp
       </a>
     </div>
   </div>
@@ -746,7 +746,7 @@ footer{
   <div class="f-links">
     <a href="#">Syarat & Ketentuan</a>
     <a href="#">Privasi</a>
-    <a href="https://t.me/nuestorebot">Kontak</a>
+    <a href="https://wa.me/628000000000" target="_blank">Kontak</a>
   </div>
 </footer>
 
@@ -799,18 +799,8 @@ document.querySelectorAll('.btn-gold,.btn-tg,.btn-ghost').forEach(btn=>{
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </div>
     <div class="float-text">
-      <strong>Tanya CS</strong>
-      <span>WHATSAPP</span>
-    </div>
-  </a>
-
-  <a href="https://t.me/nuestorebot" class="float-btn float-tg" target="_blank">
-    <div class="float-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
-    </div>
-    <div class="float-text">
-      <strong>Order via Bot</strong>
-      <span>TELEGRAM</span>
+      <strong>Order / Tanya CS</strong>
+      <span>WHATSAPP KAMI</span>
     </div>
   </a>
 </div>
