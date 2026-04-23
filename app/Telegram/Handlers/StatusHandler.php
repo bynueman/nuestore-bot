@@ -10,10 +10,16 @@ class StatusHandler
 {
     public function __invoke(Nutgram $bot, ?string $orderId = null): void
     {
+        $text = $bot->message()?->text ?? '';
+
         if (!$orderId) {
-            $text    = $bot->message()?->text ?? '';
-            $parts   = explode(' ', $text, 2);
-            $orderId = trim($parts[1] ?? '');
+            // Jika diklik dari tombol menu "📋 Cek Status"
+            if ($text === '📋 Cek Status') {
+                $orderId = null;
+            } else {
+                $parts   = explode(' ', $text, 2);
+                $orderId = trim($parts[1] ?? '');
+            }
         }
 
         if (!$orderId) {
