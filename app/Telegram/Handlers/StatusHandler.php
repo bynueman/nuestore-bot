@@ -8,11 +8,13 @@ use SergiX44\Nutgram\Nutgram;
 
 class StatusHandler
 {
-    public function __invoke(Nutgram $bot): void
+    public function __invoke(Nutgram $bot, ?string $orderId = null): void
     {
-        $text    = $bot->message()->text;
-        $parts   = explode(' ', $text, 2);
-        $orderId = trim($parts[1] ?? '');
+        if (!$orderId) {
+            $text    = $bot->message()?->text ?? '';
+            $parts   = explode(' ', $text, 2);
+            $orderId = trim($parts[1] ?? '');
+        }
 
         if (!$orderId) {
             $bot->sendMessage(
