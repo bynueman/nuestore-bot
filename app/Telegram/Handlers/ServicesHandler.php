@@ -84,42 +84,16 @@ class ServicesHandler
 
     private static function showCategories(Nutgram $bot, string $platform): void
     {
-        $lollipop = new LollipopSmmService();
-        $services = $lollipop->getServices();
-
-        if (!$services) {
-            $bot->sendMessage(text: "❌ Gagal memuat layanan. Coba lagi nanti.");
-            return;
-        }
-
-        $whitelist = array_filter(
-            array_map('trim', explode(',', NuestoreSetting::get('whitelisted_service_ids', '')))
-        );
-
-        // Ambil kategori unik dari whitelist untuk platform ini
-        $categories = collect($services)
-            ->filter(function ($s) use ($whitelist, $platform) {
-                if (!empty($whitelist) && !in_array((string)$s['service'], $whitelist)) return false;
-                return str_contains(strtolower($s['category']), strtolower($platform)) ||
-                       str_contains(strtolower($s['name']), strtolower($platform === 'tiktok' ? 'tiktok' : 'instagram'));
-            })
-            ->pluck('category')
-            ->unique()
-            ->values();
-
-        if ($categories->isEmpty()) {
-            $bot->sendMessage(text: "⚠️ Tidak ada layanan tersedia.");
-            return;
-        }
+        $categories = $platform === 'instagram'
+            ? ['Followers', 'Likes', 'Views', 'Story']
+            : ['Followers', 'Likes', 'Views', 'Saves', 'Shares'];
 
         $platformLabel = $platform === 'instagram' ? '📸 Instagram' : '🎵 TikTok';
         $keyboard      = InlineKeyboardMarkup::make();
 
         foreach ($categories as $cat) {
-            // Singkat nama kategori untuk tombol
-            $shortName = self::shortenCategory($cat);
             $keyboard->addRow(
-                InlineKeyboardButton::make($shortName, callback_data: "sv_cat:{$platform}|{$cat}")
+                InlineKeyboardButton::make(ucfirst($cat), callback_data: "sv_cat:{$platform}|{$cat}")
             );
         }
 
@@ -151,23 +125,43 @@ class ServicesHandler
     {
         $lollipop = new LollipopSmmService();
         $services = $lollipop->getServices();
+
+        if (!$services) {
+            $bot->answerCallbackQuery(text: "❌ Gagal memuat layanan. Coba lagi nanti.");
+            return;
+        }
+
         $markup   = (float) NuestoreSetting::get('global_markup_multiplier', 2.0);
 
-        $whitelist = array_filter(
-            array_map('trim', explode(',', NuestoreSetting::get('whitelisted_service_ids', '')))
-        );
+        $filtered = collect($services)->filter(function ($s) use ($platform, $cat) {
+            $name          = strtolower($s['name']);
+            $platformLower = strtolower($platform);
+            $categoryLower = strtolower($cat);
 
-        $filtered = collect($services)->filter(function ($s) use ($whitelist, $cat) {
-            if (!empty($whitelist) && !in_array((string)$s['service'], $whitelist)) return false;
-            return $s['category'] === $cat;
-        });
+            $platformMatch = str_contains($name, $platformLower) ||
+                             str_contains(strtolower($s['category'] ?? ''), $platformLower);
+
+            $categoryKeywords = [
+                'followers' => ['follower'], 'likes' => ['like'], 'views' => ['view'],
+                'story'     => ['story'],    'saves' => ['save'], 'shares' => ['share'],
+            ];
+            $keywords      = $categoryKeywords[$categoryLower] ?? [$categoryLower];
+            $categoryMatch = false;
+            foreach ($keywords as $kw) {
+                if (str_contains($name, $kw)) { $categoryMatch = true; break; }
+            }
+            return $platformMatch && $categoryMatch;
+        })
+        ->sortBy('rate') // Urutkan dari yang paling murah
+        ->take(10)       // Ambil 10 teratas
+        ->values();
 
         if ($filtered->isEmpty()) {
             $bot->answerCallbackQuery(text: "Tidak ada layanan di kategori ini.");
             return;
         }
 
-        $text = "📦 *" . self::shortenCategory($cat) . "*\n\n";
+        $text = "📦 *" . ucfirst($cat) . "*\n\n";
 
         foreach ($filtered as $s) {
             $harga = number_format((float)$s['rate'] * $markup, 0, ',', '.');

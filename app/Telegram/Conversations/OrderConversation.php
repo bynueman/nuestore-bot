@@ -103,9 +103,6 @@ class OrderConversation extends Conversation
     // ─── Helper: tampilkan daftar layanan (reusable) ─────────────────────────
     private function sendServiceListKeyboard(Nutgram $bot): bool
     {
-        $whitelistRaw = NuestoreSetting::get('whitelisted_service_ids', '');
-        $whitelist    = array_map('intval', explode(',', $whitelistRaw));
-
         $lollipop = new LollipopSmmService();
         $services = $lollipop->getServices();
 
@@ -115,9 +112,7 @@ class OrderConversation extends Conversation
             return false;
         }
 
-        $filtered = collect($services)->filter(function ($s) use ($whitelist) {
-            if (!in_array((int)$s['service'], $whitelist)) return false;
-
+        $filtered = collect($services)->filter(function ($s) {
             $name     = strtolower($s['name']);
             $platform = strtolower($this->platform);
             $category = strtolower($this->category);
@@ -135,7 +130,10 @@ class OrderConversation extends Conversation
                 if (str_contains($name, $kw)) { $categoryMatch = true; break; }
             }
             return $platformMatch && $categoryMatch;
-        })->values();
+        })
+        ->sortBy('rate') // Urutkan dari yang paling murah
+        ->take(10)       // Ambil 10 teratas
+        ->values();
 
         if ($filtered->isEmpty()) {
             $bot->sendMessage(
