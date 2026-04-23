@@ -2,11 +2,10 @@
 
 namespace App\Telegram\Conversations;
 
-use App\Models\NuestoreSetting;
 use App\Models\NuestoreTransaction;
-use App\Models\NuestoreUser;
-use App\Services\DuitkuService;
+use App\Models\NuestoreSetting;
 use App\Services\LollipopSmmService;
+use App\Telegram\Handlers\Admin\NotificationService;
 use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
@@ -14,439 +13,586 @@ use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
 
 class OrderConversation extends Conversation
 {
-    protected ?string $platform        = null;
-    protected ?string $category        = null;
-    protected ?int    $serviceId       = null;
-    protected ?array  $selectedService = null;
-    protected ?string $targetLink      = null;
-    protected ?int    $quantity        = null;
+    // ─── State ────────────────────────────────────────────────────────────────
+    protected ?string $platform       = null;
+    protected ?string $category       = null;
+    protected ?int    $serviceId      = null;
+    protected ?string $serviceName    = null;
+    protected ?string $serviceDesc    = null;
+    protected ?string $serviceAvgTime = null;
+    protected ?float  $serviceRate    = null;
+    protected ?int    $serviceMin     = null;
+    protected ?int    $serviceMax     = null;
+    protected ?string $targetLink     = null;
+    protected ?int    $quantity       = null;
+    protected ?string $customerNote   = null;
+    protected ?float  $totalPrice     = null;
+    protected ?float  $modalCost      = null;
 
-    protected array $categories = [
-        'instagram' => [
-            'ig_followers_id' => ['label' => '👥 Followers 🇮🇩 Indonesia', 'keywords' => ['followers', 'indonesia'], 'exclude' => ['buzzer']],
-            'ig_followers_ww' => ['label' => '👥 Followers 🌍 Worldwide',  'keywords' => ['followers'],              'exclude' => ['indonesia', 'buzzer']],
-            'ig_likes_id'     => ['label' => '❤️ Likes 🇮🇩 Indonesia',     'keywords' => ['likes', 'indonesia'],     'exclude' => ['buzzer', 'auto']],
-            'ig_likes_ww'     => ['label' => '❤️ Likes 🌍 Worldwide',      'keywords' => ['likes'],                  'exclude' => ['indonesia', 'reels', 'split', 'real users', 'power', 'auto', 'buzzer']],
-            'ig_views'        => ['label' => '▶️ Views',                   'keywords' => ['video views'],            'exclude' => []],
-            'ig_story'        => ['label' => '📖 Story Views',             'keywords' => ['story views'],            'exclude' => []],
-        ],
-        'tiktok' => [
-            'tt_followers_id' => ['label' => '👥 Followers 🇮🇩 Indonesia', 'keywords' => ['followers', 'indonesian'], 'exclude' => ['buzzer']],
-            'tt_followers_ww' => ['label' => '👥 Followers 🌍 Worldwide',  'keywords' => ['followers'],               'exclude' => ['indonesian', 'indonesia', 'buzzer']],
-            'tt_likes_id'     => ['label' => '❤️ Likes 🇮🇩 Indonesia',     'keywords' => ['likes', 'indonesian'],     'exclude' => ['buzzer']],
-            'tt_likes_ww'     => ['label' => '❤️ Likes 🌍 Worldwide',      'keywords' => ['likes'],                   'exclude' => ['indonesian', 'indonesia', 'buzzer']],
-            'tt_views_id'     => ['label' => '▶️ Views 🇮🇩 Indonesia',     'keywords' => ['views', 'indonesian'],     'exclude' => ['buzzer']],
-            'tt_views_ww'     => ['label' => '▶️ Views 🌍 Worldwide',      'keywords' => ['views'],                   'exclude' => ['indonesian', 'indonesia', 'live', 'saves', 'buzzer']],
-            'tt_saves'        => ['label' => '🔖 Saves',                   'keywords' => ['saves'],                   'exclude' => ['live', 'buzzer']],
-            'tt_shares'       => ['label' => '↗️ Shares',                  'keywords' => ['shares'],                  'exclude' => ['live', 'buzzer']],
-        ],
-    ];
+    // ─── Helper: cek apakah user mengetik perintah batal ──────────────────────
+    private function isCancelText(string $text): bool
+    {
+        return in_array(strtolower(trim($text)), ['batal', '/batal', 'cancel', '/cancel', '❌', 'keluar', '/keluar']);
+    }
 
-    public function start(Nutgram $bot): void
+    private function sendCancelled(Nutgram $bot): void
     {
         $bot->sendMessage(
-            text: "🛒 *Buat Pesanan Baru*\n\nPilih platform:",
+            text: "❌ Order dibatalkan.\n\nKetik /order atau tap 🛒 *Order* untuk mulai lagi.",
+            parse_mode: 'Markdown'
+        );
+        $this->end();
+    }
+
+    // ─── Helper: tampilkan pilihan platform (reusable) ────────────────────────
+    private function sendPlatformKeyboard(Nutgram $bot): void
+    {
+        $bot->sendMessage(
+            text: "🛒 *Input Order Baru*\n\nPilih platform pelanggan:",
             parse_mode: 'Markdown',
             reply_markup: InlineKeyboardMarkup::make()
                 ->addRow(
-                    InlineKeyboardButton::make('📸 Instagram', callback_data: 'platform:instagram'),
-                    InlineKeyboardButton::make('🎵 TikTok',    callback_data: 'platform:tiktok'),
+                    InlineKeyboardButton::make('📸 Instagram', callback_data: 'sv_platform_instagram'),
+                    InlineKeyboardButton::make('🎵 TikTok',   callback_data: 'sv_platform_tiktok'),
+                )
+                ->addRow(
+                    InlineKeyboardButton::make('❌ Batalkan', callback_data: 'order_cancel_all'),
                 )
         );
-
-        $this->next('selectPlatform');
     }
 
-    public function selectPlatform(Nutgram $bot): void
+    // ─── Helper: tampilkan pilihan kategori (reusable) ────────────────────────
+    private function sendCategoryKeyboard(Nutgram $bot): void
     {
-        $data = $bot->callbackQuery()?->data;
+        $categories = $this->platform === 'instagram'
+            ? [
+                ['label' => '👥 Followers', 'key' => 'followers'],
+                ['label' => '❤️ Likes',     'key' => 'likes'],
+                ['label' => '▶️ Views',     'key' => 'views'],
+                ['label' => '📖 Story',     'key' => 'story'],
+            ]
+            : [
+                ['label' => '👥 Followers', 'key' => 'followers'],
+                ['label' => '❤️ Likes',     'key' => 'likes'],
+                ['label' => '▶️ Views',     'key' => 'views'],
+                ['label' => '🔖 Saves',     'key' => 'saves'],
+                ['label' => '🔁 Shares',    'key' => 'shares'],
+            ];
 
-        if (!$data || !str_starts_with($data, 'platform:')) {
-            $bot->answerCallbackQuery();
-            return;
+        $keyboard = InlineKeyboardMarkup::make();
+        $row = [];
+        foreach ($categories as $i => $cat) {
+            $row[] = InlineKeyboardButton::make($cat['label'], callback_data: "sv_cat_{$cat['key']}");
+            if (count($row) === 2 || $i === count($categories) - 1) {
+                $keyboard->addRow(...$row);
+                $row = [];
+            }
         }
-
-        $platform = str_replace('platform:', '', $data);
-
-        if (!isset($this->categories[$platform])) {
-            $bot->answerCallbackQuery();
-            return;
-        }
-
-        $this->platform = $platform;
-        $bot->answerCallbackQuery();
-
-        $bot->editMessageText(
-            text: $this->getCategoryText(),
-            parse_mode: 'Markdown',
-            reply_markup: $this->buildCategoryKeyboard(),
-            chat_id: $bot->callbackQuery()->message->chat->id,
-            message_id: $bot->callbackQuery()->message->message_id,
+        $keyboard->addRow(
+            InlineKeyboardButton::make('🔙 Kembali ke Platform', callback_data: 'order_back_to_platform'),
         );
 
-        $this->next('selectCategory');
+        $platformLabel = ucfirst($this->platform);
+        $bot->sendMessage(
+            text: "📂 Pilih kategori layanan *{$platformLabel}*:",
+            parse_mode: 'Markdown',
+            reply_markup: $keyboard
+        );
     }
 
-    public function selectCategory(Nutgram $bot): void
+    // ─── Helper: tampilkan daftar layanan (reusable) ─────────────────────────
+    private function sendServiceListKeyboard(Nutgram $bot): bool
     {
-        $data = $bot->callbackQuery()?->data;
-
-        if (!$data) {
-            $bot->answerCallbackQuery();
-            return;
-        }
-
-        if ($data === 'back:platform') {
-            $bot->answerCallbackQuery();
-            $this->platform = null;
-            $bot->editMessageText(
-                text: "🛒 *Buat Pesanan Baru*\n\nPilih platform:",
-                parse_mode: 'Markdown',
-                reply_markup: InlineKeyboardMarkup::make()
-                    ->addRow(
-                        InlineKeyboardButton::make('📸 Instagram', callback_data: 'platform:instagram'),
-                        InlineKeyboardButton::make('🎵 TikTok',    callback_data: 'platform:tiktok'),
-                    ),
-                chat_id: $bot->callbackQuery()->message->chat->id,
-                message_id: $bot->callbackQuery()->message->message_id,
-            );
-            $this->next('selectPlatform');
-            return;
-        }
-
-        if (!str_starts_with($data, 'category:')) {
-            $bot->answerCallbackQuery();
-            return;
-        }
-
-        $category = str_replace('category:', '', $data);
-
-        if (!isset($this->categories[$this->platform][$category])) {
-            $bot->answerCallbackQuery();
-            $bot->sendMessage(text: "❌ Kategori tidak valid. Ketik /order untuk mulai ulang.");
-            $this->end();
-            return;
-        }
-
-        $this->category = $category;
-        $bot->answerCallbackQuery();
+        $whitelistRaw = NuestoreSetting::get('whitelisted_service_ids', '');
+        $whitelist    = array_map('intval', explode(',', $whitelistRaw));
 
         $lollipop = new LollipopSmmService();
         $services = $lollipop->getServices();
 
         if (!$services) {
-            $bot->sendMessage(text: "❌ Gagal memuat layanan. Coba lagi nanti.");
+            $bot->sendMessage('❌ Gagal mengambil daftar layanan. Coba lagi nanti.');
             $this->end();
-            return;
+            return false;
         }
 
-        $whitelist = array_filter(
-            array_map('trim', explode(',', NuestoreSetting::get('whitelisted_service_ids', '')))
-        );
+        $filtered = collect($services)->filter(function ($s) use ($whitelist) {
+            if (!in_array((int)$s['service'], $whitelist)) return false;
 
-        $catConfig = $this->categories[$this->platform][$this->category];
-        $markup    = (float) NuestoreSetting::get('global_markup_multiplier', 2.0);
+            $name     = strtolower($s['name']);
+            $platform = strtolower($this->platform);
+            $category = strtolower($this->category);
 
-        $filtered = collect($services)->filter(function ($s) use ($whitelist, $catConfig) {
-            if (!empty($whitelist) && !in_array((string)$s['service'], $whitelist)) {
-                return false;
+            $platformMatch = str_contains($name, $platform) ||
+                             str_contains(strtolower($s['category'] ?? ''), $platform);
+
+            $categoryKeywords = [
+                'followers' => ['follower'], 'likes' => ['like'], 'views' => ['view'],
+                'story'     => ['story'],    'saves' => ['save'], 'shares' => ['share'],
+            ];
+            $keywords      = $categoryKeywords[$category] ?? [$category];
+            $categoryMatch = false;
+            foreach ($keywords as $kw) {
+                if (str_contains($name, $kw)) { $categoryMatch = true; break; }
             }
-            $name = strtolower($s['name']);
-            foreach ($catConfig['keywords'] as $kw) {
-                if (!str_contains($name, strtolower($kw))) return false;
-            }
-            foreach ($catConfig['exclude'] ?? [] as $ex) {
-                if (str_contains($name, strtolower($ex))) return false;
-            }
-            return true;
-        });
+            return $platformMatch && $categoryMatch;
+        })->values();
 
         if ($filtered->isEmpty()) {
-            $bot->sendMessage(text: "⚠️ Tidak ada layanan tersedia untuk kategori ini. Ketik /order untuk mulai ulang.");
-            $this->end();
+            $bot->sendMessage(
+                text: "⚠️ Tidak ada layanan tersedia untuk kategori ini.\n\nCoba pilih kategori lain.",
+                reply_markup: InlineKeyboardMarkup::make()->addRow(
+                    InlineKeyboardButton::make('🔙 Kembali ke Kategori', callback_data: 'order_back_to_category'),
+                )
+            );
+            return false;
+        }
+
+        $markup   = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
+        $keyboard = InlineKeyboardMarkup::make();
+        $text     = "📋 *Pilih Layanan " . ucfirst($this->platform) . " — " . ucfirst($this->category) . ":*\n\n";
+
+        foreach ($filtered as $s) {
+            $hargaJual   = (float)$s['rate'] * $markup;
+            $hargaFormat = number_format($hargaJual, 0, ',', '.');
+            $text       .= "▪️ `#{$s['service']}` — {$s['name']}\n";
+            $text       .= "   💰 Rp {$hargaFormat}/1000 | Min: {$s['min']} | Max: {$s['max']}\n\n";
+            $keyboard->addRow(
+                InlineKeyboardButton::make("#{$s['service']} — {$s['name']}", callback_data: "sv_pick_{$s['service']}")
+            );
+        }
+
+        $keyboard->addRow(
+            InlineKeyboardButton::make('🔙 Kembali ke Kategori', callback_data: 'order_back_to_category'),
+        );
+
+        $bot->sendMessage(text: $text, parse_mode: 'Markdown', reply_markup: $keyboard);
+        return true;
+    }
+
+    // =========================================================================
+    // STEP 1: Pilih Platform
+    // =========================================================================
+    public function start(Nutgram $bot): void
+    {
+        $this->sendPlatformKeyboard($bot);
+        $this->next('selectCategory');
+    }
+
+    // =========================================================================
+    // STEP 2: Pilih Kategori
+    //   Menerima: sv_platform_xxx | order_cancel_all
+    // =========================================================================
+    public function selectCategory(Nutgram $bot): void
+    {
+        $cb = $bot->callbackQuery()?->data ?? '';
+
+        if ($cb === 'order_cancel_all') {
+            $bot->answerCallbackQuery();
+            $this->sendCancelled($bot);
             return;
         }
 
-        $keyboard = InlineKeyboardMarkup::make();
-        foreach ($filtered as $s) {
-            $harga = number_format((float)$s['rate'] * $markup, 0, ',', '.');
-            $label = "#{$s['service']} • Rp {$harga}/1000 • Min:{$s['min']}";
-            $keyboard->addRow(
-                InlineKeyboardButton::make($label, callback_data: "service:{$s['service']}")
-            );
+        if (!str_starts_with($cb, 'sv_platform_')) {
+            $bot->sendMessage('⚠️ Pilih platform menggunakan tombol di atas.');
+            return;
         }
-        $keyboard->addRow(InlineKeyboardButton::make('« Kembali', callback_data: 'back:category'));
 
-        $catLabel = $this->categories[$this->platform][$this->category]['label'];
+        $this->platform = str_replace('sv_platform_', '', $cb);
+        $bot->answerCallbackQuery();
 
-        $bot->editMessageText(
-            text: "🛒 *Buat Pesanan Baru*\n\nKategori: *{$catLabel}*\nPilih layanan:",
-            parse_mode: 'Markdown',
-            reply_markup: $keyboard,
-            chat_id: $bot->callbackQuery()->message->chat->id,
-            message_id: $bot->callbackQuery()->message->message_id,
-        );
-
+        $this->sendCategoryKeyboard($bot);
         $this->next('selectService');
     }
 
+    // =========================================================================
+    // STEP 3: Pilih Layanan
+    //   Menerima: sv_cat_xxx | order_back_to_platform | order_cancel_all
+    // =========================================================================
     public function selectService(Nutgram $bot): void
     {
-        $data = $bot->callbackQuery()?->data;
+        $cb = $bot->callbackQuery()?->data ?? '';
 
-        if (!$data) {
+        // ── Kembali ke platform ──────────────────────────────────────────────
+        if ($cb === 'order_back_to_platform') {
             $bot->answerCallbackQuery();
-            return;
-        }
-
-        if ($data === 'back:category') {
-            $bot->answerCallbackQuery();
+            $this->platform = null;
             $this->category = null;
-            $bot->editMessageText(
-                text: $this->getCategoryText(),
-                parse_mode: 'Markdown',
-                reply_markup: $this->buildCategoryKeyboard(),
-                chat_id: $bot->callbackQuery()->message->chat->id,
-                message_id: $bot->callbackQuery()->message->message_id,
-            );
+            $this->sendPlatformKeyboard($bot);
             $this->next('selectCategory');
             return;
         }
 
-        if (!str_starts_with($data, 'service:')) {
+        if ($cb === 'order_cancel_all') {
             $bot->answerCallbackQuery();
+            $this->sendCancelled($bot);
             return;
         }
 
-        $this->serviceId = (int) str_replace('service:', '', $data);
+        if (!str_starts_with($cb, 'sv_cat_')) {
+            $bot->sendMessage('⚠️ Pilih kategori menggunakan tombol di atas.');
+            return;
+        }
+
+        $this->category = str_replace('sv_cat_', '', $cb);
         $bot->answerCallbackQuery();
 
-        $lollipop = new LollipopSmmService();
-        $services = $lollipop->getServices();
-        $found    = collect($services)->firstWhere('service', $this->serviceId);
+        $ok = $this->sendServiceListKeyboard($bot);
+        if ($ok) {
+            $this->next('showServiceDetail');
+        } else {
+            // Layanan kosong — tetap di selectService, tunggu kembali
+            $this->next('selectService');
+        }
+    }
 
-        if (!$found) {
-            $bot->sendMessage(text: "❌ Layanan tidak ditemukan. Ketik /order untuk mulai ulang.");
+    // =========================================================================
+    // STEP 3b: Detail Layanan
+    //   Menerima: sv_pick_xxx | sv_detail_confirm | sv_detail_back
+    //             | order_back_to_category | order_back_to_platform | order_cancel_all
+    // =========================================================================
+    public function showServiceDetail(Nutgram $bot): void
+    {
+        $cb = $bot->callbackQuery()?->data ?? '';
+
+        // ── Kembali ke kategori ──────────────────────────────────────────────
+        if ($cb === 'order_back_to_category') {
+            $bot->answerCallbackQuery();
+            $this->resetServiceState();
+            $this->sendCategoryKeyboard($bot);
+            $this->next('selectService');
+            return;
+        }
+
+        // ── Kembali ke platform ──────────────────────────────────────────────
+        if ($cb === 'order_back_to_platform') {
+            $bot->answerCallbackQuery();
+            $this->resetServiceState();
+            $this->platform = null;
+            $this->category = null;
+            $this->sendPlatformKeyboard($bot);
+            $this->next('selectCategory');
+            return;
+        }
+
+        if ($cb === 'order_cancel_all') {
+            $bot->answerCallbackQuery();
+            $this->sendCancelled($bot);
+            return;
+        }
+
+        // ── Kembali ke daftar layanan (dari detail) ──────────────────────────
+        if ($cb === 'sv_detail_back') {
+            $bot->answerCallbackQuery();
+            $this->resetServiceState();
+            $ok = $this->sendServiceListKeyboard($bot);
+            if ($ok) {
+                $this->next('showServiceDetail');
+            } else {
+                $this->next('selectService');
+            }
+            return;
+        }
+
+        // ── Konfirmasi pilih layanan → minta link ────────────────────────────
+        if ($cb === 'sv_detail_confirm') {
+            $bot->answerCallbackQuery();
+
+            $platformHint = $this->platform === 'instagram'
+                ? "Contoh: `https://instagram.com/username`"
+                : "Contoh: `https://tiktok.com/@username`";
+
+            if (in_array($this->category, ['likes', 'views', 'saves', 'shares', 'story'])) {
+                $platformHint = $this->platform === 'instagram'
+                    ? "Contoh: `https://instagram.com/p/XXXX/`"
+                    : "Contoh: `https://tiktok.com/@user/video/XXXX`";
+            }
+
+            $markup      = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
+            $hargaJual   = $this->serviceRate * $markup;
+            $hargaFormat = number_format($hargaJual, 0, ',', '.');
+
+            $bot->sendMessage(
+                text: "✅ *{$this->serviceName}* dipilih.\n"
+                    . "💰 Rp {$hargaFormat}/1000 | Min: {$this->serviceMin} | Max: {$this->serviceMax}\n\n"
+                    . "🔗 *Masukkan link target pelanggan:*\n_{$platformHint}_\n\n"
+                    . "_(Ketik `batal` untuk membatalkan order)_",
+                parse_mode: 'Markdown'
+            );
+
+            $this->next('inputLink');
+            return;
+        }
+
+        // ── Pilih layanan dari daftar ─────────────────────────────────────────
+        if (!str_starts_with($cb, 'sv_pick_')) {
+            $bot->sendMessage('⚠️ Pilih layanan menggunakan tombol di atas.');
+            return;
+        }
+
+        $this->serviceId = (int) str_replace('sv_pick_', '', $cb);
+        $bot->answerCallbackQuery();
+
+        $lollipop      = new LollipopSmmService();
+        $services      = $lollipop->getServices();
+        $serviceDetail = collect($services)->firstWhere('service', $this->serviceId);
+
+        if (!$serviceDetail) {
+            $bot->sendMessage('❌ Layanan tidak ditemukan. Ulangi dari awal.');
             $this->end();
             return;
         }
 
-        $this->selectedService = $found;
-        $markup = (float) NuestoreSetting::get('global_markup_multiplier', 2.0);
-        $harga  = number_format((float)$found['rate'] * $markup, 0, ',', '.');
+        $this->serviceName    = $serviceDetail['name'];
+        $this->serviceDesc    = $serviceDetail['description'] ?? null;
+        $this->serviceAvgTime = isset($serviceDetail['average_time'])
+            ? $serviceDetail['average_time'] . ' menit'
+            : null;
+        $this->serviceRate = (float) $serviceDetail['rate'];
+        $this->serviceMin  = (int) $serviceDetail['min'];
+        $this->serviceMax  = (int) $serviceDetail['max'];
 
-        $text = "✅ *Layanan dipilih:*\n\n" .
-                "📦 {$found['name']}\n" .
-                "💰 Rp {$harga} / 1000\n" .
-                "📊 Min: {$found['min']} | Max: {$found['max']}\n\n";
+        $markup      = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
+        $hargaJual   = $this->serviceRate * $markup;
+        $profitEst   = $hargaJual - $this->serviceRate;
 
-        if ($this->platform === 'instagram' && str_contains($this->category, 'followers')) {
-            $text .= "⚠️ *Penting sebelum order:*\n" .
-                     "• Pastikan akun *tidak di-private*\n" .
-                     "• Matikan *Flag for Review* di Settings Instagram\n" .
-                     "  _(Settings → Following and Followers → Flag for Review → OFF)_\n\n";
+        $hargaFormat  = number_format($hargaJual, 0, ',', '.');
+        $modalFormat  = number_format($this->serviceRate, 0, ',', '.');
+        $profitFormat = number_format($profitEst, 0, ',', '.');
+
+        $detailText  = "📦 *{$this->serviceName}*\n";
+        $detailText .= "━━━━━━━━━━━━━━━━━━━━━━━\n";
+        if ($this->serviceDesc) {
+            $detailText .= "📝 _{$this->serviceDesc}_\n\n";
         }
+        if ($this->serviceAvgTime) {
+            $detailText .= "⏱️ Rata-rata waktu: *{$this->serviceAvgTime}*\n";
+        }
+        $detailText .= "📊 Min: *{$this->serviceMin}* | Max: *" . number_format($this->serviceMax, 0, ',', '.') . "*\n\n";
+        $detailText .= "💰 Harga jual ke pelanggan: *Rp {$hargaFormat}/1000*\n";
+        $detailText .= "📦 Modal kamu: Rp {$modalFormat}/1000\n";
+        $detailText .= "📈 Est. profit/1000: *Rp {$profitFormat}*\n";
 
-        $text .= "Masukkan *link target* akun/konten:\n_(Contoh: https://instagram.com/username)_";
+        $keyboard = InlineKeyboardMarkup::make()
+            ->addRow(
+                InlineKeyboardButton::make('✅ Pilih Layanan Ini', callback_data: 'sv_detail_confirm'),
+            )
+            ->addRow(
+                InlineKeyboardButton::make('🔙 Kembali ke Daftar',   callback_data: 'sv_detail_back'),
+                InlineKeyboardButton::make('🏠 Kembali ke Kategori', callback_data: 'order_back_to_category'),
+            );
 
-        $bot->editMessageText(
-            text: $text,
-            parse_mode: 'Markdown',
-            reply_markup: null,
-            chat_id: $bot->callbackQuery()->message->chat->id,
-            message_id: $bot->callbackQuery()->message->message_id,
-        );
-
-        $this->next('askLink');
+        $bot->sendMessage(text: $detailText, parse_mode: 'Markdown', reply_markup: $keyboard);
+        $this->next('showServiceDetail');
     }
 
-    public function askLink(Nutgram $bot): void
+    // =========================================================================
+    // STEP 4: Input Link Target
+    //   Menerima: teks URL | "batal"
+    // =========================================================================
+    public function inputLink(Nutgram $bot): void
     {
-        $link = $bot->message()?->text;
-        if (!$link) return;
+        $text = trim($bot->message()?->text ?? '');
 
-        if (!filter_var($link, FILTER_VALIDATE_URL)) {
+        if ($this->isCancelText($text)) {
+            $this->sendCancelled($bot);
+            return;
+        }
+
+        if (empty($text) || !filter_var($text, FILTER_VALIDATE_URL)) {
             $bot->sendMessage(
-                text: "❌ Link tidak valid. Masukkan URL yang benar:\n_(Contoh: https://instagram.com/username)_",
+                text: "⚠️ Link tidak valid. Masukkan URL lengkap yang benar (dimulai https://).\n\n"
+                    . "_(Ketik `batal` untuk membatalkan)_",
                 parse_mode: 'Markdown'
             );
             return;
         }
 
-        $this->targetLink = $link;
+        $this->targetLink = $text;
+
+        $markup      = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
+        $hargaJual   = $this->serviceRate * $markup;
+        $hargaFormat = number_format($hargaJual, 0, ',', '.');
 
         $bot->sendMessage(
-            text: "📊 Masukkan *jumlah* yang ingin dipesan:\n_(Min: {$this->selectedService['min']} | Max: {$this->selectedService['max']})_",
+            text: "✅ Link: `{$this->targetLink}`\n\n"
+                . "🔢 *Masukkan jumlah (quantity):*\n"
+                . "Min: *{$this->serviceMin}* | Max: *" . number_format($this->serviceMax, 0, ',', '.') . "*\n"
+                . "💰 Harga: Rp {$hargaFormat}/1000\n\n"
+                . "_(Ketik `batal` untuk membatalkan)_",
             parse_mode: 'Markdown'
         );
 
-        $this->next('askQuantity');
+        $this->next('inputQuantity');
     }
 
-    public function askQuantity(Nutgram $bot): void
+    // =========================================================================
+    // STEP 5: Input Quantity
+    //   Menerima: angka | "batal"
+    // =========================================================================
+    public function inputQuantity(Nutgram $bot): void
     {
-        $qty = $bot->message()?->text;
-        if (!$qty) return;
+        $text = trim($bot->message()?->text ?? '');
 
-        if (!is_numeric($qty)) {
-            $bot->sendMessage(text: "❌ Jumlah harus berupa angka. Coba lagi:");
+        if ($this->isCancelText($text)) {
+            $this->sendCancelled($bot);
             return;
         }
 
-        $qty = (int) $qty;
+        $qty = (int) $text;
 
-        if ($qty < (int)$this->selectedService['min'] || $qty > (int)$this->selectedService['max']) {
+        if ($qty < $this->serviceMin || $qty > $this->serviceMax) {
             $bot->sendMessage(
-                text: "❌ Jumlah harus antara {$this->selectedService['min']} - {$this->selectedService['max']}. Coba lagi:"
+                text: "⚠️ Jumlah harus antara *{$this->serviceMin}* dan *" . number_format($this->serviceMax, 0, ',', '.') . "*.\n\n"
+                    . "_(Ketik `batal` untuk membatalkan)_",
+                parse_mode: 'Markdown'
             );
             return;
         }
 
         $this->quantity = $qty;
 
-        $markup       = (float) NuestoreSetting::get('global_markup_multiplier', 2.0);
-        $hargaPer1000 = (float)$this->selectedService['rate'] * $markup;
-        $totalHarga   = (int) ceil(($hargaPer1000 / 1000) * $qty);
-        $totalRupiah  = number_format($totalHarga, 0, ',', '.');
+        $markup           = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
+        $this->totalPrice = (float) ceil(($this->serviceRate * $markup / 1000) * $qty);
+        $this->modalCost  = (float) ($this->serviceRate / 1000 * $qty);
+
+        $totalFormat = number_format($this->totalPrice, 0, ',', '.');
+        $modalFormat = number_format($this->modalCost, 0, ',', '.');
 
         $bot->sendMessage(
-            text: "📋 *Konfirmasi Pesanan:*\n\n" .
-                  "📦 {$this->selectedService['name']}\n" .
-                  "🔗 Target: {$this->targetLink}\n" .
-                  "📊 Jumlah: " . number_format($qty, 0, ',', '.') . "\n" .
-                  "💰 Total: Rp {$totalRupiah}\n\n" .
-                  "Lanjutkan pembayaran?",
-            parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(
-                    InlineKeyboardButton::make('✅ YA, Bayar Sekarang', callback_data: 'confirm:yes'),
-                    InlineKeyboardButton::make('❌ Batal',              callback_data: 'confirm:no'),
-                )
+            text: "✅ Qty: *{$qty}*\n"
+                . "💰 Estimasi tagih ke pelanggan: *Rp {$totalFormat}*\n"
+                . "📦 Modal: Rp {$modalFormat}\n\n"
+                . "📝 *Nama atau catatan pelanggan:*\n"
+                . "_(Ketik `-` jika tidak ada catatan | Ketik `batal` untuk membatalkan)_",
+            parse_mode: 'Markdown'
         );
 
-        $this->next('processPayment');
+        $this->next('inputCustomerNote');
     }
 
-    public function processPayment(Nutgram $bot): void
+    // =========================================================================
+    // STEP 6: Input Catatan Pelanggan
+    //   Menerima: teks catatan | "-" | "batal"
+    // =========================================================================
+    public function inputCustomerNote(Nutgram $bot): void
     {
-        $data = $bot->callbackQuery()?->data;
+        $text = trim($bot->message()?->text ?? '');
 
-        if (!$data) {
-            $bot->answerCallbackQuery();
+        if ($this->isCancelText($text)) {
+            $this->sendCancelled($bot);
             return;
         }
 
-        if ($data === 'confirm:no') {
-            $bot->answerCallbackQuery();
-            $bot->editMessageText(
-                text: "❌ Pesanan dibatalkan. Ketik /order untuk mulai ulang.",
-                chat_id: $bot->callbackQuery()->message->chat->id,
-                message_id: $bot->callbackQuery()->message->message_id,
+        $this->customerNote = ($text === '-') ? null : $text;
+
+        $totalFormat  = number_format($this->totalPrice, 0, ',', '.');
+        $modalFormat  = number_format($this->modalCost, 0, ',', '.');
+        $profitEst    = $this->totalPrice - $this->modalCost;
+        $profitFormat = number_format($profitEst, 0, ',', '.');
+
+        $noteText = $this->customerNote ? "\n📝 Pelanggan: {$this->customerNote}" : '';
+
+        $keyboard = InlineKeyboardMarkup::make()
+            ->addRow(
+                InlineKeyboardButton::make('✅ Submit ke Lollipop', callback_data: 'order_confirm'),
+                InlineKeyboardButton::make('❌ Batal',              callback_data: 'order_cancel'),
             );
-            $this->end();
+
+        $bot->sendMessage(
+            text: "📋 *RINGKASAN ORDER*\n"
+                . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+                . "🏷️ Layanan: {$this->serviceName}\n"
+                . "🔗 Target: `{$this->targetLink}`\n"
+                . "🔢 Qty: " . number_format($this->quantity, 0, ',', '.') . "\n"
+                . $noteText . "\n\n"
+                . "💰 Tagih ke pelanggan: *Rp {$totalFormat}*\n"
+                . "📦 Modal Lollipop: Rp {$modalFormat}\n"
+                . "📈 Est. Profit: *Rp {$profitFormat}*\n"
+                . "━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                . "Lanjut submit order ke Lollipop?",
+            parse_mode: 'Markdown',
+            reply_markup: $keyboard
+        );
+
+        $this->next('submitOrder');
+    }
+
+    // =========================================================================
+    // STEP 7: Submit ke Lollipop
+    //   Menerima: order_confirm | order_cancel
+    // =========================================================================
+    public function submitOrder(Nutgram $bot): void
+    {
+        $cb = $bot->callbackQuery()?->data ?? '';
+
+        if ($cb === 'order_cancel') {
+            $bot->answerCallbackQuery();
+            $this->sendCancelled($bot);
             return;
         }
 
-        if ($data !== 'confirm:yes') {
-            $bot->answerCallbackQuery();
+        if ($cb !== 'order_confirm') {
+            $bot->sendMessage('⚠️ Gunakan tombol ✅ Submit atau ❌ Batal.');
             return;
         }
 
         $bot->answerCallbackQuery();
-        $bot->editMessageText(
-            text: "⏳ Membuat invoice pembayaran...",
-            chat_id: $bot->callbackQuery()->message->chat->id,
-            message_id: $bot->callbackQuery()->message->message_id,
+        $bot->sendMessage('⏳ Mengirim order ke Lollipop...');
+
+        $lollipop = new LollipopSmmService();
+        $result   = $lollipop->createOrder(
+            serviceId: $this->serviceId,
+            link:      $this->targetLink,
+            quantity:  $this->quantity
         );
 
-        $markup       = (float) NuestoreSetting::get('global_markup_multiplier', 2.0);
-        $hargaPer1000 = (float)$this->selectedService['rate'] * $markup;
-        $totalHarga   = (int) ceil(($hargaPer1000 / 1000) * $this->quantity);
-        $modalCost    = (float)$this->selectedService['rate'] / 1000 * $this->quantity;
-        $pgFee        = $totalHarga * 0.007;
-        $profitEst    = $totalHarga - $modalCost - $pgFee;
+        if ($result && isset($result['order'])) {
+            $transaction = NuestoreTransaction::create([
+                'provider_order_id' => (string) $result['order'],
+                'target_link'       => $this->targetLink,
+                'service_id'        => $this->serviceId,
+                'quantity'          => $this->quantity,
+                'amount_paid'       => $this->totalPrice,
+                'modal_cost'        => $this->modalCost,
+                'profit_estimated'  => $this->totalPrice - $this->modalCost,
+                'customer_note'     => $this->customerNote,
+                'status'            => 'PROCESSING',
+            ]);
 
-        $telegramId = $bot->userId();
-        $user = NuestoreUser::firstOrCreate(
-            ['telegram_id' => $telegramId],
-            ['username'    => $bot->user()->username ?? null]
-        );
+            $bot->sendMessage(
+                text: "✅ *Order Berhasil Disubmit!*\n\n"
+                    . "🆔 Order ID: `{$transaction->id}`\n"
+                    . "📦 Provider ID: `{$result['order']}`\n"
+                    . "🏷️ {$this->serviceName}\n"
+                    . "🔗 `{$this->targetLink}`\n"
+                    . "🔢 Qty: " . number_format($this->quantity, 0, ',', '.') . "\n\n"
+                    . "Gunakan `/status {$transaction->id}` untuk cek progress.",
+                parse_mode: 'Markdown'
+            );
 
-        $transaction = NuestoreTransaction::create([
-            'user_id'          => $user->id,
-            'target_link'      => $this->targetLink,
-            'service_id'       => $this->serviceId,
-            'amount_paid'      => $totalHarga,
-            'modal_cost'       => $modalCost,
-            'pg_fee_estimated' => $pgFee,
-            'profit_estimated' => $profitEst,
-            'status'           => 'UNPAID',
-        ]);
+            $notify = new NotificationService();
+            $notify->notifyNewOrder($transaction->id, $this->serviceName, $this->targetLink, (int) $this->totalPrice);
 
-        $duitku   = new DuitkuService();
-        $response = $duitku->createTransaction(
-            orderId:        $transaction->id,
-            amount:         $totalHarga,
-            productDetails: "Order - {$this->selectedService['name']}",
-            email:          'customer@nuestore.id',
-            phoneNumber:    '08000000000',
-            customerName:   $bot->user()->first_name ?? 'Customer',
-            returnUrl:      config('app.url'),
-            callbackUrl:    config('app.url') . '/api/webhook/duitku'
-        );
-
-        if (!$response || !isset($response['paymentUrl'])) {
-            $bot->sendMessage(text: "❌ Gagal membuat invoice. Coba lagi nanti.");
-            $transaction->delete();
-            $this->end();
-            return;
+        } else {
+            $errorDetail = json_encode($result);
+            $bot->sendMessage(
+                text: "❌ *Gagal submit ke Lollipop!*\n\nResponse: `{$errorDetail}`\n\nCek saldo atau coba lagi dengan /order.",
+                parse_mode: 'Markdown'
+            );
         }
-
-        $transaction->update(['duitku_ref' => $response['merchantOrderId'] ?? $transaction->id]);
-
-        $totalFormatted = number_format($totalHarga, 0, ',', '.');
-
-        $bot->sendMessage(
-            text: "✅ *Invoice Berhasil Dibuat!*\n\n" .
-                  "📋 Order ID: `{$transaction->id}`\n" .
-                  "💰 Total: Rp {$totalFormatted}\n\n" .
-                  "🔗 *Link Pembayaran:*\n{$response['paymentUrl']}\n\n" .
-                  "⏰ Invoice berlaku *60 menit*.\n" .
-                  "Setelah bayar, pesanan diproses otomatis!\n\n" .
-                  "Gunakan `/status {$transaction->id}` untuk cek status.",
-            parse_mode: 'Markdown'
-        );
 
         $this->end();
     }
 
-    // ── Helper methods ──────────────────────────────────────────
-
-    private function getCategoryText(): string
+    // ─── Private: reset state layanan ─────────────────────────────────────────
+    private function resetServiceState(): void
     {
-        $platformLabel = $this->platform === 'instagram' ? '📸 Instagram' : '🎵 TikTok';
-        return "🛒 *Buat Pesanan Baru*\n\nPlatform: *{$platformLabel}*\nPilih kategori:";
-    }
-
-    private function buildCategoryKeyboard(): InlineKeyboardMarkup
-    {
-        $keyboard = InlineKeyboardMarkup::make();
-        $row      = [];
-
-        foreach ($this->categories[$this->platform] as $key => $cat) {
-            $row[] = InlineKeyboardButton::make($cat['label'], callback_data: "category:{$key}");
-            if (count($row) === 2) {
-                $keyboard->addRow(...$row);
-                $row = [];
-            }
-        }
-
-        if (!empty($row)) {
-            $keyboard->addRow(...$row);
-        }
-
-        $keyboard->addRow(InlineKeyboardButton::make('« Kembali', callback_data: 'back:platform'));
-
-        return $keyboard;
+        $this->serviceId      = null;
+        $this->serviceName    = null;
+        $this->serviceDesc    = null;
+        $this->serviceAvgTime = null;
+        $this->serviceRate    = null;
+        $this->serviceMin     = null;
+        $this->serviceMax     = null;
     }
 }

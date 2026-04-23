@@ -12,74 +12,75 @@ class StatusHandler
     {
         $text    = $bot->message()->text;
         $parts   = explode(' ', $text, 2);
-        $orderId = $parts[1] ?? null;
+        $orderId = trim($parts[1] ?? '');
 
         if (!$orderId) {
             $bot->sendMessage(
-                text: "❌ Format salah. Gunakan:\n`/status [Order ID]`\n\nContoh:\n`/status uuid-order-id`",
+                text: "❌ Format salah. Gunakan:\n`/status [Order ID]`\n\nContoh:\n`/status uuid-order-id`\n\nAtau ketik 📋 *Cek Status* di menu, lalu kirimkan Order ID.",
                 parse_mode: 'Markdown'
             );
             return;
         }
 
-        $transaction = NuestoreTransaction::where('id', $orderId)
-            ->where('user_id', function ($query) use ($bot) {
-                $query->select('id')
-                    ->from('nuestore_users')
-                    ->where('telegram_id', $bot->userId());
-            })
-            ->first();
+        // Private admin bot: tidak perlu filter by user_id
+        $transaction = NuestoreTransaction::where('id', $orderId)->first();
 
         if (!$transaction) {
-            $bot->sendMessage(text: "❌ Order tidak ditemukan atau bukan milik Anda.");
+            $bot->sendMessage(text: "❌ Order tidak ditemukan. Periksa kembali Order ID-nya.");
             return;
         }
 
         $statusEmoji = match($transaction->status) {
-            'UNPAID'           => '⏳',
-            'PAID_QUEUED'      => '🕐',
-            'PROCESSING'       => '⚙️',
-            'COMPLETED'        => '✅',
-            'FAILED_PG'        => '❌',
-            'FAILED_PROVIDER'  => '❌',
-            'REFUND_REQUESTED' => '🔄',
-            'DISPUTED'         => '⚠️',
-            'CANCELED'         => '🚫',
-            default            => '❓',
+            'PROCESSING'      => '⚙️',
+            'COMPLETED'       => '✅',
+            'FAILED_PROVIDER' => '❌',
+            'CANCELED'        => '🚫',
+            default           => '❓',
         };
 
         $statusText = match($transaction->status) {
-            'UNPAID'           => 'Belum Dibayar',
-            'PAID_QUEUED'      => 'Dibayar - Dalam Antrean',
-            'PROCESSING'       => 'Sedang Diproses',
-            'COMPLETED'        => 'Selesai',
-            'FAILED_PG'        => 'Gagal (Payment)',
-            'FAILED_PROVIDER'  => 'Gagal (Provider)',
-            'REFUND_REQUESTED' => 'Refund Diminta',
-            'DISPUTED'         => 'Dalam Sengketa',
-            'CANCELED'         => 'Dibatalkan',
-            default            => 'Unknown',
+            'PROCESSING'      => 'Sedang Diproses',
+            'COMPLETED'       => 'Selesai',
+            'FAILED_PROVIDER' => 'Gagal (Provider)',
+            'CANCELED'        => 'Dibatalkan',
+            default           => $transaction->status,
         };
 
-        $totalFormatted = number_format($transaction->amount_paid, 0, ',', '.');
+        $totalFormatted  = number_format($transaction->amount_paid, 0, ',', '.');
+        $modalFormatted  = number_format($transaction->modal_cost, 0, ',', '.');
+        $profitEstFormat = number_format($transaction->profit_estimated ?? 0, 0, ',', '.');
 
-        $text = "📋 *Detail Pesanan*\n\n" .
-                "🆔 Order ID: `{$transaction->id}`\n" .
-                "📦 Service ID: {$transaction->service_id}\n" .
-                "🔗 Target: {$transaction->target_link}\n" .
-                "💰 Total: Rp {$totalFormatted}\n" .
-                "{$statusEmoji} Status: {$statusText}\n" .
-                "📅 Tanggal: {$transaction->created_at->format('d/m/Y H:i')}";
+        $noteText = $transaction->customer_note
+            ? "\n📝 Catatan: {$transaction->customer_note}"
+            : '';
 
+        $text = "📋 *Detail Pesanan*\n"
+              . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+              . "🆔 Order ID: `{$transaction->id}`\n"
+              . "📦 Service ID: {$transaction->service_id}\n"
+              . "🔗 Target: {$transaction->target_link}\n"
+              . "🔢 Qty: " . number_format($transaction->quantity ?? 0, 0, ',', '.') . "\n"
+              . $noteText . "\n\n"
+              . "💰 Tagih ke pelanggan: Rp {$totalFormatted}\n"
+              . "📦 Modal: Rp {$modalFormatted}\n"
+              . "📈 Est. Profit: Rp {$profitEstFormat}\n\n"
+              . "{$statusEmoji} Status: *{$statusText}*\n"
+              . "📅 Dibuat: {$transaction->created_at->format('d/m/Y H:i')}";
+
+        // Kalau masih PROCESSING, query live ke Lollipop
         if ($transaction->provider_order_id && $transaction->status === 'PROCESSING') {
             $lollipop       = new LollipopSmmService();
             $providerStatus = $lollipop->getStatus($transaction->provider_order_id);
 
             if ($providerStatus) {
-                $text .= "\n\n⚙️ *Status Provider:*\n";
-                $text .= "Status: {$providerStatus['status']}\n";
+                $text .= "\n\n⚙️ *Status Provider (Live):*\n";
+                $text .= "Status: *{$providerStatus['status']}*\n";
+
+                if (isset($providerStatus['start_count'])) {
+                    $text .= "🔢 Start count: {$providerStatus['start_count']}\n";
+                }
                 if (isset($providerStatus['remains'])) {
-                    $text .= "Sisa: {$providerStatus['remains']}";
+                    $text .= "📊 Sisa: {$providerStatus['remains']}";
                 }
             }
         }

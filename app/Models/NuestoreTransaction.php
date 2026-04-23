@@ -7,21 +7,20 @@ use Illuminate\Support\Str;
 
 class NuestoreTransaction extends Model
 {
-    protected $table = 'nuestore_transactions';
-
-    protected $keyType = 'string';
+    protected $table     = 'nuestore_transactions';
+    protected $keyType   = 'string';
     public $incrementing = false;
 
     protected $fillable = [
         'id',
-        'user_id',
+        'user_id',           // nullable sekarang
         'provider_order_id',
         'target_link',
         'service_id',
-        'duitku_ref',
+        'quantity',          // jumlah order
+        'customer_note',     // catatan pelanggan
         'amount_paid',
         'modal_cost',
-        'pg_fee_estimated',
         'profit_estimated',
         'profit_actual',
         'retry_count',
@@ -30,7 +29,7 @@ class NuestoreTransaction extends Model
         'status',
     ];
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
         static::creating(function ($model) {

@@ -1,8 +1,9 @@
 <?php
 
 use App\Telegram\Conversations\OrderConversation;
-use App\Telegram\Handlers\AdminHandler;
+use App\Telegram\Handlers\BalanceHandler;
 use App\Telegram\Handlers\HelpHandler;
+use App\Telegram\Handlers\ReportHandler;
 use App\Telegram\Handlers\ServicesHandler;
 use App\Telegram\Handlers\StartHandler;
 use App\Telegram\Handlers\StatusHandler;
@@ -10,35 +11,65 @@ use SergiX44\Nutgram\Nutgram;
 
 /** @var Nutgram $bot */
 
+// =============================================
+// GUARD: Hanya owner yang bisa pakai bot ini
+// =============================================
+$bot->middleware(function (Nutgram $bot, $next) {
+    $allowedId = (string) config('nutgram.admin_telegram_id');
+
+    if ((string) $bot->userId() !== $allowedId) {
+        $bot->sendMessage('⛔ Bot ini bersifat private.');
+        return;
+    }
+
+    $next($bot);
+});
+
+// =============================================
 // Commands
+// =============================================
 $bot->onCommand('start',    StartHandler::class);
 $bot->onCommand('order',    OrderConversation::class);
 $bot->onCommand('status',   StatusHandler::class);
 $bot->onCommand('services', ServicesHandler::class);
+$bot->onCommand('balance',  BalanceHandler::class);
+$bot->onCommand('report',   ReportHandler::class);
 $bot->onCommand('help',     HelpHandler::class);
 
-// Admin Commands
-$bot->onCommand('retry_queue', [AdminHandler::class, 'retryQueue']);
-$bot->onCommand('balance',     [AdminHandler::class, 'checkBalance']);
-$bot->onCommand('queued',      [AdminHandler::class, 'listQueued']);
-
+// =============================================
 // Persistent keyboard buttons
+// =============================================
 $bot->onText('🛒 Order',      OrderConversation::class);
+$bot->onText('💰 Saldo',      BalanceHandler::class);
+$bot->onText('📊 Laporan',    ReportHandler::class);
+
 $bot->onText('📋 Cek Status', function (Nutgram $bot) {
     $bot->sendMessage(
-        text: "📋 Masukkan Order ID pesananmu:\n_(Contoh: /status uuid-order-id)_",
+        text: "📋 Masukkan Order ID pesanan:\n_(Contoh: `/status uuid-order-id`)_",
         parse_mode: 'Markdown'
     );
 });
 
-// Handle callback query
+// =============================================
+// Handle semua callback query
+// =============================================
 $bot->onCallbackQuery(function (Nutgram $bot) {
     $data = $bot->callbackQuery()?->data ?? '';
 
-    if (str_starts_with($data, 'sv_')) {
+    // ServicesHandler callbacks (sv_platform: sv_cat: sv_back:)
+    if (str_starts_with($data, 'sv_platform:') ||
+        str_starts_with($data, 'sv_cat:') ||
+        str_starts_with($data, 'sv_back:')) {
         ServicesHandler::handleCallback($bot);
         return;
     }
 
+    // ReportHandler callbacks
+    if (str_starts_with($data, 'report_period:')) {
+        ReportHandler::handleCallback($bot);
+        return;
+    }
+
+    // OrderConversation callbacks (sv_platform_ sv_cat_ sv_pick_ sv_detail_ order_)
     $bot->currentConversation()?->continue($bot);
 });

@@ -45,6 +45,7 @@ Schedule::call(function () {
 
     $lollipop = new LollipopSmmService();
     $bot      = app(Nutgram::class);
+    $adminId  = config('nutgram.admin_telegram_id');
 
     foreach ($processing as $transaction) {
         sleep(1); // Hindari rate limit
@@ -62,42 +63,45 @@ Schedule::call(function () {
         ]);
 
         if (strtolower($result['status']) === 'completed') {
+            $profitActual = $transaction->amount_paid - $transaction->modal_cost;
+
             $transaction->update([
                 'status'        => 'COMPLETED',
-                'profit_actual' => $transaction->amount_paid - $transaction->modal_cost - $transaction->pg_fee_estimated,
+                'profit_actual' => $profitActual,
             ]);
 
-            // Notif ke user
-            $bot->sendMessage(
-                text: "🎉 *Pesanan Selesai!*\n\n" .
-                      "🆔 Order ID: `{$transaction->id}`\n" .
-                      "📦 Service: {$transaction->service_id}\n" .
-                      "🔗 Target: {$transaction->target_link}\n\n" .
-                      "Terima kasih telah menggunakan Nuestore SMM! 🙏",
-                parse_mode: 'Markdown',
-                chat_id: $transaction->user->telegram_id
-            );
-        } elseif (in_array(strtolower($result['status']), ['canceled', 'failed'])) {
-            $transaction->update(['status' => 'FAILED_PROVIDER']);
-
-            // Notif ke user
-            $bot->sendMessage(
-                text: "❌ *Pesanan Gagal*\n\n" .
-                      "🆔 Order ID: `{$transaction->id}`\n\n" .
-                      "Mohon hubungi admin untuk refund.",
-                parse_mode: 'Markdown',
-                chat_id: $transaction->user->telegram_id
-            );
+            $profitFormat = number_format($profitActual, 0, ',', '.');
+            $tagiFormat   = number_format($transaction->amount_paid, 0, ',', '.');
 
             // Notif ke admin
             $bot->sendMessage(
-                text: "🚨 *Pesanan Gagal di Provider!*\n\n" .
-                      "🆔 Order ID: `{$transaction->id}`\n" .
-                      "📦 Service: {$transaction->service_id}\n" .
-                      "💰 Rp " . number_format($transaction->amount_paid, 0, ',', '.') . "\n\n" .
-                      "User mungkin butuh refund.",
+                text: "🎉 *Pesanan Selesai!*\n\n"
+                    . "🆔 Order ID: `{$transaction->id}`\n"
+                    . "📦 Service: {$transaction->service_id}\n"
+                    . "🔗 Target: {$transaction->target_link}\n"
+                    . ($transaction->customer_note ? "📝 Catatan: {$transaction->customer_note}\n" : '')
+                    . "\n💰 Tagih: Rp {$tagiFormat}\n"
+                    . "📈 Profit: Rp {$profitFormat}",
                 parse_mode: 'Markdown',
-                chat_id: config('nutgram.admin_telegram_id')
+                chat_id: $adminId
+            );
+
+        } elseif (in_array(strtolower($result['status']), ['canceled', 'failed'])) {
+            $transaction->update(['status' => 'FAILED_PROVIDER']);
+
+            $tagiFormat = number_format($transaction->amount_paid, 0, ',', '.');
+
+            // Notif ke admin
+            $bot->sendMessage(
+                text: "🚨 *Pesanan Gagal di Provider!*\n\n"
+                    . "🆔 Order ID: `{$transaction->id}`\n"
+                    . "📦 Service: {$transaction->service_id}\n"
+                    . "🔗 Target: {$transaction->target_link}\n"
+                    . ($transaction->customer_note ? "📝 Catatan: {$transaction->customer_note}\n" : '')
+                    . "\n💰 Tagih: Rp {$tagiFormat}\n\n"
+                    . "Status Provider: *{$result['status']}*",
+                parse_mode: 'Markdown',
+                chat_id: $adminId
             );
         }
     }
