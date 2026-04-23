@@ -672,7 +672,7 @@ footer{
     <div class="testi-grid rv2">
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <p class="testi-q">Prosesnya cepet banget, baru bayar langsung masuk. Bot-nya simpel, ga perlu banyak klik. Puas banget.</p>
+        <p class="testi-q">Proses via WhatsApp cepet banget, admin-nya responsif dan ramah. Hasilnya juga nyata, puas banget langganan di sini.</p>
         <div class="testi-auth">
           <div class="testi-av">AR</div>
           <div><div class="testi-name">Aldi R.</div><div class="testi-role">Content Creator</div></div>
@@ -680,7 +680,7 @@ footer{
       </div>
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <p class="testi-q">Yang paling suka itu bayar QRIS langsung via chat, ga perlu buka website. Praktis banget buat yang sibuk.</p>
+        <p class="testi-q">Suka banget karena bisa tanya-tanya dulu via chat sebelum order. Pembayaran QRIS-nya juga praktis, ga ribet.</p>
         <div class="testi-auth">
           <div class="testi-av">MS</div>
           <div><div class="testi-name">Mutiara S.</div><div class="testi-role">Online Seller</div></div>
@@ -688,7 +688,7 @@ footer{
       </div>
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <p class="testi-q">Udah coba beberapa layanan, ini yang paling trusted. Followers masuk real, ga ada drop. Recommended!</p>
+        <p class="testi-q">Sudah coba beberapa tempat, nuestore yang paling trusted. Hasil permanen dan pengerjaannya profesional. Mantap!</p>
         <div class="testi-auth">
           <div class="testi-av">RB</div>
           <div><div class="testi-name">Roberto B.</div><div class="testi-role">Digital Marketer</div></div>
