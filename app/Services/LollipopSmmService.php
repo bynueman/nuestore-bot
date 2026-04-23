@@ -64,6 +64,14 @@ class LollipopSmmService
         ]);
     }
 
+    public function getStatuses(array $orderIds): ?array
+    {
+        return $this->connect([
+            'action' => 'status',
+            'orders' => implode(',', $orderIds),
+        ]);
+    }
+
     public function getBalance(): ?array
     {
         return $this->connect(['action' => 'balance']);

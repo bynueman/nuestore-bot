@@ -43,12 +43,7 @@ $bot->onText('🛒 Order',      OrderConversation::class);
 $bot->onText('💰 Saldo',      BalanceHandler::class);
 $bot->onText('📊 Laporan',    ReportHandler::class);
 
-$bot->onText('📋 Cek Status', function (Nutgram $bot) {
-    $bot->sendMessage(
-        text: "📋 Masukkan Order ID pesanan:\n_(Contoh: `/status uuid-order-id`)_",
-        parse_mode: 'Markdown'
-    );
-});
+$bot->onText('📋 Cek Status', StatusHandler::class);
 
 // =============================================
 // Handle semua callback query
