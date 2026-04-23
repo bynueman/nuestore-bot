@@ -85,15 +85,30 @@ class ServicesHandler
     private static function showCategories(Nutgram $bot, string $platform): void
     {
         $categories = $platform === 'instagram'
-            ? ['Followers', 'Likes', 'Views', 'Story']
-            : ['Followers', 'Likes', 'Views', 'Saves', 'Shares'];
+            ? [
+                'followers_id' => '🇮🇩 Followers ID',
+                'followers_ww' => '🌍 Followers WW',
+                'likes_id'     => '🇮🇩 Likes ID',
+                'likes_ww'     => '🌍 Likes WW',
+                'views'        => '▶️ Views',
+                'story'        => '📖 Story'
+            ]
+            : [
+                'followers_id' => '🇮🇩 Followers ID',
+                'followers_ww' => '🌍 Followers WW',
+                'likes_id'     => '🇮🇩 Likes ID',
+                'likes_ww'     => '🌍 Likes WW',
+                'views'        => '▶️ Views',
+                'saves'        => '🔖 Saves',
+                'shares'       => '🔁 Shares'
+            ];
 
         $platformLabel = $platform === 'instagram' ? '📸 Instagram' : '🎵 TikTok';
         $keyboard      = InlineKeyboardMarkup::make();
 
-        foreach ($categories as $cat) {
+        foreach ($categories as $catKey => $catLabel) {
             $keyboard->addRow(
-                InlineKeyboardButton::make(ucfirst($cat), callback_data: "sv_cat:{$platform}|{$cat}")
+                InlineKeyboardButton::make($catLabel, callback_data: "sv_cat:{$platform}|{$catKey}")
             );
         }
 
@@ -136,7 +151,10 @@ class ServicesHandler
         $filtered = collect($services)->filter(function ($s) use ($platform, $cat) {
             $name          = strtolower($s['name']);
             $platformLower = strtolower($platform);
-            $categoryLower = strtolower($cat);
+            
+            $catParts      = explode('_', strtolower($cat));
+            $baseCategory  = $catParts[0];
+            $region        = $catParts[1] ?? 'all';
 
             $platformMatch = str_contains($name, $platformLower) ||
                              str_contains(strtolower($s['category'] ?? ''), $platformLower);
@@ -145,12 +163,21 @@ class ServicesHandler
                 'followers' => ['follower'], 'likes' => ['like'], 'views' => ['view'],
                 'story'     => ['story'],    'saves' => ['save'], 'shares' => ['share'],
             ];
-            $keywords      = $categoryKeywords[$categoryLower] ?? [$categoryLower];
+            $keywords      = $categoryKeywords[$baseCategory] ?? [$baseCategory];
             $categoryMatch = false;
             foreach ($keywords as $kw) {
                 if (str_contains($name, $kw)) { $categoryMatch = true; break; }
             }
-            return $platformMatch && $categoryMatch;
+            
+            if (!$platformMatch || !$categoryMatch) return false;
+
+            // Region filter
+            $isIndo = str_contains($name, 'indonesia') || str_contains($name, 'indo ') || str_contains(strtolower($s['category'] ?? ''), 'indonesia');
+            
+            if ($region === 'id' && !$isIndo) return false;
+            if ($region === 'ww' && $isIndo) return false;
+
+            return true;
         })
         ->sortBy('rate') // Urutkan dari yang paling murah
         ->take(10)       // Ambil 10 teratas
@@ -161,7 +188,8 @@ class ServicesHandler
             return;
         }
 
-        $text = "📦 *" . ucfirst($cat) . "*\n\n";
+        $displayCategory = (str_contains($cat, '_id') ? strtoupper(str_replace('_', ' ', $cat)) : (str_contains($cat, '_ww') ? strtoupper(str_replace('_ww', ' WORLD WIDE', $cat)) : ucfirst($cat)));
+        $text = "📦 *" . $displayCategory . "*\n\n";
 
         foreach ($filtered as $s) {
             $harga = number_format((float)$s['rate'] * $markup, 0, ',', '.');

@@ -66,17 +66,21 @@ class OrderConversation extends Conversation
     {
         $categories = $this->platform === 'instagram'
             ? [
-                ['label' => '👥 Followers', 'key' => 'followers'],
-                ['label' => '❤️ Likes',     'key' => 'likes'],
-                ['label' => '▶️ Views',     'key' => 'views'],
-                ['label' => '📖 Story',     'key' => 'story'],
+                ['label' => '🇮🇩 Followers ID', 'key' => 'followers_id'],
+                ['label' => '🌍 Followers WW', 'key' => 'followers_ww'],
+                ['label' => '🇮🇩 Likes ID',     'key' => 'likes_id'],
+                ['label' => '🌍 Likes WW',     'key' => 'likes_ww'],
+                ['label' => '▶️ Views',        'key' => 'views'],
+                ['label' => '📖 Story',        'key' => 'story'],
             ]
             : [
-                ['label' => '👥 Followers', 'key' => 'followers'],
-                ['label' => '❤️ Likes',     'key' => 'likes'],
-                ['label' => '▶️ Views',     'key' => 'views'],
-                ['label' => '🔖 Saves',     'key' => 'saves'],
-                ['label' => '🔁 Shares',    'key' => 'shares'],
+                ['label' => '🇮🇩 Followers ID', 'key' => 'followers_id'],
+                ['label' => '🌍 Followers WW', 'key' => 'followers_ww'],
+                ['label' => '🇮🇩 Likes ID',     'key' => 'likes_id'],
+                ['label' => '🌍 Likes WW',     'key' => 'likes_ww'],
+                ['label' => '▶️ Views',        'key' => 'views'],
+                ['label' => '🔖 Saves',        'key' => 'saves'],
+                ['label' => '🔁 Shares',       'key' => 'shares'],
             ];
 
         $keyboard = InlineKeyboardMarkup::make();
@@ -115,7 +119,10 @@ class OrderConversation extends Conversation
         $filtered = collect($services)->filter(function ($s) {
             $name     = strtolower($s['name']);
             $platform = strtolower($this->platform);
-            $category = strtolower($this->category);
+            
+            $catParts     = explode('_', strtolower($this->category));
+            $baseCategory = $catParts[0];
+            $region       = $catParts[1] ?? 'all';
 
             $platformMatch = str_contains($name, $platform) ||
                              str_contains(strtolower($s['category'] ?? ''), $platform);
@@ -124,12 +131,21 @@ class OrderConversation extends Conversation
                 'followers' => ['follower'], 'likes' => ['like'], 'views' => ['view'],
                 'story'     => ['story'],    'saves' => ['save'], 'shares' => ['share'],
             ];
-            $keywords      = $categoryKeywords[$category] ?? [$category];
+            $keywords      = $categoryKeywords[$baseCategory] ?? [$baseCategory];
             $categoryMatch = false;
             foreach ($keywords as $kw) {
                 if (str_contains($name, $kw)) { $categoryMatch = true; break; }
             }
-            return $platformMatch && $categoryMatch;
+            
+            if (!$platformMatch || !$categoryMatch) return false;
+
+            // Region filter
+            $isIndo = str_contains($name, 'indonesia') || str_contains($name, 'indo ') || str_contains(strtolower($s['category'] ?? ''), 'indonesia');
+            
+            if ($region === 'id' && !$isIndo) return false;
+            if ($region === 'ww' && $isIndo) return false;
+
+            return true;
         })
         ->sortBy('rate') // Urutkan dari yang paling murah
         ->take(10)       // Ambil 10 teratas
@@ -147,7 +163,8 @@ class OrderConversation extends Conversation
 
         $markup   = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
         $keyboard = InlineKeyboardMarkup::make();
-        $text     = "📋 *Pilih Layanan " . ucfirst($this->platform) . " — " . ucfirst($this->category) . ":*\n\n";
+        $displayCategory = (str_contains($this->category, '_id') ? strtoupper(str_replace('_', ' ', $this->category)) : (str_contains($this->category, '_ww') ? strtoupper(str_replace('_ww', ' WORLD WIDE', $this->category)) : ucfirst($this->category)));
+        $text     = "📋 *Pilih Layanan " . ucfirst($this->platform) . " — " . $displayCategory . ":*\n\n";
 
         foreach ($filtered as $s) {
             $hargaJual   = (float)$s['rate'] * $markup;
