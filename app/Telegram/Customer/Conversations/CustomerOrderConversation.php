@@ -376,7 +376,7 @@ class CustomerOrderConversation extends Conversation
             // Kirim QRIS image
             $qrisPath = public_path('images/qris.jpg');
 
-            if (file_exists($qrisPath)) {
+            if (file_exists($qrisPath) && is_readable($qrisPath)) {
                 $bot->sendPhoto(
                     photo: InputFile::make($qrisPath),
                     caption: "🏦 *Scan QRIS untuk Pembayaran*",
