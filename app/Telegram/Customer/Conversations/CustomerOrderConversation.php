@@ -127,22 +127,21 @@ class CustomerOrderConversation extends Conversation
                 'TikTok'    => ['Followers ID 🇮🇩', 'Followers WW 🌐', 'Likes ID 🇮🇩', 'Likes WW 🌐', 'Views WW 🌐'],
             ];
 
-            $rows    = [];
-            $catList = $categories[$this->platform] ?? ['Followers WW 🌐', 'Likes WW 🌐'];
-
+            $catList  = $categories[$this->platform] ?? ['Followers WW 🌐', 'Likes WW 🌐'];
+            $keyboard = InlineKeyboardMarkup::make();
             foreach (array_chunk($catList, 2) as $chunk) {
                 $btnRow = [];
                 foreach ($chunk as $cat) {
                     $btnRow[] = InlineKeyboardButton::make($cat, callback_data: 'co_cat:' . $cat);
                 }
-                $rows[] = $btnRow;
+                $keyboard->addRow(...$btnRow);
             }
-            $rows[] = [InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel')];
+            $keyboard->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'));
 
             $bot->sendMessage(
                 text: "📱 Platform: *{$this->platform}*\n\n🗂️ *Langkah 2: Pilih Kategori Layanan*",
                 parse_mode: 'Markdown',
-                reply_markup: InlineKeyboardMarkup::make()->addRows($rows)
+                reply_markup: $keyboard
             );
 
             $this->next('inputLink');
