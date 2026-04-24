@@ -56,28 +56,10 @@ class CustomerOrderConversation extends Conversation
                 return;
             }
 
-            // Cek pending order
-            if ($customer->hasPendingOrder()) {
-                $pending = $customer->pendingOrder();
-                $statusText = $pending->status === 'PROOF_SUBMITTED'
-                    ? "📸 Bukti sudah dikirim, menunggu konfirmasi admin."
-                    : "💳 Belum dibayar. Silakan bayar atau batalkan dulu.";
-
-                $bot->sendMessage(
-                    text: "⚠️ *Kamu masih punya pesanan aktif!*\n\n"
-                        . "{$statusText}\n\n"
-                        . "📦 {$pending->service_name}\n"
-                        . "💰 Rp " . number_format($pending->total_amount, 0, ',', '.') . "\n\n"
-                        . "Selesaikan atau batalkan pesanan sebelumnya untuk membuat pesanan baru.",
-                    parse_mode: 'Markdown',
-                    reply_markup: InlineKeyboardMarkup::make()
-                        ->addRow(
-                            InlineKeyboardButton::make('❌ Batalkan Pesanan Lama', callback_data: "customer_cancel:{$pending->id}"),
-                        )
-                );
-                $this->end();
-                return;
-            }
+            // Masuk ke pilihan platform
+            $this->platform = null;
+            $this->region   = null;
+            $this->category = null;
 
             // Tampilkan pilihan platform
             $bot->sendMessage(
