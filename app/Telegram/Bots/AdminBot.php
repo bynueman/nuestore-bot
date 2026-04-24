@@ -482,18 +482,56 @@ class AdminBot
             return;
         }
 
-        $bot->sendPhoto(
-            photo: $order->proof_file_id,
-            caption: "📸 *Bukti Bayar: {$order->id}*\n"
-                   . "👤 @{$order->customer->username}\n"
-                   . "💰 Rp " . number_format($order->total_amount, 0, ',', '.'),
-            parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
+        $bot->answerCallbackQuery(text: "⌛ Mengambil foto...");
+
+        // --- FIXED: Cross-bot photo sending (Download & Send) ---
+        $custToken = config('nutgram.token');
+        $tempPath  = storage_path("app/public/view_proof_{$orderId}.jpg");
+        $fileId    = $order->proof_file_id;
+        
+        try {
+            $fileInfo = Http::get("https://api.telegram.org/bot{$custToken}/getFile", ['file_id' => $fileId])->json();
+            if (isset($fileInfo['result']['file_path'])) {
+                $remotePath = "https://api.telegram.org/file/bot{$custToken}/" . $fileInfo['result']['file_path'];
+                $imageContent = @file_get_contents($remotePath);
+                if ($imageContent) {
+                    file_put_contents($tempPath, $imageContent);
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('showProof download failed', ['error' => $e->getMessage()]);
+        }
+
+        if (file_exists($tempPath)) {
+            $caption = "📸 *Bukti Bayar: {$order->id}*\n"
+                     . "👤 @{$order->customer->username}\n"
+                     . "💰 Rp " . number_format($order->total_amount, 0, ',', '.');
+
+            $keyboard = InlineKeyboardMarkup::make()
                 ->addRow(
                     InlineKeyboardButton::make("✅ Approve", callback_data: "cust_approve:{$order->id}"),
                     InlineKeyboardButton::make("❌ Reject",  callback_data: "cust_reject:{$order->id}")
-                )
-        );
+                );
+
+            // Kirim via CURL untuk keandalan upload
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . config('nutgram.admin_bot_token') . "/sendPhoto");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                'chat_id'    => config('nutgram.admin_telegram_id'),
+                'photo'      => new \CURLFile($tempPath),
+                'caption'    => $caption,
+                'parse_mode' => 'Markdown',
+                'reply_markup' => json_encode(['inline_keyboard' => $keyboard->inline_keyboard])
+            ]);
+            curl_exec($ch);
+            curl_close($ch);
+
+            unlink($tempPath);
+        } else {
+            $bot->sendMessage("❌ Gagal memuat foto bukti. Silakan cek manual atau hubungi pelanggan.");
+        }
     }
 
     private function retryQueue(Nutgram $bot): void
