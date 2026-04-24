@@ -311,33 +311,44 @@ class CustomerOrderConversation extends Conversation
         $this->serviceName = $best['name'];
         $this->serviceRate = (float) $best['rate'];
 
-        // --- EDUKASI & PERINGATAN ---
-        if ($this->platform === 'Instagram' && $this->category === 'followers') {
-            $igSettingPath = public_path('images/igsetting.png');
-            if (file_exists($igSettingPath)) {
-                $bot->sendPhoto(
-                    photo: InputFile::make($igSettingPath),
-                    caption: "⚠️ *PENTING: Setting Instagram Kamu*\n\n"
-                           . "Agar followers masuk, pastikan settingan berikut *DIMATIKAN*:\n"
-                           . "1. Follow and Invite Friends\n"
-                           . "2. Flag for Review / Laporkan untuk Ditinjau\n\n"
-                           . "Lihat gambar di atas untuk panduannya.",
-                    parse_mode: 'Markdown'
-                );
+        try {
+            // --- EDUKASI & PERINGATAN ---
+            if ($this->platform === 'Instagram' && $this->category === 'followers') {
+                $igSettingPath = public_path('images/igsetting.png');
+                if (file_exists($igSettingPath)) {
+                    try {
+                        $bot->sendPhoto(
+                            photo: InputFile::make($igSettingPath),
+                            caption: "⚠️ *PENTING: Setting Instagram Kamu*\n\n"
+                                   . "Agar followers masuk, pastikan settingan berikut *DIMATIKAN*:\n"
+                                   . "1. Follow and Invite Friends\n"
+                                   . "2. Flag for Review / Laporkan untuk Ditinjau\n\n"
+                                   . "Lihat gambar di atas untuk panduannya.",
+                            parse_mode: 'Markdown'
+                        );
+                    } catch (\Throwable $photoError) {
+                        \Illuminate\Support\Facades\Log::warning('Failed to send IG education photo: ' . $photoError->getMessage());
+                    }
+                }
             }
+
+            $bot->sendMessage(
+                text: "🔒 *PENTING: JANGAN PRIVATE AKUN!*\n"
+                    . "Pastikan akun target bersifat *PUBLIK* selama proses berlangsung.\n\n"
+                    . "🔗 *Langkah 6: Masukkan Link Target*\n"
+                    . "Contoh: `https://www.instagram.com/nuestore/`",
+                parse_mode: 'Markdown',
+                reply_markup: InlineKeyboardMarkup::make()
+                    ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
+            );
+
+            $this->next('confirmOrder');
+
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('askLink Error: ' . $e->getMessage());
+            $bot->sendMessage("❌ Terjadi kesalahan teknis. Silakan masukkan link target secara manual atau hubungi admin.");
+            $this->next('confirmOrder');
         }
-
-        $bot->sendMessage(
-            text: "🔒 *PENTING: JANGAN PRIVATE AKUN!*\n"
-                . "Pastikan akun target bersifat *PUBLIK* selama proses berlangsung.\n\n"
-                . "🔗 *Langkah 6: Masukkan Link Target*\n"
-                . "Contoh: `https://www.instagram.com/nuestore/`",
-            parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
-        );
-
-        $this->next('confirmOrder');
     }
 
     // ─────────────────────────────────────────────
