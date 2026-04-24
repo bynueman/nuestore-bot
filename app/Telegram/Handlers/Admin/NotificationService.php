@@ -102,18 +102,24 @@ class NotificationService
         $orderId      = $order->id;
         $fileId       = $order->proof_file_id;
 
-        // --- FIXED: Cross-bot photo sending ---
-        // Get file path using CUSTOMER bot token
+        // --- FIXED: Cross-bot photo sending (Download & Send) ---
         $custToken = config('nutgram.token');
         $fileUrl   = null;
+        $tempPath  = storage_path("app/public/temp_proof_{$orderId}.jpg");
         
         try {
             $fileInfo = Http::get("https://api.telegram.org/bot{$custToken}/getFile", ['file_id' => $fileId])->json();
             if (isset($fileInfo['result']['file_path'])) {
-                $fileUrl = "https://api.telegram.org/file/bot{$custToken}/" . $fileInfo['result']['file_path'];
+                $remotePath = "https://api.telegram.org/file/bot{$custToken}/" . $fileInfo['result']['file_path'];
+                
+                // Download file locally
+                $imageContent = file_get_contents($remotePath);
+                if ($imageContent) {
+                    file_put_contents($tempPath, $imageContent);
+                }
             }
         } catch (\Exception $e) {
-            Log::error('Failed to get file path for admin notification', ['error' => $e->getMessage()]);
+            Log::error('Failed to download proof for admin', ['error' => $e->getMessage()]);
         }
 
         $caption = "📸 *BUKTI BAYAR MASUK*\n"
@@ -129,9 +135,6 @@ class NotificationService
 
         $keyboard = [
             [
-                ['text' => '🖼️ Lihat Foto Full', 'url' => $fileUrl ?? '#'],
-            ],
-            [
                 ['text' => '✅ Approve', 'callback_data' => "cust_approve:{$orderId}"],
                 ['text' => '❌ Reject',  'callback_data' => "cust_reject:{$orderId}"],
             ],
@@ -140,9 +143,31 @@ class NotificationService
             ],
         ];
 
-        // Jika URL file didapat, kirim sebagai foto. Jika gagal, kirim teks saja.
-        if ($fileUrl) {
-            return $this->sendPhoto($fileUrl, $caption, $keyboard);
+        // Kirim foto jika berhasil didownload
+        if (file_exists($tempPath)) {
+            try {
+                // Gunakan CURL manual agar lebih pasti terkirim ke Bot Admin
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot{$this->token}/sendPhoto");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                    'chat_id'    => $this->adminId,
+                    'photo'      => new \CURLFile($tempPath),
+                    'caption'    => $caption,
+                    'parse_mode' => 'Markdown',
+                    'reply_markup' => json_encode(['inline_keyboard' => $keyboard])
+                ]);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                
+                // Hapus file temp setelah terkirim
+                unlink($tempPath);
+                
+                return json_decode($result, true)['result']['message_id'] ?? null;
+            } catch (\Exception $e) {
+                Log::error('CURL SendPhoto failed', ['error' => $e->getMessage()]);
+            }
         }
 
         return $this->send($caption, $keyboard);
