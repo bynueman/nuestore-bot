@@ -99,6 +99,12 @@ class CustomerOrderConversation extends Conversation
         try {
             $cb = $bot->callbackQuery()?->data ?? '';
 
+            \Illuminate\Support\Facades\Log::info('selectCategory called', [
+                'cb'       => $cb,
+                'platform' => $this->platform,
+                'user'     => $bot->userId(),
+            ]);
+
             if ($cb === 'co_cancel') {
                 $bot->answerCallbackQuery();
                 $bot->sendMessage("❌ Order dibatalkan.");
