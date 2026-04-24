@@ -95,53 +95,58 @@ class CustomerOrderConversation extends Conversation
 
     public function selectCategory(Nutgram $bot): void
     {
-        $text = $bot->message()?->text ?? '';
+        try {
+            $text = $bot->message()?->text ?? '';
 
-        if ($text === '❌ Batal') {
-            $bot->sendMessage("❌ Order dibatalkan.", reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardRemove::make());
-            $this->end();
-            return;
-        }
-
-        if (str_contains($text, 'Instagram')) $this->platform = 'Instagram';
-        if (str_contains($text, 'TikTok'))    $this->platform = 'TikTok';
-
-        if (!$this->platform) {
-            $bot->sendMessage("⚠️ Silakan pilih platform yang tersedia di menu bawah.");
-            return;
-        }
-
-        if (!$this->platform) {
-            $bot->sendMessage("⚠️ Silakan pilih platform terlebih dahulu.");
-            return;
-        }
-
-        $categories = [
-            'Instagram' => ['Followers ID 🇮🇩', 'Followers WW 🌐', 'Likes ID 🇮🇩', 'Likes WW 🌐', 'Views WW 🌐', 'Story Views 🌐'],
-            'TikTok'    => ['Followers ID 🇮🇩', 'Followers WW 🌐', 'Likes ID 🇮🇩', 'Likes WW 🌐', 'Views WW 🌐'],
-            'YouTube'   => ['Subscribers WW 🌐', 'Views WW 🌐', 'Likes WW 🌐'],
-            'Twitter'   => ['Followers WW 🌐', 'Likes WW 🌐'],
-        ];
-
-        $rows    = [];
-        $catList = $categories[$this->platform] ?? ['Followers WW 🌐', 'Likes WW 🌐'];
-
-        foreach (array_chunk($catList, 2) as $chunk) {
-            $btnRow = [];
-            foreach ($chunk as $cat) {
-                $btnRow[] = InlineKeyboardButton::make($cat, callback_data: 'co_cat:' . $cat);
+            if ($text === '❌ Batal') {
+                $bot->sendMessage("❌ Order dibatalkan.", reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardRemove::make());
+                $this->end();
+                return;
             }
-            $rows[] = $btnRow;
+
+            if (str_contains($text, 'Instagram')) $this->platform = 'Instagram';
+            if (str_contains($text, 'TikTok'))    $this->platform = 'TikTok';
+
+            if (!$this->platform) {
+                $bot->sendMessage("⚠️ Silakan pilih platform yang tersedia di menu bawah.");
+                return;
+            }
+
+            // Hapus keyboard bawah agar bersih
+            $bot->sendMessage(
+                text: "⏳ Menyiapkan layanan {$this->platform}...",
+                reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardRemove::make()
+            );
+
+            $categories = [
+                'Instagram' => ['Followers ID 🇮🇩', 'Followers WW 🌐', 'Likes ID 🇮🇩', 'Likes WW 🌐', 'Views WW 🌐', 'Story Views 🌐'],
+                'TikTok'    => ['Followers ID 🇮🇩', 'Followers WW 🌐', 'Likes ID 🇮🇩', 'Likes WW 🌐', 'Views WW 🌐'],
+            ];
+
+            $rows    = [];
+            $catList = $categories[$this->platform] ?? ['Followers WW 🌐', 'Likes WW 🌐'];
+
+            foreach (array_chunk($catList, 2) as $chunk) {
+                $btnRow = [];
+                foreach ($chunk as $cat) {
+                    $btnRow[] = InlineKeyboardButton::make($cat, callback_data: 'co_cat:' . $cat);
+                }
+                $rows[] = $btnRow;
+            }
+            $rows[] = [InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel')];
+
+            $bot->sendMessage(
+                text: "📱 Platform: *{$this->platform}*\n\n🗂️ *Langkah 2: Pilih Kategori Layanan*",
+                parse_mode: 'Markdown',
+                reply_markup: InlineKeyboardMarkup::make()->addRows($rows)
+            );
+
+            $this->next('inputLink');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('selectCategory failed', ['error' => $e->getMessage()]);
+            $bot->sendMessage("❌ Terjadi kesalahan teknis. Silakan ketik /start untuk mulai ulang.");
+            $this->end();
         }
-        $rows[] = [InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel')];
-
-        $bot->sendMessage(
-            text: "📱 Platform: *{$this->platform}*\n\n🗂️ *Langkah 2: Pilih Kategori Layanan*",
-            parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()->addRows($rows)
-        );
-
-        $this->next('inputLink');
     }
 
     // ─────────────────────────────────────────────
