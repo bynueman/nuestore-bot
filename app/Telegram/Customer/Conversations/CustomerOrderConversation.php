@@ -71,18 +71,19 @@ class CustomerOrderConversation extends Conversation
             return;
         }
 
-        // Tampilkan pilihan platform
+        // Tampilkan pilihan platform dengan Keyboard Bawah (Lebih Stabil)
         $bot->sendMessage(
             text: "🛒 *Pesan Layanan Nuestore*\n\n📱 *Langkah 1: Pilih Platform*",
             parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(
-                    InlineKeyboardButton::make('📸 Instagram',  callback_data: 'co_platform:Instagram'),
-                    InlineKeyboardButton::make('🎵 TikTok',     callback_data: 'co_platform:TikTok'),
-                )
-                ->addRow(
-                    InlineKeyboardButton::make('❌ Batal',      callback_data: 'co_cancel'),
-                )
+            reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup::make(
+                resize_keyboard: true,
+                one_time_keyboard: true
+            )->addRow(
+                \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('📸 Instagram'),
+                \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🎵 TikTok')
+            )->addRow(
+                \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('❌ Batal')
+            )
         );
 
         $this->next('selectCategory');
@@ -94,23 +95,20 @@ class CustomerOrderConversation extends Conversation
 
     public function selectCategory(Nutgram $bot): void
     {
-        $cb = $bot->callbackQuery()?->data ?? '';
+        $text = $bot->message()?->text ?? '';
 
-        if ($cb === 'co_cancel') {
-            $bot->answerCallbackQuery();
-            $bot->sendMessage("❌ Order dibatalkan.");
+        if ($text === '❌ Batal') {
+            $bot->sendMessage("❌ Order dibatalkan.", reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardRemove::make());
             $this->end();
             return;
         }
 
-        if (str_starts_with($cb, 'co_platform:')) {
-            $this->platform = substr($cb, 12);
-            $bot->answerCallbackQuery();
-        }
+        if (str_contains($text, 'Instagram')) $this->platform = 'Instagram';
+        if (str_contains($text, 'TikTok'))    $this->platform = 'TikTok';
 
-        // Jika karena suatu alasan platform kosong (session hilang), coba tarik dari callback
-        if (!$this->platform && str_starts_with($cb, 'co_platform:')) {
-            $this->platform = substr($cb, 12);
+        if (!$this->platform) {
+            $bot->sendMessage("⚠️ Silakan pilih platform yang tersedia di menu bawah.");
+            return;
         }
 
         if (!$this->platform) {
