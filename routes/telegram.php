@@ -14,7 +14,12 @@ use SergiX44\Nutgram\Nutgram;
 // GUARD: Blokir user yang di-blacklist
 // =============================================
 $bot->middleware(function (Nutgram $bot, $next) {
-    $userId = (string) $bot->userId();
+    $userId = $bot->userId();
+    if ($userId === null) {
+        return;
+    }
+    
+    $userId = (string) $userId;
     $customer = NuestoreCustomer::where('telegram_id', $userId)->first();
     if ($customer?->is_blacklisted) {
         $bot->sendMessage('⛔ Akunmu diblokir dari layanan kami.');

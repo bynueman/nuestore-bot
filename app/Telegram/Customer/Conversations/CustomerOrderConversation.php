@@ -263,10 +263,19 @@ class CustomerOrderConversation extends Conversation
         $services = $lollipop->getServices();
 
         if (!$services) {
-            $bot->sendMessage("❌ Gagal mengambil data layanan. Silakan coba lagi nanti.");
+            \Illuminate\Support\Facades\Log::error('OrderConversation: Failed to fetch services from Lollipop', [
+                'user_id' => $bot->userId()
+            ]);
+            $bot->sendMessage("❌ Gagal mengambil data layanan. Saldo mungkin habis atau API sedang gangguan.");
             $this->end();
             return;
         }
+
+        \Illuminate\Support\Facades\Log::info('Filtering services', [
+            'platform' => $this->platform,
+            'category' => $this->category,
+            'total_services' => count($services)
+        ]);
 
         $catLower = strtolower($this->category);
         $region   = 'all';
@@ -281,24 +290,34 @@ class CustomerOrderConversation extends Conversation
         $platform = strtolower($this->platform);
 
         $filtered = collect($services)->filter(function ($s) use ($platform, $baseCategory, $region) {
-            $name = strtolower($s['name']);
+            $name     = strtolower($s['name']);
+            $category = strtolower($s['category'] ?? '');
 
-            $platformMatch = str_contains($name, $platform)
-                || str_contains(strtolower($s['category'] ?? ''), $platform);
+            $platformMatch = str_contains($name, $platform) || str_contains($category, $platform);
 
             if (!$platformMatch || !$baseCategory) return false;
 
-            $keywords      = ['followers' => ['follower'], 'likes' => ['like'], 'views' => ['view'],
-                              'story' => ['story'], 'saves' => ['save'], 'shares' => ['share'],
-                              'subscribers' => ['subscriber']];
+            $keywords = [
+                'followers'   => ['follower', 'pengikut'],
+                'likes'       => ['like', 'suka'],
+                'views'       => ['view', 'tonton'],
+                'story'       => ['story'],
+                'saves'       => ['save'],
+                'shares'      => ['share'],
+                'subscribers' => ['subscriber', 'langganan']
+            ];
+            
             $kws           = $keywords[$baseCategory] ?? [$baseCategory];
             $categoryMatch = false;
             foreach ($kws as $kw) {
-                if (str_contains($name, $kw)) { $categoryMatch = true; break; }
+                if (str_contains($name, $kw) || str_contains($category, $kw)) {
+                    $categoryMatch = true;
+                    break;
+                }
             }
             if (!$categoryMatch) return false;
 
-            $isIndo = str_contains($name, 'indonesia') || str_contains($name, 'indo ');
+            $isIndo = str_contains($name, 'indonesia') || str_contains($name, 'indo ') || str_contains($category, 'indonesia');
             if ($region === 'id' && !$isIndo) return false;
             if ($region === 'ww' && $isIndo)  return false;
 
