@@ -329,8 +329,10 @@ class CustomerOrderConversation extends Conversation
         $this->targetLink = $link;
 
         $bot->sendMessage(
-            text: "🔢 *Langkah 6: Masukkan Jumlah*\n"
-                . "Min: " . number_format($this->serviceMin) . " | Max: " . number_format($this->serviceMax),
+            text: "🔢 *Langkah 6: Masukkan Jumlah*\n\n"
+                . "⚠️ *INFO:* Minimal order biasanya *100* unit.\n"
+                . "🚩 Batas layanan ini: Min *{$this->serviceMin}* - Max *{$this->serviceMax}*\n\n"
+                . "Kirim jumlah yang ingin kamu beli:",
             parse_mode: 'Markdown',
             reply_markup: InlineKeyboardMarkup::make()
                 ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
