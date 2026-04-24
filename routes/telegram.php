@@ -51,36 +51,5 @@ $bot->onText('🛒 Pesan Sekarang', function (Nutgram $bot) {
 $bot->onText('📋 Status Pesanan',  CustomerStatusHandler::class);
 $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
-// Safety net dihapus — platform sekarang pakai InlineKeyboard (callback query),
-// tidak ada lagi teks "📸 Instagram" / "🎵 TikTok" yang dikirim user.
-
-// =============================================
-// Handle Callback Queries
-// =============================================
-$bot->onCallbackQuery(function (Nutgram $bot) {
-    $data = $bot->callbackQuery()?->data ?? '';
-
-    // 1. Handle Batal Global (kill conversation)
-    if ($data === 'co_cancel') {
-        $bot->endConversation();
-        $bot->answerCallbackQuery(text: "Dibatalkan");
-        $bot->sendMessage("❌ Pesanan dibatalkan.");
-        return;
-    }
-
-    // 2. Handle Cancel Order Spesifik (dari Status)
-    if (str_starts_with($data, 'customer_cancel:')) {
-        $orderId = substr($data, 16);
-        $order   = NuestoreOrder::find($orderId);
-        if ($order && in_array($order->status, ['PENDING_PAYMENT', 'PROOF_SUBMITTED'])) {
-            $order->update(['status' => 'CANCELLED']);
-            $bot->answerCallbackQuery(text: "Pesanan dibatalkan");
-            $bot->sendMessage("✅ Pesanan berhasil dibatalkan.");
-        }
-        return;
-    }
-
-    // 3. Semua callback lain (co_platform:, co_cat:, co_proof, dll)
-    // Nutgram otomatis forward ke active conversation step
-    try { $bot->answerCallbackQuery(); } catch (\Throwable $e) { /* query expired, ignore */ }
-});
+// Safety net dihapus — platform sekarang pakai InlineKeyboard (callback query).
+// Callback query sekarang ditangani langsung oleh masing-masing Handler/Conversation.
