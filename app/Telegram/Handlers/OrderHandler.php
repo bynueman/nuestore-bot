@@ -10,7 +10,7 @@ use App\Services\LollipopSmmService;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Conversations\Conversation;
 
-class OrderConversation extends Conversation
+class OrderHandler extends Conversation
 {
     private ?int $serviceId = null;
     private ?string $targetLink = null;
