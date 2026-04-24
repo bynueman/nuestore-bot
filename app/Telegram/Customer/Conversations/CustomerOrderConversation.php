@@ -257,11 +257,19 @@ class CustomerOrderConversation extends Conversation
               . "━━━━━━━━━━━━━━━━━━━━━━━\n\n";
 
         foreach ($filtered as $index => $s) {
+            $name = $s['name'];
+            
+            // Clean up "Refill" keywords
+            $name = preg_replace('/ - (No )?Refill( \d+ Days)?/i', '', $name);
+            $name = preg_replace('/(No )?Refill( \d+ Days)?/i', '', $name);
+            $name = trim(preg_replace('/\s+/', ' ', $name));
+            $name = rtrim($name, ' -');
+
             $totalPrice = ceil(($s['rate'] * $markupMultiplier / 1000) * $this->quantity);
             $priceFmt   = number_format($totalPrice, 0, ',', '.');
             $num        = $index + 1;
             
-            $text .= "*{$num}. {$s['name']}*\n";
+            $text .= "*{$num}. {$name}*\n";
             $text .= "💰 *Total Bayar: Rp {$priceFmt}*\n";
             $text .= "⚡ Proses Cepat & Aman\n\n";
 
