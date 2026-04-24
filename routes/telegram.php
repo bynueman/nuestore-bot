@@ -77,5 +77,10 @@ $bot->onCallbackQuery(function (Nutgram $bot) {
     }
 
     // Order conversation callbacks (co_platform:, co_cat:, co_proof, co_cancel)
+    if (str_starts_with($data, 'co_')) {
+        $bot->currentConversation()?->continue($bot);
+        return;
+    }
+
     $bot->currentConversation()?->continue($bot);
 });

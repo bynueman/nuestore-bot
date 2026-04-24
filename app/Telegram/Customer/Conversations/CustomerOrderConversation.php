@@ -81,10 +81,6 @@ class CustomerOrderConversation extends Conversation
                     InlineKeyboardButton::make('🎵 TikTok',     callback_data: 'co_platform:TikTok'),
                 )
                 ->addRow(
-                    InlineKeyboardButton::make('▶️ YouTube',    callback_data: 'co_platform:YouTube'),
-                    InlineKeyboardButton::make('🐦 Twitter/X',  callback_data: 'co_platform:Twitter'),
-                )
-                ->addRow(
                     InlineKeyboardButton::make('❌ Batal',      callback_data: 'co_cancel'),
                 )
         );

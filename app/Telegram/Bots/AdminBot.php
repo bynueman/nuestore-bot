@@ -19,11 +19,17 @@ class AdminBot
 
     public function __construct()
     {
-        $this->bot = new Nutgram(config('nutgram.admin_bot_token'));
+        $token = config('nutgram.admin_bot_token');
+        if (empty($token)) {
+            Log::error('AdminBot: TELEGRAM_ADMIN_BOT_TOKEN is missing in .env');
+            return;
+        }
+        $this->bot = new Nutgram($token);
     }
 
     public function register(): void
     {
+        if (!isset($this->bot)) return;
         $bot = $this->bot;
 
         // /start
