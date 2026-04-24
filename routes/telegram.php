@@ -15,13 +15,11 @@ use SergiX44\Nutgram\Nutgram;
 // =============================================
 $bot->middleware(function (Nutgram $bot, $next) {
     $userId = (string) $bot->userId();
-
-    $customer = \App\Models\NuestoreCustomer::where('telegram_id', $userId)->first();
+    $customer = NuestoreCustomer::where('telegram_id', $userId)->first();
     if ($customer?->is_blacklisted) {
         $bot->sendMessage('⛔ Akunmu diblokir dari layanan kami.');
         return;
     }
-
     $next($bot);
 });
 
@@ -45,44 +43,32 @@ $bot->onText('📋 Status Pesanan',  CustomerStatusHandler::class);
 $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
 // =============================================
-// Handle semua callback query
+// Handle Callback Queries (Pemicu Utama)
 // =============================================
 $bot->onCallbackQuery(function (Nutgram $bot) {
     $data = $bot->callbackQuery()?->data ?? '';
 
-    // Pembatalan order dari tombol Cek Status atau pesan lama
+    // 1. Handle Batal Global
+    if ($data === 'co_cancel') {
+        $bot->killCurrentConversation();
+        $bot->answerCallbackQuery(text: "Dibatalkan");
+        $bot->sendMessage("❌ Pesanan dibatalkan.");
+        return;
+    }
+
+    // 2. Handle Cancel Order Spesifik (dari Status)
     if (str_starts_with($data, 'customer_cancel:')) {
         $orderId = substr($data, 16);
         $order   = NuestoreOrder::find($orderId);
-
-        if (!$order || !in_array($order->status, ['PENDING_PAYMENT', 'PROOF_SUBMITTED'])) {
-            $bot->answerCallbackQuery(text: "Order tidak bisa dibatalkan.");
-            return;
+        if ($order && in_array($order->status, ['PENDING_PAYMENT', 'PROOF_SUBMITTED'])) {
+            $order->update(['status' => 'CANCELLED']);
+            $bot->answerCallbackQuery(text: "Pesanan dibatalkan");
+            $bot->sendMessage("✅ Pesanan berhasil dibatalkan.");
         }
-
-        // Pastikan hanya pemilik yang bisa cancel
-        $customer = NuestoreCustomer::where('telegram_id', (string) $bot->userId())->first();
-        if (!$customer || $order->customer_id !== $customer->id) {
-            $bot->answerCallbackQuery(text: "⛔ Bukan orderanmu.");
-            return;
-        }
-
-        $order->update(['status' => 'CANCELLED']);
-        $bot->answerCallbackQuery(text: "✅ Pesanan dibatalkan");
-        $bot->sendMessage(
-            text: "✅ *Pesanan berhasil dibatalkan.*\n\nKamu bisa membuat pesanan baru sekarang.",
-            parse_mode: 'Markdown'
-        );
         return;
     }
 
-    // Pastikan percakapan lanjut jika ada tombol co_ (Customer Order)
-    if (str_starts_with($data, 'co_') || str_starts_with($data, 'customer_')) {
-        $bot->currentConversation()?->continue($bot);
-        $bot->answerCallbackQuery();
-        return;
-    }
-
-    // Fallback: Selalu coba lanjutkan percakapan jika ada yang aktif
+    // 3. Handle Percakapan (PENTING: Gunakan continue & answer)
     $bot->currentConversation()?->continue($bot);
+    $bot->answerCallbackQuery();
 });

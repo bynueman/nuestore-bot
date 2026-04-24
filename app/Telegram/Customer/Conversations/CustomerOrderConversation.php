@@ -108,6 +108,11 @@ class CustomerOrderConversation extends Conversation
             $bot->answerCallbackQuery();
         }
 
+        // Jika karena suatu alasan platform kosong (session hilang), coba tarik dari callback
+        if (!$this->platform && str_starts_with($cb, 'co_platform:')) {
+            $this->platform = substr($cb, 12);
+        }
+
         if (!$this->platform) {
             $bot->sendMessage("⚠️ Silakan pilih platform terlebih dahulu.");
             return;
