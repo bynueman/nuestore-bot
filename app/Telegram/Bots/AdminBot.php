@@ -86,7 +86,10 @@ class AdminBot
         $bot->onText('⏳ Order Pending', function (Nutgram $bot) { $this->sendPendingOrders($bot); });
         $bot->onText('🕐 Antrean',     function (Nutgram $bot) { $this->sendQueued($bot); });
         $bot->onText('🔨 Blacklist Manual', function (Nutgram $bot) {
-            $bot->sendMessage("🔨 *Blacklist Manual*\n\nKetik perintah ini: `/blacklist_id [ID_TELEGRAM]`\nContoh: `/blacklist_id 123456789`", ['parse_mode' => 'Markdown']);
+            $bot->sendMessage(
+                text: "🔨 *Blacklist Manual*\n\nKetik perintah ini: `/blacklist_id [ID_TELEGRAM]`\nContoh: `/blacklist_id 123456789`",
+                parse_mode: 'Markdown'
+            );
         });
 
         // Handle direct blacklist command
@@ -123,7 +126,10 @@ class AdminBot
 
         $bot->onCommand('blacklist', function (Nutgram $bot) {
             if (!$this->isAdmin($bot)) return;
-            $bot->sendMessage("🔨 *Mode Blacklist Manual*\n\nBalas pesan ini dengan **ID Telegram** user yang ingin diblokir.", ['parse_mode' => 'Markdown']);
+            $bot->sendMessage(
+                text: "🔨 *Mode Blacklist Manual*\n\nBalas pesan ini dengan **ID Telegram** user yang ingin diblokir.",
+                parse_mode: 'Markdown'
+            );
         });
 
         // Handle semua callback query
