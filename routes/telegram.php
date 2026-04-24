@@ -73,5 +73,5 @@ $bot->onCallbackQuery(function (Nutgram $bot) {
 
     // 3. Semua callback lain (co_platform:, co_cat:, co_proof, dll)
     // Nutgram otomatis forward ke active conversation step
-    $bot->answerCallbackQuery();
+    try { $bot->answerCallbackQuery(); } catch (\Throwable $e) { /* query expired, ignore */ }
 });
