@@ -44,6 +44,7 @@ $bot->onCommand('cancel', function (Nutgram $bot) {
 // Persistent keyboard buttons & Safety Net
 // =============================================
 $bot->onText('🛒 Pesan Sekarang', function (Nutgram $bot) {
+    \Illuminate\Support\Facades\Log::info('Button Clicked: Pesan Sekarang', ['user' => $bot->userId()]);
     $bot->endConversation();
     CustomerOrderConversation::begin($bot);
 });
