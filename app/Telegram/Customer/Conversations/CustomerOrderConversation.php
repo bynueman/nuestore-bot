@@ -295,7 +295,7 @@ class CustomerOrderConversation extends Conversation
         }
 
         $this->serviceId = (int) substr($cb, 7);
-        $bot->answerCallbackQuery();
+        $bot->answerCallbackQuery(); // Jawab secepat mungkin agar loading di HP user hilang
 
         // Get service details
         $smm = new LollipopSmmService();
@@ -312,23 +312,31 @@ class CustomerOrderConversation extends Conversation
         $this->serviceRate = (float) $best['rate'];
 
         try {
-            // --- EDUKASI & PERINGATAN ---
+            // --- EDUKASI & PERINGATAN (Wajib untuk IG Followers) ---
             if ($this->platform === 'Instagram' && $this->category === 'followers') {
                 $igSettingPath = public_path('images/igsetting.png');
                 if (file_exists($igSettingPath)) {
                     try {
+                        // Pastikan file bisa dibaca
                         $bot->sendPhoto(
-                            photo: InputFile::make($igSettingPath),
+                            photo: InputFile::make(fopen($igSettingPath, 'r')),
                             caption: "⚠️ *PENTING: Setting Instagram Kamu*\n\n"
                                    . "Agar followers masuk, pastikan settingan berikut *DIMATIKAN*:\n"
                                    . "1. Follow and Invite Friends\n"
                                    . "2. Flag for Review / Laporkan untuk Ditinjau\n\n"
-                                   . "Lihat gambar di atas untuk panduannya.",
+                                   . "Lakukan seperti pada gambar di atas agar pesananmu lancar. ✅",
                             parse_mode: 'Markdown'
                         );
                     } catch (\Throwable $photoError) {
-                        \Illuminate\Support\Facades\Log::warning('Failed to send IG education photo: ' . $photoError->getMessage());
+                        \Illuminate\Support\Facades\Log::error('CRITICAL: Failed to send IG guide photo', [
+                            'error' => $photoError->getMessage(),
+                            'path'  => $igSettingPath
+                        ]);
+                        // Jika gagal kirim foto, kirim teks peringatan keras
+                        $bot->sendMessage("⚠️ *PERINGATAN:* Pastikan settingan 'Follow and Invite Friends' dan 'Flag for Review' di IG kamu sudah *DIMATIKAN* agar followers masuk!");
                     }
+                } else {
+                    \Illuminate\Support\Facades\Log::warning('IG Guide photo not found at: ' . $igSettingPath);
                 }
             }
 
