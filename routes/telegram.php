@@ -43,7 +43,9 @@ $bot->onCommand('cancel', function (Nutgram $bot) {
 // =============================================
 // Persistent keyboard buttons & Safety Net
 // =============================================
-$bot->onText('🛒 Pesan Sekarang',  CustomerOrderConversation::class);
+$bot->onText('🛒 Pesan Sekarang', function (Nutgram $bot) {
+    CustomerOrderConversation::begin($bot);
+});
 $bot->onText('📋 Status Pesanan',  CustomerStatusHandler::class);
 $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
