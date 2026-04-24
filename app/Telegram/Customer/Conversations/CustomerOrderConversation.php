@@ -316,7 +316,14 @@ class CustomerOrderConversation extends Conversation
             return;
         }
 
-        $this->serviceName = $best['name'];
+        $name = $best['name'];
+        // Bersihkan kata "Refill"
+        $name = preg_replace('/ - (No )?Refill( \d+ Days)?/i', '', $name);
+        $name = preg_replace('/(No )?Refill( \d+ Days)?/i', '', $name);
+        $name = trim(preg_replace('/\s+/', ' ', $name));
+        $name = rtrim($name, ' -');
+
+        $this->serviceName = $name;
         $this->serviceRate = (float) $best['rate'];
 
         try {
