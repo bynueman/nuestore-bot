@@ -46,12 +46,12 @@ $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 // tidak ada lagi teks "📸 Instagram" / "🎵 TikTok" yang dikirim user.
 
 // =============================================
-// Handle Callback Queries (Pemicu Utama)
+// Handle Callback Queries
 // =============================================
 $bot->onCallbackQuery(function (Nutgram $bot) {
     $data = $bot->callbackQuery()?->data ?? '';
 
-    // 1. Handle Batal Global
+    // 1. Handle Batal Global (kill conversation)
     if ($data === 'co_cancel') {
         $bot->killCurrentConversation();
         $bot->answerCallbackQuery(text: "Dibatalkan");
@@ -71,7 +71,7 @@ $bot->onCallbackQuery(function (Nutgram $bot) {
         return;
     }
 
-    // 3. Handle Percakapan (PENTING: Gunakan continue & answer)
-    $bot->currentConversation()?->continue($bot);
+    // 3. Semua callback lain (co_platform:, co_cat:, co_proof, dll)
+    // Nutgram otomatis forward ke active conversation step
     $bot->answerCallbackQuery();
 });
