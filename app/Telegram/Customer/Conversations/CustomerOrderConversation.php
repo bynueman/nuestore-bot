@@ -374,14 +374,14 @@ class CustomerOrderConversation extends Conversation
         $this->targetLink = $link;
 
         // Hitung harga final
-        $markupMultiplier = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
+        $markupMultiplier = (float) NuestoreSetting::get('global_markup_multiplier', '2.5');
         $this->basePrice  = (float) ceil(($this->serviceRate * $markupMultiplier / 1000) * $this->quantity);
-        $this->uniqueCode = rand(1, 999);
+        $this->uniqueCode = rand(1, 99); // Kode unik lebih kecil (1-99) agar tidak terlalu membengkak
         $this->totalAmount = $this->basePrice + $this->uniqueCode;
         $this->modalCost   = (float) ($this->serviceRate / 1000 * $this->quantity);
         $this->profit      = $this->basePrice - $this->modalCost;
 
-        $totalFmt = number_format($this->totalAmount, 0, ',', '.');
+        $baseFmt = number_format($this->basePrice, 0, ',', '.');
 
         $bot->sendMessage(
             text: "📋 *KONFIRMASI PESANAN FINAL*\n"
@@ -389,7 +389,7 @@ class CustomerOrderConversation extends Conversation
                 . "📦 Layanan: {$this->serviceName}\n"
                 . "🔗 Target: `{$this->targetLink}`\n"
                 . "🔢 Jumlah: " . number_format($this->quantity) . "\n\n"
-                . "💰 *TOTAL BAYAR: Rp {$totalFmt}*\n"
+                . "💰 *HARGA: Rp {$baseFmt}*\n"
                 . "━━━━━━━━━━━━━━━━━━━━━━━\n"
                 . "Klik tombol di bawah untuk melanjutkan ke pembayaran.",
             parse_mode: 'Markdown',
@@ -437,19 +437,22 @@ class CustomerOrderConversation extends Conversation
 
             // Kirim QRIS
             $qrisPath = public_path('images/qris.jpg');
+            $totalFmt = number_format($this->totalAmount, 0, ',', '.');
+
             if (file_exists($qrisPath) && is_readable($qrisPath)) {
                 $bot->sendPhoto(
                     photo: InputFile::make($qrisPath),
                     caption: "🏦 *SCAN QRIS UNTUK BAYAR*\n\n"
-                           . "Total: *Rp " . number_format($this->totalAmount, 0, ',', '.') . "*\n"
-                           . "*(Wajib sesuai nominal agar otomatis terdeteksi)*",
+                           . "Total: *Rp {$totalFmt}*\n"
+                           . "_(Sudah termasuk kode unik #{$this->uniqueCode})_\n\n"
+                           . "⚠️ *WAJIB BAYAR SESUAI NOMINAL!*",
                     parse_mode: 'Markdown'
                 );
             }
 
             $bot->sendMessage(
                 text: "✅ *Pesanan Menunggu Pembayaran*\n\n"
-                    . "Silakan bayar *Rp " . number_format($this->totalAmount, 0, ',', '.') . "*.\n"
+                    . "Silakan bayar *Rp {$totalFmt}*.\n"
                     . "Setelah berhasil, klik tombol di bawah untuk kirim bukti.",
                 parse_mode: 'Markdown',
                 reply_markup: InlineKeyboardMarkup::make()
@@ -464,7 +467,9 @@ class CustomerOrderConversation extends Conversation
             $this->next('waitProof');
 
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Order Final Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Order Final Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             $bot->sendMessage("❌ Terjadi kesalahan saat memproses pembayaran. Hubungi admin.");
             $this->end();
         }
