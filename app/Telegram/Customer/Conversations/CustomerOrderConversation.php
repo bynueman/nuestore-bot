@@ -125,7 +125,19 @@ class CustomerOrderConversation extends Conversation
                 parse_mode: 'Markdown',
                 reply_markup: InlineKeyboardMarkup::make()
                     ->addRow(
-                        Inl    // ─────────────────────────────────────────────
+                        InlineKeyboardButton::make('🇮🇩 Indonesia', callback_data: 'co_reg:id'),
+                        InlineKeyboardButton::make('🌐 Worldwide', callback_data: 'co_reg:ww'),
+                    )
+                    ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
+            );
+            $this->next('selectCategory');
+            return;
+        }
+
+        $this->start($bot);
+    }
+
+    // ─────────────────────────────────────────────
     // STEP 3: Pilih Jenis Layanan (Followers/Likes/dll)
     // ─────────────────────────────────────────────
 
