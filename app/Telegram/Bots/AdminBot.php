@@ -34,27 +34,30 @@ class AdminBot
         // /start
         $bot->onCommand('start', function (Nutgram $bot) {
             if (!$this->isAdmin($bot)) return;
+
+            $pendingCount = NuestoreOrder::where('status', 'PROOF_SUBMITTED')->count();
+            $processing   = NuestoreOrder::where('status', 'PROCESSING')->count();
+
             $bot->sendMessage(
-                text: "👨‍💼 *Nuestore Admin Panel*\n\n"
-                    . "Selamat datang, Boss! 🎉\n\n"
-                    . "📋 *Menu:*\n"
-                    . "/dashboard — Ringkasan hari ini\n"
-                    . "/pending   — Order pelanggan belum bayar\n"
-                    . "/queued    — Pesanan dalam antrean\n"
-                    . "/retry     — Proses ulang antrean\n"
-                    . "/balance   — Cek saldo Lollipop\n",
+                text: "🤴 *NUESTORE ADMIN PANEL*\n"
+                    . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    . "Selamat datang kembali, Boss! 👋\n\n"
+                    . "📊 *Status Saat Ini:*\n"
+                    . "📸 Menunggu Review: *{$pendingCount} Order*\n"
+                    . "⚙️ Sedang Diproses: *{$processing} Order*\n\n"
+                    . "Gunakan menu di bawah untuk mengelola bot:",
                 parse_mode: 'Markdown',
                 reply_markup: InlineKeyboardMarkup::make()
                     ->addRow(
                         InlineKeyboardButton::make('📊 Dashboard',   callback_data: 'admin:dashboard'),
-                        InlineKeyboardButton::make('💰 Cek Saldo',   callback_data: 'admin:balance'),
+                        InlineKeyboardButton::make('💰 Saldo SMM',   callback_data: 'admin:balance'),
                     )
                     ->addRow(
-                        InlineKeyboardButton::make('🕐 Antrean',     callback_data: 'admin:queued'),
-                        InlineKeyboardButton::make('🔄 Retry Queue', callback_data: 'admin:retry_queue'),
+                        InlineKeyboardButton::make('⏳ Menunggu ACC (' . $pendingCount . ')', callback_data: 'admin:pending'),
                     )
                     ->addRow(
-                        InlineKeyboardButton::make('⏳ Pending Bayar', callback_data: 'admin:pending'),
+                        InlineKeyboardButton::make('🕐 Antrean Provider', callback_data: 'admin:queued'),
+                        InlineKeyboardButton::make('🔄 Retry Gagal', callback_data: 'admin:retry_queue'),
                     )
             );
         });
@@ -106,6 +109,7 @@ class AdminBot
                 str_starts_with($data, 'cust_approve:')   => $this->approveOrder($bot, substr($data, 13)),
                 str_starts_with($data, 'cust_reject:')    => $this->rejectOrder($bot, substr($data, 12)),
                 str_starts_with($data, 'cust_blacklist:') => $this->blacklistCustomer($bot, substr($data, 15)),
+                str_starts_with($data, 'cust_show_proof:') => $this->showProof($bot, substr($data, 16)),
 
                 default => null,
             };
@@ -429,8 +433,11 @@ class AdminBot
 
             if ($o->status === 'PROOF_SUBMITTED') {
                 $markup->addRow(
-                    InlineKeyboardButton::make("✅ Acc " . substr($o->id, 0, 8), callback_data: "cust_approve:{$o->id}"),
-                    InlineKeyboardButton::make("❌ Reject", callback_data: "cust_reject:{$o->id}")
+                    InlineKeyboardButton::make("🖼️ Lihat Bukti", callback_data: "cust_show_proof:{$o->id}"),
+                    InlineKeyboardButton::make("✅ Acc",         callback_data: "cust_approve:{$o->id}")
+                );
+                $markup->addRow(
+                    InlineKeyboardButton::make("❌ Reject",      callback_data: "cust_reject:{$o->id}")
                 );
             }
         }
@@ -441,6 +448,28 @@ class AdminBot
             text: $text,
             parse_mode: 'Markdown',
             reply_markup: $markup
+        );
+    }
+
+    private function showProof(Nutgram $bot, string $orderId): void
+    {
+        $order = NuestoreOrder::find($orderId);
+        if (!$order || !$order->proof_file_id) {
+            $bot->answerCallbackQuery(text: "❌ Bukti tidak ditemukan.");
+            return;
+        }
+
+        $bot->sendPhoto(
+            photo: $order->proof_file_id,
+            caption: "📸 *Bukti Bayar: {$order->id}*\n"
+                   . "👤 @{$order->customer->username}\n"
+                   . "💰 Rp " . number_format($order->total_amount, 0, ',', '.'),
+            parse_mode: 'Markdown',
+            reply_markup: InlineKeyboardMarkup::make()
+                ->addRow(
+                    InlineKeyboardButton::make("✅ Approve", callback_data: "cust_approve:{$order->id}"),
+                    InlineKeyboardButton::make("❌ Reject",  callback_data: "cust_reject:{$order->id}")
+                )
         );
     }
 
