@@ -11,6 +11,7 @@ use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
+use SergiX44\Nutgram\Telegram\Types\Internal\InputFile;
 use Illuminate\Support\Str;
 
 class CustomerOrderConversation extends Conversation
@@ -377,7 +378,7 @@ class CustomerOrderConversation extends Conversation
 
             if (file_exists($qrisPath)) {
                 $bot->sendPhoto(
-                    photo: fopen($qrisPath, 'r'),
+                    photo: InputFile::make($qrisPath),
                     caption: "🏦 *Scan QRIS untuk Pembayaran*",
                     parse_mode: 'Markdown'
                 );
