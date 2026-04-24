@@ -60,7 +60,30 @@ class AdminBot
                         InlineKeyboardButton::make('🔄 Retry Gagal', callback_data: 'admin:retry_queue'),
                     )
             );
+
+            // Menu Bawah (Reply Keyboard)
+            $bot->sendMessage(
+                text: "⌨️ *Menu Navigasi:*",
+                parse_mode: 'Markdown',
+                reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup::make(
+                    resize_keyboard: true,
+                    one_time_keyboard: false
+                )->addRow(
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('📊 Dashboard'),
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('💰 Saldo SMM')
+                )->addRow(
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('⏳ Order Pending'),
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🕐 Antrean')
+                )
+            );
         });
+
+        // Register Reply Keyboard Handlers
+        $bot->onText('📊 Dashboard', function (Nutgram $bot) { $this->sendDashboard($bot); });
+        $bot->onText('💰 Saldo SMM',   function (Nutgram $bot) { $this->sendBalance($bot); });
+        $bot->onText('⏳ Order Pending', function (Nutgram $bot) { $this->sendPendingOrders($bot); });
+        $bot->onText('🕐 Antrean',     function (Nutgram $bot) { $this->sendQueued($bot); });
+
 
         $bot->onCommand('dashboard', function (Nutgram $bot) {
             if (!$this->isAdmin($bot)) return;

@@ -100,6 +100,21 @@ class NotificationService
         $totalFmt     = number_format($order->total_amount, 0, ',', '.');
         $profitFmt    = number_format($order->profit_estimated, 0, ',', '.');
         $orderId      = $order->id;
+        $fileId       = $order->proof_file_id;
+
+        // --- FIXED: Cross-bot photo sending ---
+        // Get file path using CUSTOMER bot token
+        $custToken = config('nutgram.token');
+        $fileUrl   = null;
+        
+        try {
+            $fileInfo = Http::get("https://api.telegram.org/bot{$custToken}/getFile", ['file_id' => $fileId])->json();
+            if (isset($fileInfo['result']['file_path'])) {
+                $fileUrl = "https://api.telegram.org/file/bot{$custToken}/" . $fileInfo['result']['file_path'];
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to get file path for admin notification', ['error' => $e->getMessage()]);
+        }
 
         $caption = "📸 *BUKTI BAYAR MASUK*\n"
                  . "━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -114,6 +129,9 @@ class NotificationService
 
         $keyboard = [
             [
+                ['text' => '🖼️ Lihat Foto Full', 'url' => $fileUrl ?? '#'],
+            ],
+            [
                 ['text' => '✅ Approve', 'callback_data' => "cust_approve:{$orderId}"],
                 ['text' => '❌ Reject',  'callback_data' => "cust_reject:{$orderId}"],
             ],
@@ -122,7 +140,12 @@ class NotificationService
             ],
         ];
 
-        return $this->sendPhoto($order->proof_file_id, $caption, $keyboard);
+        // Jika URL file didapat, kirim sebagai foto. Jika gagal, kirim teks saja.
+        if ($fileUrl) {
+            return $this->sendPhoto($fileUrl, $caption, $keyboard);
+        }
+
+        return $this->send($caption, $keyboard);
     }
 
     /**
