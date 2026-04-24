@@ -42,13 +42,8 @@ $bot->onText('🛒 Pesan Sekarang',  CustomerOrderConversation::class);
 $bot->onText('📋 Status Pesanan',  CustomerStatusHandler::class);
 $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
-// Safety net: Jika user klik tombol keyboard bawah tapi conversation belum start
-$bot->onText('📸 Instagram', function(Nutgram $bot) {
-    CustomerOrderConversation::begin($bot, data: ['platform' => 'Instagram']);
-});
-$bot->onText('🎵 TikTok', function(Nutgram $bot) {
-    CustomerOrderConversation::begin($bot, data: ['platform' => 'TikTok']);
-});
+// Safety net dihapus — platform sekarang pakai InlineKeyboard (callback query),
+// tidak ada lagi teks "📸 Instagram" / "🎵 TikTok" yang dikirim user.
 
 // =============================================
 // Handle Callback Queries (Pemicu Utama)

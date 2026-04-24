@@ -73,19 +73,18 @@ class CustomerOrderConversation extends Conversation
             return;
         }
 
-        // Tampilkan pilihan platform dengan Keyboard Bawah (Lebih Stabil)
+        // Tampilkan pilihan platform dengan InlineKeyboard (lebih reliable, tidak bentrok onText)
         $bot->sendMessage(
             text: "🛒 *Pesan Layanan Nuestore*\n\n📱 *Langkah 1: Pilih Platform*",
             parse_mode: 'Markdown',
-            reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup::make(
-                resize_keyboard: true,
-                one_time_keyboard: true
-            )->addRow(
-                \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('📸 Instagram'),
-                \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🎵 TikTok')
-            )->addRow(
-                \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('❌ Batal')
-            )
+            reply_markup: InlineKeyboardMarkup::make()
+                ->addRow(
+                    InlineKeyboardButton::make('📸 Instagram', callback_data: 'co_platform:Instagram'),
+                    InlineKeyboardButton::make('🎵 TikTok',    callback_data: 'co_platform:TikTok'),
+                )
+                ->addRow(
+                    InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'),
+                )
         );
 
         $this->next('selectCategory');
@@ -98,27 +97,24 @@ class CustomerOrderConversation extends Conversation
     public function selectCategory(Nutgram $bot): void
     {
         try {
-            $text = $bot->message()?->text ?? '';
+            $cb = $bot->callbackQuery()?->data ?? '';
 
-            if ($text === '❌ Batal') {
-                $bot->sendMessage("❌ Order dibatalkan.", reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardRemove::make());
+            if ($cb === 'co_cancel') {
+                $bot->answerCallbackQuery();
+                $bot->sendMessage("❌ Order dibatalkan.");
                 $this->end();
                 return;
             }
 
-            if (str_contains($text, 'Instagram')) $this->platform = 'Instagram';
-            if (str_contains($text, 'TikTok'))    $this->platform = 'TikTok';
-
-            if (!$this->platform) {
-                $bot->sendMessage("⚠️ Silakan pilih platform yang tersedia di menu bawah.");
-                return;
+            if (str_starts_with($cb, 'co_platform:')) {
+                $this->platform = substr($cb, 12); // 'Instagram' atau 'TikTok'
+                $bot->answerCallbackQuery();
             }
 
-            // Hapus keyboard bawah agar bersih
-            $bot->sendMessage(
-                text: "⏳ Menyiapkan layanan {$this->platform}...",
-                reply_markup: \SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardRemove::make()
-            );
+            if (!$this->platform) {
+                $bot->sendMessage("⚠️ Silakan pilih platform dari tombol di atas.");
+                return;
+            }
 
             $categories = [
                 'Instagram' => ['Followers ID 🇮🇩', 'Followers WW 🌐', 'Likes ID 🇮🇩', 'Likes WW 🌐', 'Views WW 🌐', 'Story Views 🌐'],
