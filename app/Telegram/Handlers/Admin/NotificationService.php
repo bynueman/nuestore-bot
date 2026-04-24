@@ -209,13 +209,14 @@ class NotificationService
     /**
      * Alert ke admin jika aktivitas user mencurigakan.
      */
-    public function notifySuspiciousUser(string $telegramId, string $username, string $reason): void
+    public function notifySuspiciousUser(string $telegramId, string $username, string $reason, string $customerId): void
     {
         $this->send(
             "🚨 *SUSPICIOUS USER*\n\n"
             . "👤 @{$username} (`{$telegramId}`)\n"
             . "⚠️ Alasan: {$reason}\n\n"
-            . "Pertimbangkan untuk blacklist user ini."
+            . "Klik tombol di bawah untuk blokir user ini.",
+            [[['text' => '🔨 Blacklist Sekarang', 'callback_data' => "cust_blacklist:{$customerId}"]]]
         );
     }
 

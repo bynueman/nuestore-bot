@@ -74,6 +74,8 @@ class AdminBot
                 )->addRow(
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('⏳ Order Pending'),
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🕐 Antrean')
+                )->addRow(
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🔨 Blacklist Manual')
                 )
             );
         });
@@ -83,6 +85,15 @@ class AdminBot
         $bot->onText('💰 Saldo SMM',   function (Nutgram $bot) { $this->sendBalance($bot); });
         $bot->onText('⏳ Order Pending', function (Nutgram $bot) { $this->sendPendingOrders($bot); });
         $bot->onText('🕐 Antrean',     function (Nutgram $bot) { $this->sendQueued($bot); });
+        $bot->onText('🔨 Blacklist Manual', function (Nutgram $bot) {
+            $bot->sendMessage("🔨 *Blacklist Manual*\n\nKetik perintah ini: `/blacklist_id [ID_TELEGRAM]`\nContoh: `/blacklist_id 123456789`", ['parse_mode' => 'Markdown']);
+        });
+
+        // Handle direct blacklist command
+        $bot->onCommand('blacklist_id {id}', function (Nutgram $bot, $id) {
+            if (!$this->isAdmin($bot)) return;
+            $this->blacklistCustomer($bot, $id, true); // true means by telegram_id
+        });
 
 
         $bot->onCommand('dashboard', function (Nutgram $bot) {
@@ -108,6 +119,11 @@ class AdminBot
         $bot->onCommand('pending', function (Nutgram $bot) {
             if (!$this->isAdmin($bot)) return;
             $this->sendPendingOrders($bot);
+        });
+
+        $bot->onCommand('blacklist', function (Nutgram $bot) {
+            if (!$this->isAdmin($bot)) return;
+            $bot->sendMessage("🔨 *Mode Blacklist Manual*\n\nBalas pesan ini dengan **ID Telegram** user yang ingin diblokir.", ['parse_mode' => 'Markdown']);
         });
 
         // Handle semua callback query
@@ -255,7 +271,8 @@ class AdminBot
             $notif->notifySuspiciousUser(
                 $customer->telegram_id,
                 $customer->username ?? 'unknown',
-                "Bukti bayar di-reject {$customer->failed_proofs_count}x. Kemungkinan mencoba bukti palsu."
+                "Bukti bayar di-reject {$customer->failed_proofs_count}x. Kemungkinan mencoba bukti palsu.",
+                $customer->id
             );
         }
 
@@ -272,9 +289,11 @@ class AdminBot
         );
     }
 
-    private function blacklistCustomer(Nutgram $bot, string $customerId): void
+    private function blacklistCustomer(Nutgram $bot, string $id, bool $byTelegramId = false): void
     {
-        $customer = NuestoreCustomer::find($customerId);
+        $customer = $byTelegramId 
+            ? NuestoreCustomer::where('telegram_id', $id)->first() 
+            : NuestoreCustomer::find($id);
 
         if (!$customer) {
             $bot->sendMessage("❌ Customer tidak ditemukan.");
