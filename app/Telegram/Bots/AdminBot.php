@@ -417,20 +417,30 @@ class AdminBot
             return;
         }
 
-        $text = "⏳ *Order Pelanggan Pending ({$pending->count()})*\n\n";
+        $text   = "⏳ *Order Pelanggan Pending ({$pending->count()})*\n\n";
+        $markup = InlineKeyboardMarkup::make();
+
         foreach ($pending as $o) {
             $statusEmoji = $o->status === 'PROOF_SUBMITTED' ? '📸' : '💳';
             $text .= "{$statusEmoji} `{$o->id}`\n";
             $text .= "👤 @{$o->customer->username}\n";
             $text .= "💰 Rp " . number_format($o->total_amount, 0, ',', '.') . "\n";
             $text .= "⏰ " . $o->created_at->diffForHumans() . "\n\n";
+
+            if ($o->status === 'PROOF_SUBMITTED') {
+                $markup->addRow(
+                    InlineKeyboardButton::make("✅ Acc " . substr($o->id, 0, 8), callback_data: "cust_approve:{$o->id}"),
+                    InlineKeyboardButton::make("❌ Reject", callback_data: "cust_reject:{$o->id}")
+                );
+            }
         }
+
+        $markup->addRow(InlineKeyboardButton::make('🔄 Refresh', callback_data: 'admin:pending'));
 
         $bot->sendMessage(
             text: $text,
             parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(InlineKeyboardButton::make('🔄 Refresh', callback_data: 'admin:pending'))
+            reply_markup: $markup
         );
     }
 
