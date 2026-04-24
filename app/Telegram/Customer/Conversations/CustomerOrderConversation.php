@@ -160,7 +160,7 @@ class CustomerOrderConversation extends Conversation
                     )
                     ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
             );
-            $this->next('findService');
+            $this->next('askQuantity');
             return;
         }
 
@@ -168,10 +168,10 @@ class CustomerOrderConversation extends Conversation
     }
 
     // ─────────────────────────────────────────────
-    // STEP 4: Tampilkan 5 Rekomendasi Layanan
+    // STEP 4: Input Jumlah (Qty) TERLEBIH DAHULU
     // ─────────────────────────────────────────────
 
-    public function findService(Nutgram $bot): void
+    public function askQuantity(Nutgram $bot): void
     {
         $cb = $bot->callbackQuery()?->data ?? '';
         if (!str_starts_with($cb, 'co_cat:')) {
@@ -183,9 +183,33 @@ class CustomerOrderConversation extends Conversation
         $bot->answerCallbackQuery();
 
         $bot->editMessageText(
-            text: "⏳ *Mencari 5 layanan terbaik untuk kamu...*",
-            parse_mode: 'Markdown'
+            text: "🔢 *Langkah 4: Masukkan Jumlah*\n\n"
+                . "Berapa banyak yang kamu butuhkan? (Contoh: `100` atau `1000`)\n\n"
+                . "Kami akan menghitung harga terbaik untuk jumlah tersebut.",
+            parse_mode: 'Markdown',
+            reply_markup: InlineKeyboardMarkup::make()
+                ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
         );
+
+        $this->next('findService');
+    }
+
+    // ─────────────────────────────────────────────
+    // STEP 5: Tampilkan 5 Rekomendasi + TOTAL HARGA
+    // ─────────────────────────────────────────────
+
+    public function findService(Nutgram $bot): void
+    {
+        $qty = $bot->message()?->text;
+
+        if (!is_numeric($qty) || (int)$qty < 10) {
+            $bot->sendMessage("❌ Jumlah tidak valid. Minimal 10 unit:");
+            return;
+        }
+
+        $this->quantity = (int) $qty;
+
+        $bot->sendMessage("⏳ _Menghitung harga layanan terbaik untuk {$this->quantity} unit..._", parse_mode: 'Markdown');
 
         $smm      = new LollipopSmmService();
         $services = $smm->getServices();
@@ -231,11 +255,14 @@ class CustomerOrderConversation extends Conversation
             if ($region === 'id' && !$isIndo) return false;
             if ($region === 'ww' && $isIndo)  return false;
 
+            // Match Min/Max Qty
+            if ($this->quantity < $s['min'] || $this->quantity > $s['max']) return false;
+
             return true;
         })->sortBy('rate')->take(5)->values();
 
         if ($filtered->isEmpty()) {
-            $bot->sendMessage("❌ Maaf, tidak ada layanan yang cocok saat ini. Silakan pilih kategori lain.");
+            $bot->sendMessage("❌ Maaf, tidak ada layanan yang mendukung jumlah {$this->quantity} saat ini. Coba ganti jumlah atau kategori.");
             $this->end();
             return;
         }
@@ -243,18 +270,18 @@ class CustomerOrderConversation extends Conversation
         $markup = InlineKeyboardMarkup::make();
         $markupMultiplier = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
 
-        $text = "⭐ *5 Rekomendasi Layanan Terbaik*\n"
-              . "Platform: {$this->platform} | Region: " . ($region === 'id' ? 'ID 🇮🇩' : 'WW 🌐') . "\n"
+        $text = "⭐ *Daftar Layanan & Total Harga*\n"
+              . "Jumlah: *{$this->quantity}* unit\n"
               . "━━━━━━━━━━━━━━━━━━━━━━━\n\n";
 
         foreach ($filtered as $index => $s) {
-            $price = ceil(($s['rate'] * $markupMultiplier));
-            $priceFmt = number_format($price, 0, ',', '.');
-            $num = $index + 1;
+            $totalPrice = ceil(($s['rate'] * $markupMultiplier / 1000) * $this->quantity);
+            $priceFmt   = number_format($totalPrice, 0, ',', '.');
+            $num        = $index + 1;
             
             $text .= "*{$num}. {$s['name']}*\n";
-            $text .= "💰 Rp {$priceFmt} / 1000\n";
-            $text .= "📊 Min: {$s['min']} | Max: {$s['max']}\n\n";
+            $text .= "💰 *Total Bayar: Rp {$priceFmt}*\n";
+            $text .= "⚡ Proses Cepat & Aman\n\n";
 
             $markup->addRow(InlineKeyboardButton::make(
                 "Pilih #{$num} (Rp {$priceFmt})", 
@@ -264,7 +291,7 @@ class CustomerOrderConversation extends Conversation
 
         $markup->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'));
 
-        $bot->editMessageText(
+        $bot->sendMessage(
             text: $text,
             parse_mode: 'Markdown',
             reply_markup: $markup
@@ -274,7 +301,7 @@ class CustomerOrderConversation extends Conversation
     }
 
     // ─────────────────────────────────────────────
-    // STEP 5: Edukasi (IG) & Input Link
+    // STEP 6: Edukasi (IG) & Input Link
     // ─────────────────────────────────────────────
 
     public function askLink(Nutgram $bot): void
@@ -288,7 +315,7 @@ class CustomerOrderConversation extends Conversation
         $this->serviceId = (int) substr($cb, 7);
         $bot->answerCallbackQuery();
 
-        // Get service details for validation later
+        // Get service details
         $smm = new LollipopSmmService();
         $services = $smm->getServices();
         $best = collect($services)->firstWhere('service', $this->serviceId);
@@ -301,8 +328,6 @@ class CustomerOrderConversation extends Conversation
 
         $this->serviceName = $best['name'];
         $this->serviceRate = (float) $best['rate'];
-        $this->serviceMin  = (int) $best['min'];
-        $this->serviceMax  = (int) $best['max'];
 
         // --- EDUKASI & PERINGATAN ---
         if ($this->platform === 'Instagram' && $this->category === 'followers') {
@@ -323,21 +348,21 @@ class CustomerOrderConversation extends Conversation
         $bot->sendMessage(
             text: "🔒 *PENTING: JANGAN PRIVATE AKUN!*\n"
                 . "Pastikan akun target bersifat *PUBLIK* selama proses berlangsung.\n\n"
-                . "🔗 *Langkah 5: Masukkan Link Target*\n"
+                . "🔗 *Langkah 6: Masukkan Link Target*\n"
                 . "Contoh: `https://www.instagram.com/nuestore/`",
             parse_mode: 'Markdown',
             reply_markup: InlineKeyboardMarkup::make()
                 ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
         );
 
-        $this->next('askQuantity');
+        $this->next('confirmOrder');
     }
 
     // ─────────────────────────────────────────────
-    // STEP 6: Input Jumlah (Qty)
+    // STEP 7: Konfirmasi Final
     // ─────────────────────────────────────────────
 
-    public function askQuantity(Nutgram $bot): void
+    public function confirmOrder(Nutgram $bot): void
     {
         $link = $bot->message()?->text;
 
@@ -348,41 +373,7 @@ class CustomerOrderConversation extends Conversation
 
         $this->targetLink = $link;
 
-        $bot->sendMessage(
-            text: "🔢 *Langkah 6: Masukkan Jumlah*\n\n"
-                . "⚠️ *INFO:* Minimal order biasanya *100* unit.\n"
-                . "🚩 Batas layanan ini: Min *{$this->serviceMin}* - Max *{$this->serviceMax}*\n\n"
-                . "Kirim jumlah yang ingin kamu beli:",
-            parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
-        );
-
-        $this->next('confirmOrder');
-    }
-
-    // ─────────────────────────────────────────────
-    // STEP 7: Konfirmasi Final & Simpan PENDING
-    // ─────────────────────────────────────────────
-
-    public function confirmOrder(Nutgram $bot): void
-    {
-        $qty = $bot->message()?->text;
-
-        if (!is_numeric($qty)) {
-            $bot->sendMessage("❌ Jumlah harus berupa angka:");
-            return;
-        }
-
-        $qty = (int) $qty;
-        if ($qty < $this->serviceMin || $qty > $this->serviceMax) {
-            $bot->sendMessage("❌ Jumlah harus antara {$this->serviceMin} - {$this->serviceMax}:");
-            return;
-        }
-
-        $this->quantity = $qty;
-
-        // Hitung harga
+        // Hitung harga final
         $markupMultiplier = (float) NuestoreSetting::get('global_markup_multiplier', '2.0');
         $this->basePrice  = (float) ceil(($this->serviceRate * $markupMultiplier / 1000) * $this->quantity);
         $this->uniqueCode = rand(1, 999);
@@ -398,38 +389,35 @@ class CustomerOrderConversation extends Conversation
                 . "📦 Layanan: {$this->serviceName}\n"
                 . "🔗 Target: `{$this->targetLink}`\n"
                 . "🔢 Jumlah: " . number_format($this->quantity) . "\n\n"
-                . "💰 Total Bayar: *Rp {$totalFmt}*\n"
+                . "💰 *TOTAL BAYAR: Rp {$totalFmt}*\n"
                 . "━━━━━━━━━━━━━━━━━━━━━━━\n"
-                . "Ketik *YA* untuk konfirmasi dan lanjut ke pembayaran, atau *BATAL*.",
-            parse_mode: 'Markdown'
+                . "Klik tombol di bawah untuk melanjutkan ke pembayaran.",
+            parse_mode: 'Markdown',
+            reply_markup: InlineKeyboardMarkup::make()
+                ->addRow(InlineKeyboardButton::make('✅ Bayar Sekarang', callback_data: 'co_pay'))
+                ->addRow(InlineKeyboardButton::make('❌ Batalkan',      callback_data: 'co_cancel'))
         );
 
         $this->next('generatePayment');
     }
 
     // ─────────────────────────────────────────────
-    // STEP 8: Kirim QRIS & Buat Order di DB
+    // STEP 8: Kirim QRIS & Simpan DB
     // ─────────────────────────────────────────────
 
     public function generatePayment(Nutgram $bot): void
     {
-        $input = strtoupper(trim($bot->message()?->text ?? ''));
-
-        if ($input === 'BATAL') {
-            $bot->sendMessage("❌ Dibatalkan.");
-            $this->end();
+        $cb = $bot->callbackQuery()?->data ?? '';
+        if ($cb !== 'co_pay') {
+            $this->start($bot);
             return;
         }
-
-        if ($input !== 'YA') {
-            $bot->sendMessage("Ketik *YA* untuk lanjut atau *BATAL* untuk berhenti.");
-            return;
-        }
+        $bot->answerCallbackQuery();
 
         try {
-            // Save order as PENDING_PAYMENT
+            // Save order
             $order = NuestoreOrder::create([
-                'id'               => (string) Str::uuid(),
+                'id'               => (string) \Illuminate\Support\Str::uuid(),
                 'customer_id'      => NuestoreCustomer::fromTelegramUser($bot->user())->id,
                 'platform'         => $this->platform,
                 'service_id'       => $this->serviceId,
@@ -453,14 +441,15 @@ class CustomerOrderConversation extends Conversation
                     photo: InputFile::make($qrisPath),
                     caption: "🏦 *SCAN QRIS UNTUK BAYAR*\n\n"
                            . "Total: *Rp " . number_format($this->totalAmount, 0, ',', '.') . "*\n"
-                           . "*(Harus sesuai nominal agar dicek lebih cepat)*",
+                           . "*(Wajib sesuai nominal agar otomatis terdeteksi)*",
                     parse_mode: 'Markdown'
                 );
             }
 
             $bot->sendMessage(
-                text: "✅ *Pesanan Tersimpan!*\n\n"
-                    . "Silakan lakukan transfer sesuai nominal di atas. Setelah bayar, klik tombol di bawah untuk kirim bukti.",
+                text: "✅ *Pesanan Menunggu Pembayaran*\n\n"
+                    . "Silakan bayar *Rp " . number_format($this->totalAmount, 0, ',', '.') . "*.\n"
+                    . "Setelah berhasil, klik tombol di bawah untuk kirim bukti.",
                 parse_mode: 'Markdown',
                 reply_markup: InlineKeyboardMarkup::make()
                     ->addRow(InlineKeyboardButton::make('📸 Sudah Bayar, Kirim Bukti', callback_data: 'co_proof'))
@@ -474,8 +463,8 @@ class CustomerOrderConversation extends Conversation
             $this->next('waitProof');
 
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Order Flow Error: ' . $e->getMessage());
-            $bot->sendMessage("❌ Terjadi kesalahan teknis. Silakan lapor admin.");
+            \Illuminate\Support\Facades\Log::error('Order Final Error: ' . $e->getMessage());
+            $bot->sendMessage("❌ Terjadi kesalahan saat memproses pembayaran. Hubungi admin.");
             $this->end();
         }
     }
