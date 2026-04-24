@@ -36,11 +36,19 @@ $bot->onCommand('cancel', function (Nutgram $bot) {
 });
 
 // =============================================
-// Persistent keyboard buttons
+// Persistent keyboard buttons & Safety Net
 // =============================================
 $bot->onText('🛒 Pesan Sekarang',  CustomerOrderConversation::class);
 $bot->onText('📋 Status Pesanan',  CustomerStatusHandler::class);
 $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
+
+// Safety net: Jika user klik tombol keyboard bawah tapi conversation belum start
+$bot->onText('📸 Instagram', function(Nutgram $bot) {
+    CustomerOrderConversation::begin($bot, data: ['platform' => 'Instagram']);
+});
+$bot->onText('🎵 TikTok', function(Nutgram $bot) {
+    CustomerOrderConversation::begin($bot, data: ['platform' => 'TikTok']);
+});
 
 // =============================================
 // Handle Callback Queries (Pemicu Utama)
