@@ -338,11 +338,11 @@ class CustomerOrderConversation extends Conversation
         $profitFmt = number_format($this->profit, 0, ',', '.');
 
         // Kirim QRIS image
-        $qrisPath = public_path('images/qris.png');
+        $qrisPath = public_path('images/qris.jpg');
 
         if (file_exists($qrisPath)) {
             $bot->sendPhoto(
-                photo: new \CURLFile($qrisPath, 'image/png', 'qris.png'),
+                photo: new \CURLFile($qrisPath, 'image/jpeg', 'qris.jpg'),
                 caption: "🏦 *Scan QRIS untuk Pembayaran*",
                 parse_mode: 'Markdown'
             );
