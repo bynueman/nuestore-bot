@@ -1,24 +1,24 @@
 <?php
 
-use App\Telegram\Conversations\OrderConversation;
-use App\Telegram\Handlers\BalanceHandler;
-use App\Telegram\Handlers\HelpHandler;
-use App\Telegram\Handlers\ReportHandler;
-use App\Telegram\Handlers\ServicesHandler;
-use App\Telegram\Handlers\StartHandler;
-use App\Telegram\Handlers\StatusHandler;
+use App\Telegram\Customer\Conversations\CustomerOrderConversation;
+use App\Telegram\Customer\Handlers\CustomerHelpHandler;
+use App\Telegram\Customer\Handlers\CustomerStartHandler;
+use App\Telegram\Customer\Handlers\CustomerStatusHandler;
+use App\Models\NuestoreOrder;
+use App\Models\NuestoreCustomer;
 use SergiX44\Nutgram\Nutgram;
 
 /** @var Nutgram $bot */
 
 // =============================================
-// GUARD: Hanya owner yang bisa pakai bot ini
+// GUARD: Blokir user yang di-blacklist
 // =============================================
 $bot->middleware(function (Nutgram $bot, $next) {
-    $allowedId = (string) config('nutgram.admin_telegram_id');
+    $userId = (string) $bot->userId();
 
-    if ((string) $bot->userId() !== $allowedId) {
-        $bot->sendMessage('⛔ Bot ini bersifat private.');
+    $customer = \App\Models\NuestoreCustomer::where('telegram_id', $userId)->first();
+    if ($customer?->is_blacklisted) {
+        $bot->sendMessage('⛔ Akunmu diblokir dari layanan kami.');
         return;
     }
 
@@ -28,24 +28,21 @@ $bot->middleware(function (Nutgram $bot, $next) {
 // =============================================
 // Commands
 // =============================================
-$bot->onCommand('start',    StartHandler::class);
-$bot->onCommand('order',    OrderConversation::class);
-$bot->onCommand('status {id?}', StatusHandler::class); // {id?} agar bisa match /status uuid
-$bot->onCommand('services', ServicesHandler::class);
-$bot->onCommand('balance',  BalanceHandler::class);
-$bot->onCommand('report',   ReportHandler::class);
-$bot->onCommand('help',     HelpHandler::class);
-$bot->onCommand('format',   \App\Telegram\Handlers\FormatHandler::class);
+$bot->onCommand('start',  CustomerStartHandler::class);
+$bot->onCommand('order',  CustomerOrderConversation::class);
+$bot->onCommand('status', CustomerStatusHandler::class);
+$bot->onCommand('help',   CustomerHelpHandler::class);
+$bot->onCommand('cancel', function (Nutgram $bot) {
+    $bot->killCurrentConversation();
+    $bot->sendMessage("❌ Dibatalkan. Kamu bisa mulai lagi kapan saja.");
+});
 
 // =============================================
-// Persistent keyboard buttons & Regex Shortcuts
+// Persistent keyboard buttons
 // =============================================
-$bot->onText('(?is)^📋 FORMAT ORDER.*', \App\Telegram\Conversations\ShortcutConversation::class);
-$bot->onText('🛒 Order',           OrderConversation::class);
-$bot->onText('💰 Saldo',           BalanceHandler::class);
-$bot->onText('📊 Laporan',         ReportHandler::class);
-$bot->onText('📝 Format Order',    \App\Telegram\Handlers\FormatHandler::class);
-$bot->onText('📋 Cek Status',      StatusHandler::class);
+$bot->onText('🛒 Pesan Sekarang',  CustomerOrderConversation::class);
+$bot->onText('📋 Status Pesanan',  CustomerStatusHandler::class);
+$bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
 // =============================================
 // Handle semua callback query
@@ -53,26 +50,32 @@ $bot->onText('📋 Cek Status',      StatusHandler::class);
 $bot->onCallbackQuery(function (Nutgram $bot) {
     $data = $bot->callbackQuery()?->data ?? '';
 
-    // ServicesHandler callbacks (sv_platform: sv_cat: sv_back:)
-    if (str_starts_with($data, 'sv_platform:') ||
-        str_starts_with($data, 'sv_cat:') ||
-        str_starts_with($data, 'sv_back:')) {
-        ServicesHandler::handleCallback($bot);
+    // Pembatalan order dari tombol Cek Status atau pesan lama
+    if (str_starts_with($data, 'customer_cancel:')) {
+        $orderId = substr($data, 16);
+        $order   = NuestoreOrder::find($orderId);
+
+        if (!$order || !in_array($order->status, ['PENDING_PAYMENT', 'PROOF_SUBMITTED'])) {
+            $bot->answerCallbackQuery(text: "Order tidak bisa dibatalkan.");
+            return;
+        }
+
+        // Pastikan hanya pemilik yang bisa cancel
+        $customer = NuestoreCustomer::where('telegram_id', (string) $bot->userId())->first();
+        if (!$customer || $order->customer_id !== $customer->id) {
+            $bot->answerCallbackQuery(text: "⛔ Bukan orderanmu.");
+            return;
+        }
+
+        $order->update(['status' => 'CANCELLED']);
+        $bot->answerCallbackQuery(text: "✅ Pesanan dibatalkan");
+        $bot->sendMessage(
+            text: "✅ *Pesanan berhasil dibatalkan.*\n\nKamu bisa membuat pesanan baru sekarang.",
+            parse_mode: 'Markdown'
+        );
         return;
     }
 
-    // FormatHandler callbacks
-    if (str_starts_with($data, 'fmt_plat:') || str_starts_with($data, 'fmt_cat:')) {
-        \App\Telegram\Handlers\FormatHandler::handleCallback($bot);
-        return;
-    }
-
-    // ReportHandler callbacks
-    if (str_starts_with($data, 'report_period:')) {
-        ReportHandler::handleCallback($bot);
-        return;
-    }
-
-    // OrderConversation callbacks (sv_platform_ sv_cat_ sv_pick_ sv_detail_ order_)
+    // Order conversation callbacks (co_platform:, co_cat:, co_proof, co_cancel)
     $bot->currentConversation()?->continue($bot);
 });

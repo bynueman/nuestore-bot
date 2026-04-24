@@ -7,6 +7,8 @@ return [
 
     'admin_bot_token' => env('TELEGRAM_ADMIN_BOT_TOKEN'),
 
+    'admin_whatsapp' => env('ADMIN_WHATSAPP', '62882007207715'),
+
     'safe_mode' => env('APP_ENV', 'local') === 'production',
 
     'config' => [],

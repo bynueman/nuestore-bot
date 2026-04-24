@@ -106,3 +106,6 @@ Schedule::call(function () {
         }
     }
 })->everyFifteenMinutes()->name('sync-order-status');
+
+// Auto-expire pesanan pelanggan yang tidak dibayar dalam 15 menit
+Schedule::command('orders:expire')->everyMinute()->name('expire-customer-orders');
