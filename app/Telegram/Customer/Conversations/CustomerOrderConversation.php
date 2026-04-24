@@ -11,6 +11,7 @@ use SergiX44\Nutgram\Conversations\Conversation;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardButton;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
+use Illuminate\Support\Str;
 
 class CustomerOrderConversation extends Conversation
 {
@@ -363,37 +364,39 @@ class CustomerOrderConversation extends Conversation
         $totalFmt  = number_format($this->totalAmount, 0, ',', '.');
         $profitFmt = number_format($this->profit, 0, ',', '.');
 
-        // Kirim QRIS image
-        $qrisPath = public_path('images/qris.jpg');
+        try {
+            // Kirim QRIS image
+            $qrisPath = public_path('images/qris.jpg');
 
-        if (file_exists($qrisPath)) {
-            $bot->sendPhoto(
-                photo: new \CURLFile($qrisPath, 'image/jpeg', 'qris.jpg'),
-                caption: "🏦 *Scan QRIS untuk Pembayaran*",
-                parse_mode: 'Markdown'
-            );
-        }
+            if (file_exists($qrisPath)) {
+                $bot->sendPhoto(
+                    photo: fopen($qrisPath, 'r'),
+                    caption: "🏦 *Scan QRIS untuk Pembayaran*",
+                    parse_mode: 'Markdown'
+                );
+            }
 
         // Create the order NOW so the 15-min timer starts and hasPendingOrder() blocks spam
         $user     = $bot->user();
         $customer = NuestoreCustomer::fromTelegramUser($user);
 
-        $order = NuestoreOrder::create([
-            'customer_id'       => $customer->id,
-            'platform'          => $this->platform,
-            'category'          => $this->category,
-            'service_id'        => $this->serviceId,
-            'service_name'      => $this->serviceName,
-            'target_link'       => $this->targetLink,
-            'quantity'          => $this->quantity,
-            'base_price'        => $this->basePrice,
-            'unique_code'       => $this->uniqueCode,
-            'total_amount'      => $this->totalAmount,
-            'modal_cost'        => $this->modalCost,
-            'profit_estimated'  => $this->profit,
-            'status'            => 'PENDING_PAYMENT',
-            'expires_at'        => now()->addMinutes(15),
-        ]);
+            $order = NuestoreOrder::create([
+                'id'                => (string) \Illuminate\Support\Str::uuid(),
+                'customer_id'       => $customer->id,
+                'platform'          => $this->platform,
+                'category'          => $this->category,
+                'service_id'        => $this->serviceId,
+                'service_name'      => $this->serviceName,
+                'target_link'       => $this->targetLink,
+                'quantity'          => $this->quantity,
+                'base_price'        => $this->basePrice,
+                'unique_code'       => $this->uniqueCode,
+                'total_amount'      => $this->totalAmount,
+                'modal_cost'        => $this->modalCost,
+                'profit_estimated'  => $this->profit,
+                'status'            => 'PENDING_PAYMENT',
+                'expires_at'        => now()->addMinutes(15),
+            ]);
 
         $customer->update(['last_order_at' => now()]);
 
@@ -430,6 +433,14 @@ class CustomerOrderConversation extends Conversation
         );
 
         $this->next('waitProof');
+
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Order Flow Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            $bot->sendMessage("❌ Terjadi kesalahan saat memproses pesanan. Silakan hubungi admin.");
+            $this->end();
+        }
     }
 
     // ─────────────────────────────────────────────
