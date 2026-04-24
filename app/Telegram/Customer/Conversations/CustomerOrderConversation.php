@@ -508,12 +508,20 @@ class CustomerOrderConversation extends Conversation
             return;
         }
 
+        // Pastikan yang dikirim adalah FOTO, bukan dokumen/file/video
         $photo = $bot->message()?->photo;
-        if (!$photo) {
-            $bot->sendMessage("❌ Kirim *gambar/foto* bukti bayarnya ya.");
+        
+        if ($bot->message()?->document || $bot->message()?->video || !$photo) {
+            $bot->sendMessage(
+                text: "⚠️ *FORMAT SALAH*\n\n"
+                    . "Harap kirimkan bukti pembayaran dalam format **GAMBAR (Foto)** langsung, bukan sebagai File/Dokumen atau Video.\n\n"
+                    . "Silakan coba kirim ulang fotonya:",
+                parse_mode: 'Markdown'
+            );
             return;
         }
 
+        // Ambil ID foto (Telegram menyediakan beberapa ukuran, kita ambil yang paling pas)
         $fileId = end($photo)->file_id;
         $order = NuestoreOrder::find($this->orderId);
 
