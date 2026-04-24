@@ -43,58 +43,70 @@ class CustomerOrderConversation extends Conversation
 
     public function start(Nutgram $bot): void
     {
-        $user     = $bot->user();
-        $customer = NuestoreCustomer::fromTelegramUser($user);
+        try {
+            $user     = $bot->user();
+            if (!$user) return;
 
-        // Cek blacklist
-        if ($customer->is_blacklisted) {
-            $bot->sendMessage("⛔ Maaf, akunmu diblokir dari layanan kami. Hubungi admin jika ada pertanyaan.");
-            $this->end();
-            return;
-        }
+            $customer = NuestoreCustomer::fromTelegramUser($user);
 
-        // Cek pending order
-        if ($customer->hasPendingOrder()) {
-            $pending = $customer->pendingOrder();
-            $statusText = $pending->status === 'PROOF_SUBMITTED'
-                ? "📸 Bukti sudah dikirim, menunggu konfirmasi admin."
-                : "💳 Belum dibayar. Silakan bayar atau batalkan dulu.";
+            // Cek blacklist
+            if ($customer->is_blacklisted) {
+                $bot->sendMessage("⛔ Maaf, akunmu diblokir dari layanan kami. Hubungi admin jika ada pertanyaan.");
+                $this->end();
+                return;
+            }
 
+            // Cek pending order
+            if ($customer->hasPendingOrder()) {
+                $pending = $customer->pendingOrder();
+                $statusText = $pending->status === 'PROOF_SUBMITTED'
+                    ? "📸 Bukti sudah dikirim, menunggu konfirmasi admin."
+                    : "💳 Belum dibayar. Silakan bayar atau batalkan dulu.";
+
+                $bot->sendMessage(
+                    text: "⚠️ *Kamu masih punya pesanan aktif!*\n\n"
+                        . "{$statusText}\n\n"
+                        . "📦 {$pending->service_name}\n"
+                        . "💰 Rp " . number_format($pending->total_amount, 0, ',', '.') . "\n\n"
+                        . "Selesaikan atau batalkan pesanan sebelumnya untuk membuat pesanan baru.",
+                    parse_mode: 'Markdown',
+                    reply_markup: InlineKeyboardMarkup::make()
+                        ->addRow(
+                            InlineKeyboardButton::make('❌ Batalkan Pesanan Lama', callback_data: "customer_cancel:{$pending->id}"),
+                        )
+                );
+                $this->end();
+                return;
+            }
+
+            // Tampilkan pilihan platform
             $bot->sendMessage(
-                text: "⚠️ *Kamu masih punya pesanan aktif!*\n\n"
-                    . "{$statusText}\n\n"
-                    . "📦 {$pending->service_name}\n"
-                    . "💰 Rp " . number_format($pending->total_amount, 0, ',', '.') . "\n\n"
-                    . "Selesaikan atau batalkan pesanan sebelumnya untuk membuat pesanan baru.",
+                text: "🛒 *Pesan Layanan Nuestore*\n\n📱 *Langkah 1: Pilih Platform*",
                 parse_mode: 'Markdown',
                 reply_markup: InlineKeyboardMarkup::make()
                     ->addRow(
-                        InlineKeyboardButton::make('❌ Batalkan Pesanan Lama', callback_data: "customer_cancel:{$pending->id}"),
+                        InlineKeyboardButton::make('📸 Instagram', callback_data: 'co_platform:Instagram'),
+                        InlineKeyboardButton::make('🎵 TikTok',    callback_data: 'co_platform:TikTok'),
+                    )
+                    ->addRow(
+                        InlineKeyboardButton::make('📽 YouTube',   callback_data: 'co_platform:YouTube'),
+                        InlineKeyboardButton::make('🕊 Twitter',   callback_data: 'co_platform:Twitter'),
+                    )
+                    ->addRow(
+                        InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'),
                     )
             );
+
+            $this->next('selectRegion');
+
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Order Start Error: ' . $e->getMessage(), [
+                'user' => $bot->userId(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            $bot->sendMessage("❌ Terjadi kesalahan saat memulai pesanan. Silakan coba lagi nanti atau hubungi admin.");
             $this->end();
-            return;
         }
-
-        // Tampilkan pilihan platform
-        $bot->sendMessage(
-            text: "🛒 *Pesan Layanan Nuestore*\n\n📱 *Langkah 1: Pilih Platform*",
-            parse_mode: 'Markdown',
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(
-                    InlineKeyboardButton::make('📸 Instagram', callback_data: 'co_platform:Instagram'),
-                    InlineKeyboardButton::make('🎵 TikTok',    callback_data: 'co_platform:TikTok'),
-                )
-                ->addRow(
-                    InlineKeyboardButton::make('📽 YouTube',   callback_data: 'co_platform:YouTube'),
-                    InlineKeyboardButton::make('🕊 Twitter',   callback_data: 'co_platform:Twitter'),
-                )
-                ->addRow(
-                    InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'),
-                )
-        );
-
-        $this->next('selectRegion');
     }
 
     // ─────────────────────────────────────────────
