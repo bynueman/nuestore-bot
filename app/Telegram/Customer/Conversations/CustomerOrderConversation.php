@@ -431,6 +431,7 @@ class CustomerOrderConversation extends Conversation
                 'modal_cost'       => $this->modalCost,
                 'profit_estimated' => $this->profit,
                 'status'           => 'PENDING_PAYMENT',
+                'expires_at'       => now()->addHours(2),
             ]);
 
             $this->orderId = $order->id;
