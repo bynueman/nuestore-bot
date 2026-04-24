@@ -32,6 +32,8 @@ class CustomerOrderConversation extends Conversation
     protected ?float  $modalCost    = null;
     protected ?float  $profit       = null;
 
+    protected ?string $orderId      = null; // Set after PENDING_PAYMENT order is created
+
     // ─────────────────────────────────────────────
     // STEP 1: Anti-spam check + pilih platform
     // ─────────────────────────────────────────────
@@ -352,6 +354,36 @@ class CustomerOrderConversation extends Conversation
             );
         }
 
+        // Create the order NOW so the 15-min timer starts and hasPendingOrder() blocks spam
+        $user     = $bot->user();
+        $customer = NuestoreCustomer::fromTelegramUser($user);
+
+        $order = NuestoreOrder::create([
+            'customer_id'       => $customer->id,
+            'platform'          => $this->platform,
+            'category'          => $this->category,
+            'service_id'        => $this->serviceId,
+            'service_name'      => $this->serviceName,
+            'target_link'       => $this->targetLink,
+            'quantity'          => $this->quantity,
+            'base_price'        => $this->basePrice,
+            'unique_code'       => $this->uniqueCode,
+            'total_amount'      => $this->totalAmount,
+            'modal_cost'        => $this->modalCost,
+            'profit_estimated'  => $this->profit,
+            'status'            => 'PENDING_PAYMENT',
+            'expires_at'        => now()->addMinutes(15),
+        ]);
+
+        $customer->update(['last_order_at' => now()]);
+
+        // Notify admin of new order (no proof yet)
+        $notif = new NotificationService();
+        $notif->notifyNewCustomerOrder($order);
+
+        // Store order ID in conversation state for waitProof
+        $this->orderId = $order->id;
+
         $bot->sendMessage(
             text: "✅ *Ringkasan Pesanan*\n"
                 . "━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -390,6 +422,12 @@ class CustomerOrderConversation extends Conversation
 
         if ($cb === 'co_cancel') {
             $bot->answerCallbackQuery();
+            // Cancel the pending order in DB
+            if ($this->orderId) {
+                NuestoreOrder::where('id', $this->orderId)
+                    ->where('status', 'PENDING_PAYMENT')
+                    ->update(['status' => 'CANCELLED']);
+            }
             $bot->sendMessage("❌ Pesanan dibatalkan. Kamu bisa order lagi kapan saja.");
             $this->end();
             return;
@@ -424,30 +462,19 @@ class CustomerOrderConversation extends Conversation
         // Ambil foto resolusi tertinggi
         $fileId = end($photo)->file_id;
 
-        // Simpan order ke database
-        $user     = $bot->user();
-        $customer = NuestoreCustomer::fromTelegramUser($user);
+        // Update existing PENDING_PAYMENT order to PROOF_SUBMITTED
+        $order = NuestoreOrder::find($this->orderId);
 
-        $order = NuestoreOrder::create([
-            'customer_id'       => $customer->id,
-            'platform'          => $this->platform,
-            'category'          => $this->category,
-            'service_id'        => $this->serviceId,
-            'service_name'      => $this->serviceName,
-            'target_link'       => $this->targetLink,
-            'quantity'          => $this->quantity,
-            'base_price'        => $this->basePrice,
-            'unique_code'       => $this->uniqueCode,
-            'total_amount'      => $this->totalAmount,
-            'modal_cost'        => $this->modalCost,
-            'profit_estimated'  => $this->profit,
-            'proof_file_id'     => $fileId,
-            'status'            => 'PROOF_SUBMITTED',
-            'expires_at'        => now()->addMinutes(15),
+        if (!$order || $order->status !== 'PENDING_PAYMENT') {
+            $bot->sendMessage("❌ Pesanan tidak ditemukan atau sudah expired. Silakan buat pesanan baru.");
+            $this->end();
+            return;
+        }
+
+        $order->update([
+            'proof_file_id' => $fileId,
+            'status'        => 'PROOF_SUBMITTED',
         ]);
-
-        // Update last_order_at
-        $customer->update(['last_order_at' => now()]);
 
         // Kirim notif ke Admin Bot
         $notif = new NotificationService();

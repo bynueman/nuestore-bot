@@ -4,7 +4,6 @@ namespace App\Telegram\Bots;
 
 use App\Models\NuestoreCustomer;
 use App\Models\NuestoreOrder;
-use App\Models\NuestoreTransaction;
 use App\Services\LollipopSmmService;
 use App\Telegram\Handlers\Admin\NotificationService;
 use Illuminate\Support\Facades\Http;
@@ -141,6 +140,16 @@ class AdminBot
             return;
         }
 
+        // RACE CONDITION FIX: Lock the order before submitting to Lollipop
+        $updated = NuestoreOrder::where('id', $orderId)
+            ->where('status', 'PROOF_SUBMITTED')
+            ->update(['status' => 'APPROVED']);
+
+        if (!$updated) {
+            $bot->sendMessage("⚠️ Order ini sedang diproses oleh admin lain.");
+            return;
+        }
+
         // Submit ke Lollipop
         $lollipop = new LollipopSmmService();
         $result   = $lollipop->createOrder($order->service_id, $order->target_link, $order->quantity);
@@ -175,7 +184,7 @@ class AdminBot
                 . "Terima kasih sudah berbelanja di Nuestore! 🎉"
             );
         } else {
-            $order->update(['status' => 'APPROVED']); // Tandai approved, tapi gagal submit ke Lollipop
+            // Lollipop submit failed — keep status APPROVED for retry queue
             $errorDetail = json_encode($result);
             $bot->sendMessage(
                 text: "⚠️ *Approved tapi Gagal Submit ke Lollipop!*\n\n"
@@ -306,34 +315,27 @@ class AdminBot
     {
         $today = now()->startOfDay();
 
-        $totalToday      = NuestoreTransaction::where('created_at', '>=', $today)->count();
-        $paidToday       = NuestoreTransaction::where('created_at', '>=', $today)->where('status', '!=', 'UNPAID')->count();
-        $completedToday  = NuestoreTransaction::where('created_at', '>=', $today)->where('status', 'COMPLETED')->count();
-        $revenueToday    = NuestoreTransaction::where('created_at', '>=', $today)->where('status', '!=', 'UNPAID')->sum('amount_paid');
-        $profitToday     = NuestoreTransaction::where('created_at', '>=', $today)->where('status', '!=', 'UNPAID')->sum('profit_estimated');
-        $queued          = NuestoreTransaction::where('status', 'PAID_QUEUED')->count();
-        $processing      = NuestoreTransaction::where('status', 'PROCESSING')->count();
-
-        // Customer orders
-        $pendingCustomer = NuestoreOrder::whereIn('status', ['PENDING_PAYMENT', 'PROOF_SUBMITTED'])->count();
-        $custToday       = NuestoreOrder::where('created_at', '>=', $today)->count();
-        $custRevenue     = NuestoreOrder::where('created_at', '>=', $today)->whereIn('status', ['APPROVED', 'PROCESSING', 'COMPLETED'])->sum('total_amount');
+        $totalToday     = NuestoreOrder::where('created_at', '>=', $today)->count();
+        $approvedToday  = NuestoreOrder::where('created_at', '>=', $today)->whereIn('status', ['APPROVED', 'PROCESSING', 'COMPLETED'])->count();
+        $completedToday = NuestoreOrder::where('created_at', '>=', $today)->where('status', 'COMPLETED')->count();
+        $revenueToday   = NuestoreOrder::where('created_at', '>=', $today)->whereIn('status', ['APPROVED', 'PROCESSING', 'COMPLETED'])->sum('total_amount');
+        $profitToday    = NuestoreOrder::where('created_at', '>=', $today)->whereIn('status', ['APPROVED', 'PROCESSING', 'COMPLETED'])->sum('profit_estimated');
+        $pendingPayment = NuestoreOrder::where('status', 'PENDING_PAYMENT')->count();
+        $proofSubmitted = NuestoreOrder::where('status', 'PROOF_SUBMITTED')->count();
+        $processing     = NuestoreOrder::where('status', 'PROCESSING')->count();
 
         $bot->sendMessage(
             text: "📊 *Dashboard Hari Ini*\n\n"
                 . "📅 " . now()->format('d/m/Y') . "\n\n"
-                . "🤖 *Bot Admin (Shortcut)*\n"
-                . "📝 Total Order: {$totalToday}\n"
-                . "✅ Dibayar: {$paidToday}\n"
-                . "🎉 Selesai: {$completedToday}\n"
-                . "🕐 Antrean: {$queued}\n"
-                . "⚙️ Diproses: {$processing}\n"
-                . "💰 Revenue: Rp " . number_format($revenueToday, 0, ',', '.') . "\n"
-                . "📈 Est. Profit: Rp " . number_format($profitToday, 0, ',', '.') . "\n\n"
                 . "👥 *Bot Pelanggan*\n"
-                . "📝 Order Hari Ini: {$custToday}\n"
-                . "⏳ Menunggu Review: {$pendingCustomer}\n"
-                . "💰 Revenue: Rp " . number_format($custRevenue, 0, ',', '.'),
+                . "📝 Total Order: {$totalToday}\n"
+                . "✅ Diapprove: {$approvedToday}\n"
+                . "🎉 Selesai: {$completedToday}\n"
+                . "⚙️ Diproses: {$processing}\n"
+                . "📸 Menunggu Review: {$proofSubmitted}\n"
+                . "💳 Belum Bayar: {$pendingPayment}\n"
+                . "💰 Revenue: Rp " . number_format($revenueToday, 0, ',', '.') . "\n"
+                . "📈 Est. Profit: Rp " . number_format($profitToday, 0, ',', '.'),
             parse_mode: 'Markdown',
             reply_markup: InlineKeyboardMarkup::make()
                 ->addRow(
@@ -368,7 +370,11 @@ class AdminBot
 
     private function sendQueued(Nutgram $bot): void
     {
-        $queued = NuestoreTransaction::where('status', 'PAID_QUEUED')->orderBy('created_at')->get();
+        $queued = NuestoreOrder::where('status', 'APPROVED')
+            ->whereNull('provider_order_id')
+            ->with('customer')
+            ->orderBy('created_at')
+            ->get();
 
         if ($queued->isEmpty()) {
             $bot->sendMessage(
@@ -380,11 +386,11 @@ class AdminBot
         }
 
         $text = "🕐 *Pesanan Dalam Antrean ({$queued->count()})*\n\n";
-        foreach ($queued as $t) {
-            $text .= "🆔 `{$t->id}`\n";
-            $text .= "📦 Service: {$t->service_id}\n";
-            $text .= "🔄 Retry: {$t->retry_count}x\n";
-            $text .= "💰 Rp " . number_format($t->amount_paid, 0, ',', '.') . "\n\n";
+        foreach ($queued as $o) {
+            $text .= "🆔 `{$o->id}`\n";
+            $text .= "👤 @{$o->customer->username}\n";
+            $text .= "📦 {$o->service_name}\n";
+            $text .= "💰 Rp " . number_format($o->total_amount, 0, ',', '.') . "\n\n";
         }
 
         $bot->sendMessage(
@@ -430,7 +436,9 @@ class AdminBot
 
     private function retryQueue(Nutgram $bot): void
     {
-        $queued = NuestoreTransaction::where('status', 'PAID_QUEUED')->where('retry_count', '<', 5)->get();
+        $queued = NuestoreOrder::where('status', 'APPROVED')
+            ->whereNull('provider_order_id')
+            ->get();
 
         if ($queued->isEmpty()) {
             $bot->sendMessage(text: "✅ Tidak ada pesanan dalam antrean.");
@@ -443,17 +451,21 @@ class AdminBot
         $success  = 0;
         $failed   = 0;
 
-        foreach ($queued as $transaction) {
+        foreach ($queued as $order) {
             sleep(1);
-            $result = $lollipop->createOrder($transaction->service_id, $transaction->target_link, null);
-            $transaction->increment('retry_count');
-            $transaction->update(['last_retried_at' => now()]);
+            $result = $lollipop->createOrder($order->service_id, $order->target_link, $order->quantity);
 
             if ($result && isset($result['order'])) {
-                $transaction->update(['provider_order_id' => $result['order'], 'status' => 'PROCESSING']);
+                $order->update([
+                    'provider_order_id' => (string) $result['order'],
+                    'status'            => 'PROCESSING',
+                ]);
+                $this->notifyCustomer(
+                    $order->customer->telegram_id,
+                    "✅ *Pembayaran Dikonfirmasi!*\n\nOrder kamu sedang diproses.\n\n📦 {$order->service_name}\n🔗 `{$order->target_link}`"
+                );
                 $success++;
             } else {
-                $transaction->update(['retry_error_log' => json_encode($result)]);
                 $failed++;
             }
         }

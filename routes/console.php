@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\NuestoreTransaction;
+use App\Models\NuestoreOrder;
 use App\Services\LollipopSmmService;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
-use SergiX44\Nutgram\Nutgram;
 
 // Cek saldo Lollipop setiap 6 jam
 Schedule::call(function () {
@@ -17,92 +17,79 @@ Schedule::call(function () {
     }
 
     $saldo = (float) $balance['balance'];
-
     Log::info('Cron: Saldo Lollipop', ['balance' => $saldo]);
 
-    // Alert kalau saldo di bawah 50000
     if ($saldo < 50000) {
-        $bot = app(Nutgram::class);
-        $bot->sendMessage(
-            text: "⚠️ *ALERT: Saldo Lollipop Menipis!*\n\n" .
-                  "💰 Saldo saat ini: {$balance['balance']} {$balance['currency']}\n\n" .
-                  "Segera deposit agar pesanan tidak terhambat.",
-            parse_mode: 'Markdown',
-            chat_id: config('nutgram.admin_telegram_id')
-        );
+        Http::post("https://api.telegram.org/bot" . config('nutgram.admin_bot_token') . "/sendMessage", [
+            'chat_id'    => config('nutgram.admin_telegram_id'),
+            'text'       => "⚠️ *ALERT: Saldo Lollipop Menipis!*\n\n💰 Saldo saat ini: {$balance['balance']} {$balance['currency']}\n\nSegera deposit agar pesanan tidak terhambat.",
+            'parse_mode' => 'Markdown',
+        ]);
     }
 })->everySixHours()->name('check-lollipop-balance');
 
 // Sync status pesanan PROCESSING setiap 15 menit
 Schedule::call(function () {
-    $processing = NuestoreTransaction::where('status', 'PROCESSING')
+    $processing = NuestoreOrder::where('status', 'PROCESSING')
         ->whereNotNull('provider_order_id')
+        ->with('customer')
         ->get();
 
-    if ($processing->isEmpty()) {
-        return;
-    }
+    if ($processing->isEmpty()) return;
 
-    $lollipop = new LollipopSmmService();
-    $bot      = app(Nutgram::class);
-    $adminId  = config('nutgram.admin_telegram_id');
+    $lollipop   = new LollipopSmmService();
+    $adminToken = config('nutgram.admin_bot_token');
+    $adminId    = config('nutgram.admin_telegram_id');
+    $custToken  = config('nutgram.token');
 
-    foreach ($processing as $transaction) {
+    foreach ($processing as $order) {
         sleep(1); // Hindari rate limit
 
-        $result = $lollipop->getStatus($transaction->provider_order_id);
-
+        $result = $lollipop->getStatus($order->provider_order_id);
         if (!$result) {
-            Log::warning('Cron: Gagal cek status', ['order_id' => $transaction->id]);
+            Log::warning('Cron: Gagal cek status', ['order_id' => $order->id]);
             continue;
         }
 
-        Log::info('Cron: Status pesanan', [
-            'order_id' => $transaction->id,
-            'status'   => $result['status'],
-        ]);
+        Log::info('Cron: Status pesanan', ['order_id' => $order->id, 'status' => $result['status']]);
 
         if (strtolower($result['status']) === 'completed') {
-            $profitActual = $transaction->amount_paid - $transaction->modal_cost;
+            $order->update(['status' => 'COMPLETED']);
 
-            $transaction->update([
-                'status'        => 'COMPLETED',
-                'profit_actual' => $profitActual,
+            // Notif ke pelanggan via Customer Bot
+            Http::post("https://api.telegram.org/bot{$custToken}/sendMessage", [
+                'chat_id'    => $order->customer->telegram_id,
+                'text'       => "🎉 *Pesanan Selesai!*\n\n"
+                              . "📦 {$order->service_name}\n"
+                              . "🔗 `{$order->target_link}`\n"
+                              . "🔢 " . number_format($order->quantity, 0, ',', '.') . "\n\n"
+                              . "Terima kasih sudah berbelanja di Nuestore! 🛍️",
+                'parse_mode' => 'Markdown',
             ]);
 
-            $profitFormat = number_format($profitActual, 0, ',', '.');
-            $tagiFormat   = number_format($transaction->amount_paid, 0, ',', '.');
-
             // Notif ke admin
-            $bot->sendMessage(
-                text: "🎉 *Pesanan Selesai!*\n\n"
-                    . "🆔 Order ID: `{$transaction->id}`\n"
-                    . "📦 Service: {$transaction->service_id}\n"
-                    . "🔗 Target: {$transaction->target_link}\n"
-                    . ($transaction->customer_note ? "📝 Catatan: {$transaction->customer_note}\n" : '')
-                    . "\n💰 Tagih: Rp {$tagiFormat}\n"
-                    . "📈 Profit: Rp {$profitFormat}",
-                parse_mode: 'Markdown',
-                chat_id: $adminId
-            );
+            Http::post("https://api.telegram.org/bot{$adminToken}/sendMessage", [
+                'chat_id'    => $adminId,
+                'text'       => "🎉 *Pesanan Selesai!*\n\n"
+                              . "🆔 `{$order->id}`\n"
+                              . "📦 {$order->service_name}\n"
+                              . "💰 Rp " . number_format($order->total_amount, 0, ',', '.') . "\n"
+                              . "📈 Est. Profit: Rp " . number_format($order->profit_estimated, 0, ',', '.'),
+                'parse_mode' => 'Markdown',
+            ]);
 
         } elseif (in_array(strtolower($result['status']), ['canceled', 'failed'])) {
-            $transaction->update(['status' => 'FAILED_PROVIDER']);
+            $order->update(['status' => 'FAILED_PROVIDER']);
 
-            $tagiFormat = number_format($transaction->amount_paid, 0, ',', '.');
-
-            // Notif ke admin
-            $bot->sendMessage(
-                text: "🚨 *Pesanan Gagal di Provider!*\n\n"
-                    . "🆔 Order ID: `{$transaction->id}`\n"
-                    . "📦 Service: {$transaction->service_id}\n"
-                    . "🔗 Target: {$transaction->target_link}\n"
-                    . ($transaction->customer_note ? "📝 Catatan: {$transaction->customer_note}\n" : '')
-                    . "\n💰 Tagih: Rp {$tagiFormat}\n\n"
-                    . "Status Provider: *{$result['status']}*",
-                parse_mode: 'Markdown',
-                chat_id: $adminId
-            );
+            Http::post("https://api.telegram.org/bot{$adminToken}/sendMessage", [
+                'chat_id'    => $adminId,
+                'text'       => "🚨 *Pesanan Gagal di Provider!*\n\n"
+                              . "🆔 `{$order->id}`\n"
+                              . "📦 {$order->service_name}\n"
+                              . "🔗 `{$order->target_link}`\n\n"
+                              . "Status Provider: *{$result['status']}*",
+                'parse_mode' => 'Markdown',
+            ]);
         }
     }
 })->everyFifteenMinutes()->name('sync-order-status');
