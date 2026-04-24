@@ -294,10 +294,11 @@ class CustomerOrderConversation extends Conversation
             $name     = strtolower($s['name']);
             $category = strtolower($s['category'] ?? '');
 
+            // 1. Cek Platform (Instagram/TikTok/dll)
             $platformMatch = str_contains($name, $platform) || str_contains($category, $platform);
-
             if (!$platformMatch || !$baseCategory) return false;
 
+            // 2. Cek Kategori Utama (Followers/Likes/dll)
             $keywords = [
                 'followers'   => ['follower', 'pengikut'],
                 'likes'       => ['like', 'suka'],
@@ -318,6 +319,7 @@ class CustomerOrderConversation extends Conversation
             }
             if (!$categoryMatch) return false;
 
+            // 3. Cek Region (Indo vs WW)
             $isIndo = str_contains($name, 'indonesia') || str_contains($name, 'indo ') || str_contains($category, 'indonesia');
             if ($region === 'id' && !$isIndo) return false;
             if ($region === 'ww' && $isIndo)  return false;
@@ -325,8 +327,13 @@ class CustomerOrderConversation extends Conversation
             return true;
         })->sortBy('rate')->values();
 
+        \Illuminate\Support\Facades\Log::info('Filter result', [
+            'count' => $filtered->count(),
+            'first_match' => $filtered->first()['name'] ?? 'none'
+        ]);
+
         if ($filtered->isEmpty()) {
-            $bot->sendMessage("❌ Tidak ada layanan yang tersedia untuk pilihan ini. Silakan pilih layanan lain.");
+            $bot->sendMessage("❌ Maaf, tidak ada layanan yang cocok untuk kategori ini saat ini. Silakan pilih kategori lain.");
             $this->end();
             return;
         }
