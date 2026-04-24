@@ -420,6 +420,7 @@ class CustomerOrderConversation extends Conversation
                 'id'               => (string) \Illuminate\Support\Str::uuid(),
                 'customer_id'      => NuestoreCustomer::fromTelegramUser($bot->user())->id,
                 'platform'         => $this->platform,
+                'category'         => $this->category,
                 'service_id'       => $this->serviceId,
                 'service_name'     => $this->serviceName,
                 'target_link'      => $this->targetLink,
