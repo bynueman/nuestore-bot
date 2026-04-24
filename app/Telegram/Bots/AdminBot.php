@@ -87,7 +87,10 @@ class AdminBot
         $bot->onText('🕐 Antrean',     function (Nutgram $bot) { $this->sendQueued($bot); });
         $bot->onText('🔨 Blacklist Manual', function (Nutgram $bot) {
             $bot->sendMessage(
-                text: "🔨 *Blacklist Manual*\n\nKetik perintah ini: `/blacklist_id [ID_TELEGRAM]`\nContoh: `/blacklist_id 123456789`",
+                text: "🔨 *Manajemen Blacklist*\n\n"
+                    . "• Blokir: `/blacklist_id [ID]`\n"
+                    . "• Buka Blokir: `/unblacklist_id [ID]`\n\n"
+                    . "Contoh: `/blacklist_id 123456789`",
                 parse_mode: 'Markdown'
             );
         });
@@ -95,7 +98,13 @@ class AdminBot
         // Handle direct blacklist command
         $bot->onCommand('blacklist_id {id}', function (Nutgram $bot, $id) {
             if (!$this->isAdmin($bot)) return;
-            $this->blacklistCustomer($bot, $id, true); // true means by telegram_id
+            $this->blacklistCustomer($bot, $id, true);
+        });
+
+        // Handle direct unblacklist command
+        $bot->onCommand('unblacklist_id {id}', function (Nutgram $bot, $id) {
+            if (!$this->isAdmin($bot)) return;
+            $this->unblacklistCustomer($bot, $id);
         });
 
 
@@ -315,6 +324,28 @@ class AdminBot
             text: "🔨 *User Diblacklist!*\n\n"
                 . "👤 @{$customer->username} (`{$customer->telegram_id}`)\n"
                 . "User ini tidak akan bisa order lagi.",
+            parse_mode: 'Markdown'
+        );
+    }
+
+    private function unblacklistCustomer(Nutgram $bot, string $telegramId): void
+    {
+        $customer = NuestoreCustomer::where('telegram_id', $telegramId)->first();
+
+        if (!$customer) {
+            $bot->sendMessage("❌ Customer dengan ID `{$telegramId}` tidak ditemukan.");
+            return;
+        }
+
+        $customer->update([
+            'is_blacklisted'   => false,
+            'blacklist_reason' => null,
+        ]);
+
+        $bot->sendMessage(
+            text: "✅ *Akses Dipulihkan!*\n\n"
+                . "👤 @{$customer->username} (`{$customer->telegram_id}`)\n"
+                . "User ini sekarang sudah bisa order lagi.",
             parse_mode: 'Markdown'
         );
     }
