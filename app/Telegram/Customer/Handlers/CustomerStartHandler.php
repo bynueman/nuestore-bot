@@ -25,8 +25,7 @@ class CustomerStartHandler
             text: "👋 Halo, *{$name}!* Selamat datang di *Nuestore* 🎉\n\n"
                 . "Kami menyediakan layanan pertumbuhan sosial media terpercaya:\n"
                 . "• Instagram 🇮🇩 & Worldwide\n"
-                . "• TikTok 🇮🇩 & Worldwide\n"
-                . "• YouTube & platform lainnya\n\n"
+                . "• TikTok 🇮🇩 & Worldwide\n\n"
                 . "Gunakan menu di bawah untuk mulai:",
             parse_mode: 'Markdown',
             reply_markup: ReplyKeyboardMarkup::make(resize_keyboard: true)
