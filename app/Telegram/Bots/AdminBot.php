@@ -15,7 +15,7 @@ use SergiX44\Nutgram\Telegram\Types\Keyboard\InlineKeyboardMarkup;
 
 class AdminBot
 {
-    private Nutgram $bot;
+    private ?Nutgram $bot = null;
 
     public function __construct()
     {
@@ -115,6 +115,10 @@ class AdminBot
 
     public function run(): void
     {
+        if ($this->bot === null) {
+            echo "❌ Gagal menjalankan Admin Bot: TELEGRAM_ADMIN_BOT_TOKEN kosong di .env\n";
+            return;
+        }
         $this->register();
         $this->bot->run();
     }
