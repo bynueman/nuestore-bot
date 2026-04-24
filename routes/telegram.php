@@ -76,11 +76,13 @@ $bot->onCallbackQuery(function (Nutgram $bot) {
         return;
     }
 
-    // Order conversation callbacks (co_platform:, co_cat:, co_proof, co_cancel)
-    if (str_starts_with($data, 'co_')) {
+    // Pastikan percakapan lanjut jika ada tombol co_ (Customer Order)
+    if (str_starts_with($data, 'co_') || str_starts_with($data, 'customer_')) {
         $bot->currentConversation()?->continue($bot);
+        $bot->answerCallbackQuery();
         return;
     }
 
+    // Fallback: Selalu coba lanjutkan percakapan jika ada yang aktif
     $bot->currentConversation()?->continue($bot);
 });
