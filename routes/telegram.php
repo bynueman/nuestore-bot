@@ -36,7 +36,7 @@ $bot->onCommand('order',  CustomerOrderConversation::class);
 $bot->onCommand('status', CustomerStatusHandler::class);
 $bot->onCommand('help',   CustomerHelpHandler::class);
 $bot->onCommand('cancel', function (Nutgram $bot) {
-    $bot->killCurrentConversation();
+    $bot->endConversation();
     $bot->sendMessage("❌ Dibatalkan. Kamu bisa mulai lagi kapan saja.");
 });
 
@@ -58,7 +58,7 @@ $bot->onCallbackQuery(function (Nutgram $bot) {
 
     // 1. Handle Batal Global (kill conversation)
     if ($data === 'co_cancel') {
-        $bot->killCurrentConversation();
+        $bot->endConversation();
         $bot->answerCallbackQuery(text: "Dibatalkan");
         $bot->sendMessage("❌ Pesanan dibatalkan.");
         return;
