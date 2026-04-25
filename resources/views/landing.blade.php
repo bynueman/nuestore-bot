@@ -674,7 +674,7 @@ footer{
     <div class="testi-grid rv2">
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <p class="testi-q">Proses via WhatsApp cepet banget, admin-nya responsif dan ramah. Hasilnya juga nyata, puas banget langganan di sini.</p>
+        <p class="testi-q">Baru pertama kali nyoba bot-nya @nuestorebot, gila sih secepat itu followers masuk. Bayar QRIS langsung di chat Telegram bener-bener praktis!</p>
         <div class="testi-auth">
           <div class="testi-av">AR</div>
           <div><div class="testi-name">Aldi R.</div><div class="testi-role">Content Creator</div></div>
@@ -682,7 +682,7 @@ footer{
       </div>
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <p class="testi-q">Suka banget karena bisa tanya-tanya dulu via chat sebelum order. Pembayaran QRIS-nya juga praktis, ga ribet.</p>
+        <p class="testi-q">Cocok banget buat jualan online. Insight IG saya naik drastis setelah langganan di sini. Bot-nya simpel, ga perlu ribet login-login segala.</p>
         <div class="testi-auth">
           <div class="testi-av">MS</div>
           <div><div class="testi-name">Mutiara S.</div><div class="testi-role">Online Seller</div></div>
@@ -690,7 +690,7 @@ footer{
       </div>
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <p class="testi-q">Sudah coba beberapa tempat, nuestore yang paling trusted. Hasil permanen dan pengerjaannya profesional. Mantap!</p>
+        <p class="testi-q">Trusted banget! Tinggal klik-klik di Bot langsung diproses otomatis. Adminnya juga responsif kalau kita chat via WhatsApp. Mantap!</p>
         <div class="testi-auth">
           <div class="testi-av">RB</div>
           <div><div class="testi-name">Roberto B.</div><div class="testi-role">Digital Marketer</div></div>
