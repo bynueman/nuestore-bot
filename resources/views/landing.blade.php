@@ -23,6 +23,22 @@
   --border2: rgba(11,212,253,0.3);
 }
 
+[data-theme="light"] {
+  --bg: #f8f9ff;
+  --s1: #ffffff;
+  --s2: #f0f2ff;
+  --ink: #0a0b10;
+  --ink2: #4a5568;
+  --ink3: #718096;
+  --primary: #0088cc;
+  --primary2: #0099dd;
+  --primary3: #00aaee;
+  --secondary: #9333ea;
+  --accent: #a855f7;
+  --border: rgba(0,136,204,0.2);
+  --border2: rgba(0,136,204,0.35);
+}
+
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 
@@ -39,9 +55,10 @@ body{
 .cur-t{width:32px;height:32px;border:1px solid rgba(0,195,255,.5);top:-16px;left:-16px;transition:all .18s cubic-bezier(.25,.46,.45,.94)}
 
 /* ── STARFIELD ── */
-.stars{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.starfield{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite;opacity:0}
-@keyframes twinkle{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:var(--o,.6);transform:scale(1)}}
+[data-theme="light"] .star{background:#0088cc}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:var(--o,.3);transform:scale(1)}}
 
 /* ── SCAN LINE ── */
 body::after{
@@ -60,15 +77,50 @@ body::after{
 
 /* ── NAV ── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  padding:22px 64px;
+  position:fixed;top:20px;left:20px;right:20px;z-index:100;
+  padding:18px 48px;
   display:flex;align-items:center;justify-content:space-between;
-  background:rgba(3,5,10,.75);
+  background:rgba(3,5,10,.85);
   backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--border);
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+[data-theme="light"] nav{
+  background:rgba(255,255,255,.9);
+  box-shadow:0 8px 32px rgba(0,0,0,.08);
 }
 .logo{font-weight:700;font-size:1.25rem;letter-spacing:.5px;color:var(--primary2)}
 .logo em{font-style:normal;color:var(--ink);opacity:.5}
+
+.nav-center{
+  display:flex;align-items:center;gap:32px;
+}
+.nav-link{
+  font-size:.88rem;font-weight:500;color:var(--ink2);
+  text-decoration:none;transition:color .3s;
+  position:relative;
+}
+.nav-link:hover{color:var(--primary2)}
+.nav-link::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:2px;background:var(--primary);
+  transform:scaleX(0);transition:transform .3s;
+}
+.nav-link:hover::after{transform:scaleX(1)}
+
+.nav-right{display:flex;align-items:center;gap:16px}
+.theme-toggle{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border2);
+  background:rgba(0,195,255,.04);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s;
+}
+[data-theme="light"] .theme-toggle{background:rgba(0,136,204,.06)}
+.theme-toggle:hover{background:rgba(0,195,255,.1);border-color:var(--primary)}
+.theme-toggle svg{width:18px;height:18px;stroke:var(--primary2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
 .nav-pill{
   display:flex;align-items:center;gap:10px;
   padding:10px 22px;
@@ -78,7 +130,50 @@ nav{
   background:rgba(0,195,255,.04);
   transition:all .3s;cursor:none;
 }
+[data-theme="light"] .nav-pill{
+  background:rgba(0,136,204,.06);
+  color:var(--primary);
+}
 .nav-pill:hover{background:rgba(0,195,255,.1);border-color:var(--primary);color:var(--primary3)}
+
+.hamburger{
+  display:none;width:40px;height:40px;
+  border:1px solid var(--border2);border-radius:12px;
+  background:rgba(0,195,255,.04);
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;cursor:pointer;transition:all .3s;
+  position:relative;z-index:101;
+}
+[data-theme="light"] .hamburger{background:rgba(0,136,204,.06)}
+.hamburger span{
+  width:20px;height:2px;background:var(--primary2);
+  transition:all .3s;border-radius:2px;
+  display:block;
+}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
+
+.mobile-menu{
+  position:fixed;top:100px;left:20px;right:20px;
+  background:rgba(3,5,10,.95);
+  backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:24px;display:none;flex-direction:column;gap:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  z-index:99;
+}
+[data-theme="light"] .mobile-menu{
+  background:rgba(255,255,255,.95);
+  box-shadow:0 8px 32px rgba(0,0,0,.08);
+}
+.mobile-menu.active{display:flex}
+.mobile-menu a{
+  font-size:.95rem;font-weight:500;color:var(--ink2);
+  text-decoration:none;padding:12px 16px;
+  border-radius:12px;transition:all .3s;
+}
+.mobile-menu a:hover{background:rgba(0,195,255,.08);color:var(--primary2)}
 
 /* ── HERO ── */
 .hero{
@@ -86,8 +181,45 @@ nav{
   min-height:100vh;
   display:flex;align-items:center;justify-content:center;
   padding:140px 64px 80px;text-align:center;
+  overflow:hidden;
 }
-.hero-in{max-width:820px}
+.hero-in{max-width:820px;position:relative;z-index:3}
+
+/* ── FLOATING SOCIAL ICONS ── */
+.social-float{
+  position:absolute;
+  width:80px;height:80px;
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:.08;
+  animation:float var(--dur,8s) ease-in-out infinite;
+  pointer-events:none;
+  backdrop-filter:blur(2px);
+}
+[data-theme="light"] .social-float{opacity:.12}
+.social-float svg{width:50%;height:50%}
+.social-ig{
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  top:20%;left:8%;--dur:7s;
+}
+.social-tt{
+  background:#000;border:2px solid rgba(255,255,255,.2);
+  top:60%;right:10%;--dur:9s;animation-delay:-2s;
+}
+.social-ig-2{
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  bottom:15%;right:15%;--dur:8s;animation-delay:-4s;
+}
+.social-tt-2{
+  background:#000;border:2px solid rgba(255,255,255,.2);
+  top:35%;left:12%;--dur:10s;animation-delay:-6s;
+}
+@keyframes float{
+  0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
+  25%{transform:translate(20px,-20px) rotate(5deg) scale(1.05)}
+  50%{transform:translate(-15px,15px) rotate(-5deg) scale(.95)}
+  75%{transform:translate(15px,10px) rotate(3deg) scale(1.02)}
+}
 
 .eyebrow{
   display:inline-flex;align-items:center;gap:10px;
@@ -138,12 +270,18 @@ h1.headline{
   box-shadow:0 0 32px rgba(0,195,255,.2);
   position:relative;overflow:hidden;
 }
+[data-theme="light"] .btn-gold{
+  background:linear-gradient(135deg,#0088cc,#0066aa);
+  color:#ffffff;
+  box-shadow:0 4px 24px rgba(0,136,204,.25);
+}
 .btn-gold::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
   opacity:0;transition:opacity .3s;
 }
 .btn-gold:hover{transform:translateY(-2px);box-shadow:0 0 48px rgba(0,195,255,.4)}
+[data-theme="light"] .btn-gold:hover{box-shadow:0 8px 32px rgba(0,136,204,.35)}
 .btn-gold:hover::before{opacity:1}
 
 .btn-ghost{
@@ -154,7 +292,12 @@ h1.headline{
   font-family:'Poppins',sans-serif;font-weight:500;font-size:.9rem;
   text-decoration:none;cursor:none;transition:all .3s;
 }
+[data-theme="light"] .btn-ghost{
+  border-color:rgba(0,136,204,.25);
+  color:var(--primary);
+}
 .btn-ghost:hover{border-color:var(--primary);color:var(--primary);background:rgba(0,195,255,.04)}
+[data-theme="light"] .btn-ghost:hover{background:rgba(0,136,204,.08)}
 
 /* ── TICKER ── */
 .ticker-wrap{
@@ -289,7 +432,7 @@ h1.headline{
   padding:32px;transition:border-color .3s,transform .3s;
 }
 .testi-card:hover{border-color:var(--border2);transform:translateY(-4px)}
-.stars{color:var(--primary);font-size:.78rem;letter-spacing:2px;margin-bottom:16px}
+.testi-stars{color:var(--primary);font-size:.78rem;letter-spacing:2px;margin-bottom:16px}
 .testi-q{font-size:.86rem;font-weight:300;color:var(--ink2);line-height:1.75;margin-bottom:20px;font-style:italic}
 .testi-q::before{content:'\201C';font-size:1.4rem;line-height:0;vertical-align:-.3em;color:var(--primary);opacity:.5;margin-right:2px}
 .testi-auth{display:flex;align-items:center;gap:12px}
@@ -357,7 +500,12 @@ h1.headline{
   transition:transform .3s,box-shadow .3s;
   box-shadow:0 0 32px rgba(30,136,199,.2);
 }
+[data-theme="light"] .btn-tg{
+  background:linear-gradient(135deg,#0088cc,#0066aa);
+  box-shadow:0 4px 24px rgba(0,136,204,.25);
+}
 .btn-tg:hover{transform:translateY(-2px);box-shadow:0 0 48px rgba(30,136,199,.4)}
+[data-theme="light"] .btn-tg:hover{box-shadow:0 8px 32px rgba(0,136,204,.35)}
 .btn-tg svg{width:18px;height:18px;flex-shrink:0}
 
 /* ── FOOTER ── */
@@ -381,8 +529,11 @@ footer{
 @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
 @media(max-width:768px){
-  nav{padding:16px 24px}
+  nav{padding:16px 20px;top:12px;left:12px;right:12px;border-radius:20px}
+  .nav-center,.nav-pill{display:none}
+  .hamburger{display:flex}
   .hero,.sec,.cta-wrap,.stats{padding-left:24px;padding-right:24px}
+  .hero{padding-top:120px}
   h1.headline{font-size:2.3rem}
   .plat-grid,.why-grid,.testi-grid{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr}
@@ -390,6 +541,7 @@ footer{
   .stat:last-child{border-bottom:none}
   footer{padding:28px 24px;flex-direction:column;text-align:center}
   .cta-box{padding:48px 28px}
+  .social-float{width:60px;height:60px}
   .float-wrap {
     bottom: 12px;
     left: 12px;
@@ -497,7 +649,7 @@ footer{
 
 <div class="cur" id="c"></div>
 <div class="cur-t" id="ct"></div>
-<div class="stars" id="stars"></div>
+<div class="starfield" id="starfield"></div>
 <div class="amb amb-a"></div>
 <div class="amb amb-b"></div>
 <div class="amb amb-c"></div>
@@ -507,27 +659,94 @@ footer{
   <a href="/" class="logo" style="text-decoration: none;">
     <img src="/images/logo-png.png" alt="nuestore" style="height:36px; width:auto; object-fit:contain; display:block;">
   </a>
-  <a href="https://t.me/nuestorebot" target="_blank" class="nav-pill">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
+  
+  <div class="nav-center">
+    <a href="#platform" class="nav-link">Fitur</a>
+    <a href="#keunggulan" class="nav-link">Keunggulan</a>
+    <a href="#cara-kerja" class="nav-link">Cara Kerja</a>
+    <a href="#testimoni" class="nav-link">Testimoni</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+  </div>
+  
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="sun-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" style="display:none">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+    <a href="https://t.me/nuestorebot" target="_blank" class="nav-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
+      Order via Bot
+    </a>
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#platform">Fitur</a>
+  <a href="#keunggulan">Keunggulan</a>
+  <a href="#cara-kerja">Cara Kerja</a>
+  <a href="#testimoni">Testimoni</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://t.me/nuestorebot" target="_blank" style="background:rgba(0,195,255,.1);color:var(--primary2);text-align:center">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:8px"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
     Order via Bot
   </a>
-</nav>
+</div>
 
 <!-- HERO -->
 <section class="hero">
+  <!-- Floating Social Media Icons -->
+  <div class="social-float social-ig">
+    <svg viewBox="0 0 24 24" fill="white">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+    </svg>
+  </div>
+  <div class="social-float social-tt">
+    <svg viewBox="0 0 24 24" fill="white">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+    </svg>
+  </div>
+  <div class="social-float social-ig-2">
+    <svg viewBox="0 0 24 24" fill="white">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+    </svg>
+  </div>
+  <div class="social-float social-tt-2">
+    <svg viewBox="0 0 24 24" fill="white">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+    </svg>
+  </div>
+  
   <div class="hero-in">
-    <div class="eyebrow"><div class="dot-live"></div>Proses Otomatis 24/7</div>
+    <div class="eyebrow"><div class="dot-live"></div>Online 24/7 Nonstop</div>
     <h1 class="headline">
-      Bersama <span class="shimmer">nuestore</span>
+      Partner terbaik untuk growth sosial media kamu — <span class="shimmer">nuestore</span>
     </h1>
-    <p>Akun sosial media Anda akan selalu tumbuh konsisten dengan layanan yang dirancang khusus sesuai kebutuhan Anda. Raih lebih banyak pengikut, keterlibatan tinggi, dan hasil yang nyata.</p>
+    <p>Mau akun sosmed kamu makin hits? Followers naik, engagement meledak, dan konten kamu dilirik banyak orang. Semua bisa terwujud tanpa ribet, tinggal klik aja!</p>
     <div class="hero-btns">
       <a href="https://t.me/nuestorebot" class="btn-gold" target="_blank">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
         Order via Bot Telegram
       </a>
       <a href="https://wa.me/62882007207715" class="btn-ghost" target="_blank">
-        WhatsApp CS
+        Chat Admin Dulu
       </a>
     </div>
   </div>
@@ -558,9 +777,9 @@ footer{
 <!-- STATS -->
 <div class="stats">
   <div class="stats-row rv">
-    <div class="stat"><span class="stat-n">10K+</span><span class="stat-l">Pesanan Selesai</span></div>
-    <div class="stat"><span class="stat-n">99.8%</span><span class="stat-l">Tingkat Keberhasilan</span></div>
-    <div class="stat"><span class="stat-n">&lt; 5 Mnt</span><span class="stat-l">Rata-rata Proses</span></div>
+    <div class="stat"><span class="stat-n">10K+</span><span class="stat-l">Order Sukses</span></div>
+    <div class="stat"><span class="stat-n">99.8%</span><span class="stat-l">Rate Berhasil</span></div>
+    <div class="stat"><span class="stat-n">&lt; 5 Mnt</span><span class="stat-l">Proses Cepet</span></div>
   </div>
 </div>
 
@@ -568,29 +787,29 @@ footer{
 <section class="sec" id="platform">
   <div class="sec-max">
     <div class="rv">
-      <div class="tag">Fitur</div>
-      <h2 class="sec-h">Cara Termudah<br>Mencapai Target Digital Anda</h2>
-      <p class="sec-sub">Ambil kendali penuh atas pertumbuhan akun Anda. Kami sediakan sistemnya, Anda tentukan hasilnya.</p>
+      <div class="tag">Yang Kamu Dapet</div>
+      <h2 class="sec-h">Cara Paling Gampang<br>Buat Viral di Sosmed</h2>
+      <p class="sec-sub">Kontrol penuh ada di tangan kamu. Tinggal pilih mau apa, sisanya biar kami yang urus!</p>
     </div>
     <div class="testi-grid rv2">
       <div class="testi-card" style="text-align:center; padding:48px 32px">
-        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Insight Meningkat</h3>
-        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Tingkatkan performa akun dengan layanan yang benar-benar berdampak pada jangkauan dan engagement Anda.</p>
+        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Insight Naik Drastis</h3>
+        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Bukan cuma angka doang, tapi engagement beneran yang bikin konten kamu makin dilirik orang!</p>
       </div>
       <div class="testi-card" style="text-align:center; padding:48px 32px">
         <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Garansi 100%</h3>
-        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Kami berani memberi jaminan karena yakin dengan kualitas layanan yang kami berikan.</p>
+        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Kami jamin uang kamu gak bakal sia-sia. Kalau ada masalah, langsung kami tangani sampai tuntas!</p>
       </div>
       <div class="testi-card" style="text-align:center; padding:48px 32px">
-        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Respon Cepat</h3>
-        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Tidak perlu menunggu lama, tim nuestore siap menanggapi setiap pertanyaan dan kebutuhan Anda.</p>
+        <h3 style="font-size:1.1rem; margin-bottom:12px; color:var(--primary2)">Fast Response</h3>
+        <p style="font-size:.86rem; font-weight:300; color:var(--ink2); line-height:1.75;">Ada pertanyaan? Langsung aja chat! Tim kami standby buat bantu kamu kapan aja.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- WHY US -->
-<section class="sec why-sec">
+<section class="sec why-sec" id="keunggulan">
   <div class="sec-max">
     <div class="rv">
       <div class="tag">Keunggulan</div>
@@ -623,40 +842,40 @@ footer{
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="sec">
+<section class="sec" id="cara-kerja">
   <div class="sec-max" style="max-width:640px">
     <div class="rv">
-      <div class="tag">Cara Kerja</div>
-      <h2 class="sec-h">Cuma 4 Langkah!<br>Akun Auto Naik</h2>
-      <p class="sec-sub">Siap populer? Ikuti panduan tiga menit ini dan lihat hasilnya hari ini.</p>
+      <div class="tag">Cara Pakenya</div>
+      <h2 class="sec-h">Cuma 4 Langkah!<br>Akun Langsung Naik</h2>
+      <p class="sec-sub">Gampang banget kok! Ikutin aja step by step ini, dijamin langsung paham.</p>
     </div>
     <div class="steps-wrap rv2">
       <div class="step-row">
         <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Buka Telegram @nuestorebot</h4>
-          <p>Cari bot kami di Telegram, lalu ketuk <strong>/start</strong>. Menu layanan otomatis akan langsung menyambut Anda.</p>
+          <h4>Buka Bot Telegram Kita</h4>
+          <p>Cari <strong>@nuestorebot</strong> di Telegram, terus ketuk <strong>/start</strong>. Langsung deh muncul menu lengkapnya!</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
         <div class="step-body">
           <h4>Pilih Layanan & Kirim Link</h4>
-          <p>Pilih platform (Instagram/TikTok), pilih kategori yang diinginkan, dan masukkan link target (profil/postingan).</p>
+          <p>Mau boost Instagram atau TikTok? Pilih aja yang kamu mau, terus paste link profil atau postingan kamu.</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
         <div class="step-body">
           <h4>Scan QRIS & Upload Bukti</h4>
-          <p>Bot akan mengirimkan QRIS dengan nominal unik. Cukup bayar dan upload screenshot bukti bayar Anda langsung ke chat bot.</p>
+          <p>Bot bakal kirim QRIS dengan nominal unik. Tinggal bayar pake e-wallet favorit kamu, screenshot, upload. Done!</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">4</div></div>
         <div class="step-body">
-          <h4>Pesanan Diproses Instan</h4>
-          <p>Setelah bukti diterima, tim kami akan memverifikasi dalam hitungan menit dan pesanan Anda langsung berjalan otomatis.</p>
+          <h4>Pesanan Langsung Jalan</h4>
+          <p>Setelah bukti kamu upload, tim kita langsung verifikasi dalam hitungan menit. Pesanan auto jalan deh!</p>
         </div>
       </div>
     </div>
@@ -664,33 +883,33 @@ footer{
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="sec" style="background:var(--s1)">
+<section class="sec" style="background:var(--s1)" id="testimoni">
   <div class="sec-max">
     <div class="rv">
-      <div class="tag">Testimoni</div>
-      <h2 class="sec-h">Kata Mereka<br>Tentang nuestore</h2>
-      <p class="sec-sub">Lihat apa yang dikatakan pelanggan kami tentang pengalaman menggunakan layanan nuestore.</p>
+      <div class="tag">Kata Mereka</div>
+      <h2 class="sec-h">Real Review<br>dari Pengguna nuestore</h2>
+      <p class="sec-sub">Jangan cuma percaya kata kita aja. Ini kata mereka yang udah ngerasain sendiri!</p>
     </div>
     <div class="testi-grid rv2">
       <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p class="testi-q">Baru pertama kali nyoba bot-nya @nuestorebot, gila sih secepat itu followers masuk. Bayar QRIS langsung di chat Telegram bener-bener praktis!</p>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-q">Gila sih ini bot cepet banget! Baru pertama kali nyoba langsung ketagihan. Followers masuk dalam hitungan menit, bayar pake QRIS juga gampang banget!</p>
         <div class="testi-auth">
           <div class="testi-av">AR</div>
           <div><div class="testi-name">Aldi R.</div><div class="testi-role">Content Creator</div></div>
         </div>
       </div>
       <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p class="testi-q">Cocok banget buat jualan online. Insight IG saya naik drastis setelah langganan di sini. Bot-nya simpel, ga perlu ribet login-login segala.</p>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-q">Jualan online jadi makin laris sejak pake nuestore. Insight IG naik drastis, engagement juga meningkat. Bot-nya user friendly banget, gak ribet!</p>
         <div class="testi-auth">
           <div class="testi-av">MS</div>
           <div><div class="testi-name">Mutiara S.</div><div class="testi-role">Online Seller</div></div>
         </div>
       </div>
       <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p class="testi-q">Trusted banget! Tinggal klik-klik di Bot langsung diproses otomatis. Adminnya juga responsif kalau kita chat via WhatsApp. Mantap!</p>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-q">Trusted banget pokoknya! Tinggal klik-klik di Bot langsung jalan. Adminnya juga fast response kalau ada yang mau ditanyain. Recommended!</p>
         <div class="testi-auth">
           <div class="testi-av">RB</div>
           <div><div class="testi-name">Roberto B.</div><div class="testi-role">Digital Marketer</div></div>
@@ -701,25 +920,25 @@ footer{
 </section>
 
 <!-- FAQ -->
-<section class="sec">
+<section class="sec" id="faq">
   <div class="sec-max" style="max-width:700px">
     <div class="rv">
-      <div class="tag">FAQ</div>
-      <h2 class="sec-h">Pertanyaan Umum</h2>
-      <p class="sec-sub">Punya pertanyaan? Kami siap membantu, hubungi kami kapan saja.</p>
+      <div class="tag">Ada Pertanyaan?</div>
+      <h2 class="sec-h">Yang Sering Ditanyain</h2>
+      <p class="sec-sub">Masih bingung? Cek dulu FAQ-nya, siapa tau jawabannya udah ada di sini!</p>
     </div>
     <div class="faq-list rv2">
       <div class="faq-item">
-        <div class="faq-q-row">Apakah Aman untuk Akun Saya? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Sangat aman. Kami hanya memerlukan username atau link profil Anda. nuestore tidak pernah dan tidak akan pernah meminta password akun sosial media Anda.</div>
+        <div class="faq-q-row">Aman gak sih buat akun gue? <span class="faq-toggle">+</span></div>
+        <div class="faq-ans">100% aman! Kita cuma butuh username atau link profil kamu aja. Password? Big NO! Kita gak bakal pernah minta password akun sosmed kamu.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q-row">Bagaimana Cara Menggunakan Layanan nuestore? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Sangat mudah! Buka Telegram, cari <strong>@nuestorebot</strong>, ketuk <strong>/start</strong>, lalu ikuti panduan menu untuk memilih layanan. Setelah transfer, kirim bukti bayar langsung ke bot dan pesanan akan diproses.</div>
+        <div class="faq-q-row">Gimana cara pake layanan nuestore? <span class="faq-toggle">+</span></div>
+        <div class="faq-ans">Gampang banget! Buka Telegram, cari <strong>@nuestorebot</strong>, ketuk <strong>/start</strong>, pilih layanan yang kamu mau. Abis transfer, kirim bukti bayar ke bot. Selesai deh!</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q-row">Bagaimana Jika Saya Mengalami Kendala? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Jika Anda menemui kendala, gunakan tombol <strong>Bantuan</strong> di dalam Bot Telegram kami atau hubungi admin via WhatsApp yang tertera di menu bot untuk respon cepat.</div>
+        <div class="faq-q-row">Kalau ada masalah gimana? <span class="faq-toggle">+</span></div>
+        <div class="faq-ans">Tenang aja! Klik tombol <strong>Bantuan</strong> di Bot Telegram atau langsung chat admin via WhatsApp. Kita siap bantu kamu kapan aja!</div>
       </div>
     </div>
   </div>
@@ -728,15 +947,15 @@ footer{
 <!-- CTA -->
 <div class="cta-wrap" id="order">
   <div class="cta-box rv">
-    <h2>Pembayaran Paling Fleksibel</h2>
-    <p>nuestore mendukung berbagai metode pembayaran, QRIS, GoPay, OVO, Dana, ShopeePay, dan seluruh mobile banking Indonesia.</p>
+    <h2>Bayar Pake Apa Aja Bisa!</h2>
+    <p>QRIS, GoPay, OVO, Dana, ShopeePay, sampai mobile banking semua support. Pilih yang paling gampang buat kamu!</p>
     <div class="cta-btns">
       <a href="https://t.me/nuestorebot" class="btn-tg" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
-        Mulai Order di Telegram
+        Yuk Order Sekarang!
       </a>
       <a href="https://wa.me/62882007207715" class="btn-ghost" target="_blank">
-        WhatsApp Admin
+        Tanya-tanya Dulu
       </a>
     </div>
   </div>
@@ -747,7 +966,7 @@ footer{
   <a href="/" class="f-logo" style="text-decoration: none;">
     <img src="/images/logo-png.png" alt="nuestore" style="height:32px; width:auto; object-fit:contain; display:block;">
   </a>
-  <div class="f-copy">© 2023 nuestore. All rights reserved.</div>
+  <div class="f-copy">© 2023 nuestore. Semua hak dilindungi.</div>
   <div class="f-links">
     <a href="#">Syarat & Ketentuan</a>
     <a href="#">Privasi</a>
@@ -756,12 +975,62 @@ footer{
 </footer>
 
 <script>
+// Theme Toggle
+const themeToggle=document.getElementById('themeToggle');
+const sunIcon=themeToggle.querySelector('.sun-icon');
+const moonIcon=themeToggle.querySelector('.moon-icon');
+const html=document.documentElement;
+
+const savedTheme=localStorage.getItem('theme')||'dark';
+html.setAttribute('data-theme',savedTheme);
+if(savedTheme==='light'){
+  sunIcon.style.display='none';
+  moonIcon.style.display='block';
+}
+
+themeToggle.addEventListener('click',()=>{
+  const current=html.getAttribute('data-theme');
+  const newTheme=current==='dark'?'light':'dark';
+  html.setAttribute('data-theme',newTheme);
+  localStorage.setItem('theme',newTheme);
+  
+  if(newTheme==='light'){
+    sunIcon.style.display='none';
+    moonIcon.style.display='block';
+  }else{
+    sunIcon.style.display='block';
+    moonIcon.style.display='none';
+  }
+});
+
+// Hamburger Menu
+const hamburger=document.getElementById('hamburger');
+const mobileMenu=document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+});
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('.mobile-menu a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+  });
+});
+
+// Stars
 (function(){
-  const wrap=document.getElementById('stars');
+  const wrap=document.getElementById('starfield');
   for(let i=0;i<120;i++){
     const s=document.createElement('div');s.className='star';
     const sz=Math.random()*2+.5;
-    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*4+2}s;--o:${Math.random()*.7+.2};animation-delay:${Math.random()*5}s`;
+    const left=Math.random()*100;
+    const top=Math.random()*100;
+    // Skip stars in top-left corner (nav area)
+    if(left<15&&top<15)continue;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${left}%;top:${top}%;--d:${Math.random()*4+2}s;--o:${Math.random()*.5+.15};animation-delay:${Math.random()*5}s`;
     wrap.appendChild(s);
   }
 })();
@@ -813,7 +1082,7 @@ document.querySelectorAll('.btn-gold,.btn-tg,.btn-ghost').forEach(btn=>{
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </div>
     <div class="float-text">
-      <strong>Order / Tanya CS</strong>
+      <strong>Chat Langsung</strong>
       <span>WHATSAPP</span>
     </div>
   </a>
