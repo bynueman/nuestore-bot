@@ -40,8 +40,13 @@ class NotificationService
         }
 
         try {
+            \Illuminate\Support\Facades\Log::info('Sending admin notification...', ['payload' => $payload]);
             $resp = Http::post("https://api.telegram.org/bot{$this->token}/sendMessage", $payload);
-            return $resp->json('result.message_id');
+            
+            if (!$resp->successful()) {
+                \Illuminate\Support\Facades\Log::error('Admin notification FAILED', ['response' => $resp->json()]);
+            }
+            return $resp->json()['result']['message_id'] ?? null;
         } catch (\Exception $e) {
             Log::error('Admin notification failed', ['error' => $e->getMessage()]);
             return null;

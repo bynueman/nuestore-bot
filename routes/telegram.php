@@ -57,6 +57,7 @@ $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
 // 1. Handle Batal Global (co_cancel)
 $bot->onCallbackQueryData('co_cancel', function (Nutgram $bot) {
+    \Illuminate\Support\Facades\Log::info('Callback: co_cancel triggered', ['user' => $bot->userId()]);
     $bot->endConversation();
     $bot->answerCallbackQuery(text: "Dibatalkan");
     $bot->editMessageText("❌ Pesanan dibatalkan.");
@@ -64,16 +65,18 @@ $bot->onCallbackQueryData('co_cancel', function (Nutgram $bot) {
 
 // 2. Handle Cancel Order dari Menu Status
 $bot->onCallbackQueryData('customer_cancel:{id}', function (Nutgram $bot, string $id) {
+    \Illuminate\Support\Facades\Log::info('Callback: customer_cancel triggered', ['order_id' => $id]);
     $order = NuestoreOrder::find($id);
     if ($order && in_array($order->status, ['PENDING_PAYMENT', 'PROOF_SUBMITTED'])) {
         $order->update(['status' => 'CANCELLED']);
         
-        // Notif Admin
+        \Illuminate\Support\Facades\Log::info('Notifying admin about cancellation', ['order_id' => $id]);
         (new \App\Telegram\Handlers\Admin\NotificationService())->notifyOrderCancelledByCustomer($order);
 
         $bot->answerCallbackQuery(text: "Pesanan dibatalkan.");
         $bot->editMessageText("❌ Pesanan berhasil dibatalkan.");
     } else {
+        \Illuminate\Support\Facades\Log::warning('customer_cancel failed: Order not found or invalid status', ['order_id' => $id]);
         $bot->answerCallbackQuery(text: "Gagal membatalkan.");
     }
 });
