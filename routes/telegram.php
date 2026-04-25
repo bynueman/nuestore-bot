@@ -14,7 +14,8 @@ use SergiX44\Nutgram\Nutgram;
 // GUARD: Keamanan (Anti-Spam & Webhook Secret)
 // =============================================
 $bot->middleware(function (Nutgram $bot, $next) {
-    // 1. Webhook Secret Guard (Hanya jika pakai Webhook)
+    // 1. Webhook Secret Guard (DIMATIKAN SEMENTARA UNTUK DEBUG)
+    /*
     $secretHeader = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
     $expectedSecret = env('TELEGRAM_WEBHOOK_SECRET');
 
@@ -26,6 +27,7 @@ $bot->middleware(function (Nutgram $bot, $next) {
         ]);
         return;
     }
+    */
 
     $userId = $bot->userId();
     if ($userId === null) return;
