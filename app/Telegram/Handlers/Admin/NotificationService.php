@@ -174,6 +174,24 @@ class NotificationService
     }
 
     /**
+     * Notif ke admin jika pelanggan membatalkan pesanan.
+     */
+    public function notifyOrderCancelledByCustomer(NuestoreOrder $order): void
+    {
+        $customer = $order->customer;
+        $totalFmt = number_format($order->total_amount, 0, ',', '.');
+        
+        $this->send(
+            "🛑 *Pesanan Dibatalkan Pelanggan*\n\n"
+            . "👤 @{$customer->username} (`{$customer->telegram_id}`)\n"
+            . "🆔 Order ID: `{$order->id}`\n"
+            . "📦 {$order->service_name}\n"
+            . "💰 Nilai: Rp {$totalFmt}\n\n"
+            . "_(User membatalkan pesanan secara manual)_"
+        );
+    }
+
+    /**
      * Kirim notifikasi order baru (belum ada bukti) ke Admin.
      */
     public function notifyNewCustomerOrder(NuestoreOrder $order): void

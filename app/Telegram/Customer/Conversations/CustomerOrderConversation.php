@@ -503,9 +503,13 @@ class CustomerOrderConversation extends Conversation
         if ($cb === 'co_cancel') {
             $bot->answerCallbackQuery();
             if ($this->orderId) {
-                NuestoreOrder::where('id', $this->orderId)
-                    ->where('status', 'PENDING_PAYMENT')
-                    ->update(['status' => 'CANCELLED']);
+                $order = NuestoreOrder::find($this->orderId);
+                if ($order && $order->status === 'PENDING_PAYMENT') {
+                    $order->update(['status' => 'CANCELLED']);
+                    
+                    // Notif Admin
+                    (new NotificationService())->notifyOrderCancelledByCustomer($order);
+                }
             }
             $bot->sendMessage("❌ Pesanan dibatalkan.");
             $this->end();
