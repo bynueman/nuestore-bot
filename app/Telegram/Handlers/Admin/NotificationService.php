@@ -129,14 +129,16 @@ class NotificationService
 
         $caption = "📸 *BUKTI BAYAR MASUK*\n"
                  . "━━━━━━━━━━━━━━━━━━━━━━━\n"
-                 . "👤 Pelanggan: @{$customer->username} (`{$customer->telegram_id}`)\n"
+                 . "👤 Pelanggan: @{$customer->username}\n"
                  . "🆔 Order ID: `{$orderId}`\n\n"
-                 . "📦 Layanan: {$order->service_name}\n"
-                 . "🔗 Target: `{$order->target_link}`\n"
-                 . "🔢 Qty: " . number_format($order->quantity, 0, ',', '.') . "\n\n"
-                 . "💰 Dibayar: *Rp {$totalFmt}*\n"
-                 . "📈 Est. Profit: Rp {$profitFmt}\n\n"
-                 . "⚠️ Cek mutasi GoPay sebelum Approve!";
+                 . "📱 Platform: *{$order->platform}*\n"
+                 . "📦 Layanan: *{$order->service_name}*\n"
+                 . "🔢 Jumlah: *" . number_format($order->quantity, 0, ',', '.') . "*\n"
+                 . "🔗 Target: `{$order->target_link}`\n\n"
+                 . "💰 Total Bayar: *Rp {$totalFmt}*\n"
+                 . "📈 Est. Profit: Rp {$profitFmt}\n"
+                 . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+                 . "⚠️ Cek mutasi sebelum Approve!";
 
         $keyboard = [
             [
@@ -205,12 +207,15 @@ class NotificationService
         $totalFmt  = number_format($order->total_amount, 0, ',', '.');
 
         $this->send(
-            "🆕 *Order Baru dari Pelanggan*\n\n"
-            . "👤 @{$customer->username} (`{$customer->telegram_id}`)\n"
-            . "📦 {$order->service_name}\n"
-            . "🔗 `{$order->target_link}`\n"
-            . "💰 Total: Rp {$totalFmt}\n"
-            . "⏰ Expired dalam 15 menit"
+            "🆕 *ADA ORDERAN BARU!*\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "👤 User: @{$customer->username}\n"
+            . "📱 Platform: *{$order->platform}*\n"
+            . "📦 Layanan: *{$order->service_name}*\n"
+            . "🔢 Jumlah: *" . number_format($order->quantity, 0, ',', '.') . "*\n"
+            . "💰 Total: *Rp {$totalFmt}*\n"
+            . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+            . "⏳ _Menunggu pembayaran user..._"
         );
     }
 
