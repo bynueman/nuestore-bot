@@ -415,7 +415,11 @@ class AdminBot
         $monthlyProfit  = $monthlyOrders->sum('profit_estimated');
 
         // --- SUCCESS RATE ---
-        $totalAttempt = NuestoreOrder::whereMonth('created_at', now()->month)->count();
+        // Menghitung hanya pesanan yang "Serius" (Sudah kirim bukti / di-acc / diproses)
+        $totalAttempt = NuestoreOrder::whereMonth('created_at', now()->month)
+            ->whereNotIn('status', ['PENDING_PAYMENT', 'EXPIRED', 'CANCELLED'])
+            ->count();
+            
         $successRate  = $totalAttempt > 0 ? round(($monthlyCount / $totalAttempt) * 100, 1) : 0;
 
         $text = "📊 *LAPORAN TRANSAKSI NUESTORE*\n"
