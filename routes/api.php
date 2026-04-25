@@ -8,3 +8,7 @@ Route::post('/bot', function () {
     require base_path('routes/telegram.php');
     $bot->run();
 });
+
+Route::get('/bot-test', function () {
+    return "API BOT IS ALIVE";
+});
