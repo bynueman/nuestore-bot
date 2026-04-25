@@ -180,8 +180,21 @@ class AdminBot
             echo "❌ Gagal menjalankan Admin Bot: TELEGRAM_ADMIN_BOT_TOKEN kosong di .env\n";
             return;
         }
+
         $this->register();
-        $this->bot->run();
+
+        echo "🚀 Admin Bot is running...\n";
+
+        // Fitur Auto-Reconnect agar tidak mati saat network timeout
+        while (true) {
+            try {
+                $this->bot->run();
+            } catch (\Throwable $e) {
+                Log::error('AdminBot Exception: ' . $e->getMessage());
+                echo "⚠️ Bot terputus, mencoba menyambung ulang dalam 5 detik... (" . $e->getMessage() . ")\n";
+                sleep(5);
+            }
+        }
     }
 
     // ─────────────────────────────────────────────
