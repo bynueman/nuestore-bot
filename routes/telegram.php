@@ -17,8 +17,13 @@ $bot->middleware(function (Nutgram $bot, $next) {
     // 1. Webhook Secret Guard (Hanya jika pakai Webhook)
     $secretHeader = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
     $expectedSecret = env('TELEGRAM_WEBHOOK_SECRET');
+
     if ($expectedSecret && $secretHeader !== $expectedSecret && !app()->runningInConsole()) {
-        \Illuminate\Support\Facades\Log::warning('Unauthorized Webhook Access Attempt');
+        \Illuminate\Support\Facades\Log::warning('Unauthorized Webhook Access Attempt', [
+            'received' => $secretHeader ? 'YES (Hidden)' : 'NO/NULL',
+            'expected' => $expectedSecret ? 'YES (Hidden)' : 'NO/NULL',
+            'ip'       => $_SERVER['REMOTE_ADDR'] ?? 'Unknown'
+        ]);
         return;
     }
 
