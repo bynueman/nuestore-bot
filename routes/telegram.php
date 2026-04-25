@@ -11,20 +11,42 @@ use SergiX44\Nutgram\Nutgram;
 /** @var Nutgram $bot */
 
 // =============================================
-// GUARD: Blokir user yang di-blacklist
+// GUARD: Keamanan (Anti-Spam & Webhook Secret)
 // =============================================
 $bot->middleware(function (Nutgram $bot, $next) {
-    $userId = $bot->userId();
-    if ($userId === null) {
+    // 1. Webhook Secret Guard (Hanya jika pakai Webhook)
+    $secretHeader = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
+    $expectedSecret = env('TELEGRAM_WEBHOOK_SECRET');
+    if ($expectedSecret && $secretHeader !== $expectedSecret && !app()->runningInConsole()) {
+        \Illuminate\Support\Facades\Log::warning('Unauthorized Webhook Access Attempt');
         return;
     }
+
+    $userId = $bot->userId();
+    if ($userId === null) return;
     
-    $userId = (string) $userId;
-    $customer = NuestoreCustomer::where('telegram_id', $userId)->first();
+    // 2. Anti-Spam (Rate Limiting: 2 pesan per detik)
+    $key = 'bot_throttle_' . $userId;
+    $executed = \Illuminate\Support\Facades\RateLimiter::attempt(
+        $key,
+        2, // Max 2 pesan
+        function() {},
+        1 // Per 1 detik
+    );
+
+    if (!$executed) {
+        $bot->answerCallbackQuery(text: "⚠️ Tenang Boss, jangan cepat-cepat!");
+        //$bot->sendMessage("⚠️ *Sistem Anti-Spam Aktif*\nHarap tunggu sebentar sebelum mengirim pesan lagi.", ['parse_mode' => 'Markdown']);
+        return;
+    }
+
+    // 3. Blacklist Guard
+    $customer = NuestoreCustomer::where('telegram_id', (string)$userId)->first();
     if ($customer?->is_blacklisted) {
         $bot->sendMessage('⛔ Akunmu diblokir dari layanan kami.');
         return;
     }
+    
     $next($bot);
 });
 
