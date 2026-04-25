@@ -615,8 +615,8 @@ footer{
       </div>
       <div class="why-card">
         <div class="why-ico"><svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
-        <h3>Proses Cepat</h3>
-        <p>Semua pesanan diproses secara instan dan otomatis, tanpa antri, tanpa konfirmasi manual.</p>
+        <h3>Proses Kilat</h3>
+        <p>Dengan sistem Bot Telegram 24/7, pesanan Anda masuk ke sistem kami secara instan tepat setelah pembayaran dikonfirmasi.</p>
       </div>
     </div>
   </div>
@@ -715,11 +715,11 @@ footer{
       </div>
       <div class="faq-item">
         <div class="faq-q-row">Bagaimana Cara Menggunakan Layanan nuestore? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Hubungi admin kami di WhatsApp, pilih layanan yang Anda mau, masukkan link target, dan bayar via QRIS. Tim kami akan langsung memproses pesanan Anda.</div>
+        <div class="faq-ans">Sangat mudah! Buka Telegram, cari <strong>@nuestorebot</strong>, ketuk <strong>/start</strong>, lalu ikuti panduan menu untuk memilih layanan. Setelah transfer, kirim bukti bayar langsung ke bot dan pesanan akan diproses.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q-row">Bagaimana Jika Saya Mengalami Kendala? <span class="faq-toggle">+</span></div>
-        <div class="faq-ans">Jika Anda memiliki kendala apapun, hubungi kami langsung via WhatsApp. Tim nuestore siap membantu Anda secepatnya.</div>
+        <div class="faq-ans">Jika Anda menemui kendala, gunakan tombol <strong>Bantuan</strong> di dalam Bot Telegram kami atau hubungi admin via WhatsApp yang tertera di menu bot untuk respon cepat.</div>
       </div>
     </div>
   </div>
