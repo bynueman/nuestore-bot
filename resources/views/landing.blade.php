@@ -634,29 +634,29 @@ footer{
       <div class="step-row">
         <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Buka Telegram @Nuestore</h4>
-          <p>Ketuk /start dan bot akan menyapa Anda dengan menu layanan yang lengkap.</p>
+          <h4>Buka Telegram @nuestorebot</h4>
+          <p>Cari bot kami di Telegram, lalu ketuk <strong>/start</strong>. Menu layanan otomatis akan langsung menyambut Anda.</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Pilih Platform & Layanan</h4>
-          <p>Pilih platform (Instagram/TikTok), pilih kategori, dan berikan link target Anda.</p>
+          <h4>Pilih Layanan & Kirim Link</h4>
+          <p>Pilih platform (Instagram/TikTok), pilih kategori yang diinginkan, dan masukkan link target (profil/postingan).</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
         <div class="step-body">
-          <h4>Bayar via QRIS Otomatis</h4>
-          <p>Bot akan mengirimkan tagihan QRIS unik. Bayar via e-wallet dan kirim bukti bayar langsung ke chat.</p>
+          <h4>Scan QRIS & Upload Bukti</h4>
+          <p>Bot akan mengirimkan QRIS dengan nominal unik. Cukup bayar dan upload screenshot bukti bayar Anda langsung ke chat bot.</p>
         </div>
       </div>
       <div class="step-row">
         <div class="step-left"><div class="step-num">4</div></div>
         <div class="step-body">
-          <h4>Pesanan Diproses</h4>
-          <p>Sistem memproses pesanan secara instan setelah admin mengonfirmasi bukti bayar Anda.</p>
+          <h4>Pesanan Diproses Instan</h4>
+          <p>Setelah bukti diterima, tim kami akan memverifikasi dalam hitungan menit dan pesanan Anda langsung berjalan otomatis.</p>
         </div>
       </div>
     </div>
