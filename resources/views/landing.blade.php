@@ -507,7 +507,7 @@ footer{
   <a href="/" class="logo" style="text-decoration: none;">
     <img src="/images/logo-png.png" alt="nuestore" style="height:36px; width:auto; object-fit:contain; display:block;">
   </a>
-  <a href="https://t.me/Nuestore" target="_blank" class="nav-pill">
+  <a href="https://t.me/nuestorebot" target="_blank" class="nav-pill">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
     Order via Bot
   </a>
@@ -522,7 +522,7 @@ footer{
     </h1>
     <p>Akun sosial media Anda akan selalu tumbuh konsisten dengan layanan yang dirancang khusus sesuai kebutuhan Anda. Raih lebih banyak pengikut, keterlibatan tinggi, dan hasil yang nyata.</p>
     <div class="hero-btns">
-      <a href="https://t.me/Nuestore" class="btn-gold" target="_blank">
+      <a href="https://t.me/nuestorebot" class="btn-gold" target="_blank">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
         Order via Bot Telegram
       </a>
@@ -731,7 +731,7 @@ footer{
     <h2>Pembayaran Paling Fleksibel</h2>
     <p>nuestore mendukung berbagai metode pembayaran, QRIS, GoPay, OVO, Dana, ShopeePay, dan seluruh mobile banking Indonesia.</p>
     <div class="cta-btns">
-      <a href="https://t.me/Nuestore" class="btn-tg" target="_blank">
+      <a href="https://t.me/nuestorebot" class="btn-tg" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
         Mulai Order di Telegram
       </a>
@@ -799,7 +799,7 @@ document.querySelectorAll('.btn-gold,.btn-tg,.btn-ghost').forEach(btn=>{
 
 <!-- FLOATING CONTACTS -->
 <div class="float-wrap">
-  <a href="https://t.me/Nuestore" class="float-btn float-tg" target="_blank">
+  <a href="https://t.me/nuestorebot" class="float-btn float-tg" target="_blank">
     <div class="float-icon">
       <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.504c-.148.665-.54.828-1.092.514l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.725l-2.95-.924c-.64-.203-.654-.64.137-.948l11.521-4.443c.537-.194 1.006.131.394.838z"/></svg>
     </div>
