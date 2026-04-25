@@ -8,6 +8,7 @@ Route::get('/', function () {
 
 Route::post('/telegram-webhook', function () {
     $bot = app(\SergiX44\Nutgram\Nutgram::class);
+    $bot->setRunningMode(\SergiX44\Nutgram\RunningMode\Webhook::class);
     require base_path('routes/telegram.php');
     $bot->run();
 });
