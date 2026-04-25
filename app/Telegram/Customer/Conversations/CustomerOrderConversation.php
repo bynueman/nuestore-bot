@@ -355,11 +355,29 @@ class CustomerOrderConversation extends Conversation
                 }
             }
 
+            // --- DINAMIS CONTOH LINK ---
+            $platform = strtolower($this->platform);
+            $category = strtolower($this->category);
+
+            if ($category === 'followers') {
+                $typeLabel = "Link Profil";
+                $example   = ($platform === 'tiktok') 
+                    ? "https://www.tiktok.com/@username" 
+                    : "https://www.instagram.com/username/";
+            } else {
+                $typeLabel = "Link Postingan/Video";
+                $example   = ($platform === 'tiktok') 
+                    ? "https://www.tiktok.com/@username/video/123456789" 
+                    : "https://www.instagram.com/p/ABC123XYZ/";
+            }
+
             $bot->sendMessage(
                 text: "🔒 *PENTING: JANGAN PRIVATE AKUN!*\n"
-                    . "Pastikan akun target bersifat *PUBLIK* selama proses berlangsung.\n\n"
-                    . "🔗 *Langkah 6: Masukkan Link Target*\n"
-                    . "Contoh: `https://www.instagram.com/nuestore/`",
+                    . "Pastikan akun target bersifat *PUBLIK* agar proses lancar.\n\n"
+                    . "🔗 *Langkah 6: Masukkan {$typeLabel}*\n"
+                    . "Silakan masukkan link untuk pesanan *{$this->serviceName}*.\n\n"
+                    . "📌 *Contoh Format yang Benar:*\n"
+                    . "`{$example}`",
                 parse_mode: 'Markdown',
                 reply_markup: InlineKeyboardMarkup::make()
                     ->addRow(InlineKeyboardButton::make('❌ Batal', callback_data: 'co_cancel'))
