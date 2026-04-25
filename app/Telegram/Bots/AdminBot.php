@@ -73,8 +73,9 @@ class AdminBot
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('💰 Saldo SMM')
                 )->addRow(
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('⏳ Order Pending'),
-                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('📊 Laporan')
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🕐 Sedang Proses')
                 )->addRow(
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('📊 Laporan'),
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🔨 Blacklist Manual')
                 )
             );
@@ -84,6 +85,7 @@ class AdminBot
         $bot->onText('📊 Dashboard', function (Nutgram $bot) { $this->sendDashboard($bot); });
         $bot->onText('💰 Saldo SMM',   function (Nutgram $bot) { $this->sendBalance($bot); });
         $bot->onText('⏳ Order Pending', function (Nutgram $bot) { $this->sendPendingOrders($bot); });
+        $bot->onText('🕐 Sedang Proses', function (Nutgram $bot) { $this->sendProcessingOrders($bot); });
         $bot->onText('📊 Laporan',       function (Nutgram $bot) { $this->sendReports($bot); });
         $bot->onText('🔨 Blacklist Manual', function (Nutgram $bot) {
             $bot->sendMessage(
@@ -159,6 +161,7 @@ class AdminBot
                 $data === 'admin:retry_queue' => $this->retryQueue($bot),
                 $data === 'admin:pending'     => $this->sendPendingOrders($bot),
                 $data === 'admin:reports'     => $this->sendReports($bot),
+                $data === 'admin:processing'  => $this->sendProcessingOrders($bot),
 
                 // ── Customer order callbacks ──
                 str_starts_with($data, 'cust_approve:')   => $this->approveOrder($bot, substr($data, 13)),
@@ -348,6 +351,43 @@ class AdminBot
                 . "👤 @{$customer->username} (`{$customer->telegram_id}`)\n"
                 . "User ini sekarang sudah bisa order lagi.",
             parse_mode: 'Markdown'
+        );
+    }
+
+    private function sendProcessingOrders(Nutgram $bot): void
+    {
+        if (!$this->isAdmin($bot)) return;
+
+        $orders = NuestoreOrder::where('status', 'PROCESSING')
+            ->orderBy('updated_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        if ($orders->isEmpty()) {
+            $bot->sendMessage("✅ Tidak ada pesanan yang sedang diproses.");
+            return;
+        }
+
+        $text = "🕐 *DAFTAR PESANAN SEDANG PROSES*\n"
+              . "_(Menampilkan 10 data terbaru)_\n"
+              . "━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+
+        foreach ($orders as $order) {
+            $text .= "🆔 `{$order->id}`\n"
+                  . "👤 " . ($order->customer?->username ? "@".$order->customer->username : $order->customer_id) . "\n"
+                  . "📦 {$order->service_name}\n"
+                  . "🔗 [Target Link]({$order->target_link})\n"
+                  . "🔢 Jumlah: *{$order->quantity}*\n"
+                  . "🕒 Update: *{$order->updated_at->format('H:i:s')}*\n"
+                  . "━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        }
+
+        $bot->sendMessage(
+            text: $text,
+            parse_mode: 'Markdown',
+            disable_web_page_preview: true,
+            reply_markup: InlineKeyboardMarkup::make()
+                ->addRow(InlineKeyboardButton::make('🔄 Refresh List', callback_data: 'admin:processing'))
         );
     }
 
