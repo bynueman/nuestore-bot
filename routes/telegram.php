@@ -57,24 +57,26 @@ $bot->onText('❓ Bantuan',          CustomerHelpHandler::class);
 
 // 1. Handle Batal Global (co_cancel)
 $bot->onCallbackQueryData('co_cancel', function (Nutgram $bot) {
-    \Illuminate\Support\Facades\Log::info('Callback: co_cancel triggered', ['user' => $bot->userId()]);
-    
-    // Cari order terakhir user ini yang masih nunggu bayar
     $userId = (string) $bot->userId();
     $customer = NuestoreCustomer::where('telegram_id', $userId)->first();
     
     if ($customer) {
-        $order = NuestoreOrder::where('customer_id', $customer->id)
+        // Ambil satu order terbaru (maksimal 1 jam yang lalu) untuk notifikasi admin
+        $latestOrder = NuestoreOrder::where('customer_id', $customer->id)
             ->where('status', 'PENDING_PAYMENT')
+            ->where('created_at', '>=', now()->subHour())
             ->orderByDesc('created_at')
             ->first();
 
-        if ($order) {
-            $order->update(['status' => 'CANCELLED']);
-            // Kirim notif ke Admin
-            (new \App\Telegram\Handlers\Admin\NotificationService())->notifyOrderCancelledByCustomer($order);
-            \Illuminate\Support\Facades\Log::info('Admin notified of global cancellation', ['order_id' => $order->id]);
+        if ($latestOrder) {
+            // Notif Admin cuma satu kali untuk yang terbaru saja
+            (new \App\Telegram\Handlers\Admin\NotificationService())->notifyOrderCancelledByCustomer($latestOrder);
         }
+
+        // Batalkan SEMUA order pending user ini di database (biar bersih)
+        NuestoreOrder::where('customer_id', $customer->id)
+            ->where('status', 'PENDING_PAYMENT')
+            ->update(['status' => 'CANCELLED']);
     }
 
     $bot->endConversation();
