@@ -42,8 +42,11 @@ $bot->middleware(function (Nutgram $bot, $next) {
     );
 
     if (!$executed) {
-        $bot->answerCallbackQuery(text: "⚠️ Tenang Boss, jangan cepat-cepat!");
-        //$bot->sendMessage("⚠️ *Sistem Anti-Spam Aktif*\nHarap tunggu sebentar sebelum mengirim pesan lagi.", ['parse_mode' => 'Markdown']);
+        if ($bot->callbackQuery()) {
+            $bot->answerCallbackQuery(text: "⚠️ Tenang Boss, jangan cepat-cepat!");
+        } else {
+            $bot->sendMessage("⚠️ Harap tunggu sebentar (Anti-Spam).");
+        }
         return;
     }
 
