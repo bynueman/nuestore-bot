@@ -73,7 +73,7 @@ class AdminBot
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('💰 Saldo SMM')
                 )->addRow(
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('⏳ Order Pending'),
-                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🕐 Antrean')
+                    \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('📊 Laporan')
                 )->addRow(
                     \SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton::make('🔨 Blacklist Manual')
                 )
@@ -84,7 +84,7 @@ class AdminBot
         $bot->onText('📊 Dashboard', function (Nutgram $bot) { $this->sendDashboard($bot); });
         $bot->onText('💰 Saldo SMM',   function (Nutgram $bot) { $this->sendBalance($bot); });
         $bot->onText('⏳ Order Pending', function (Nutgram $bot) { $this->sendPendingOrders($bot); });
-        $bot->onText('🕐 Antrean',     function (Nutgram $bot) { $this->sendQueued($bot); });
+        $bot->onText('📊 Laporan',       function (Nutgram $bot) { $this->sendReports($bot); });
         $bot->onText('🔨 Blacklist Manual', function (Nutgram $bot) {
             $bot->sendMessage(
                 text: "🔨 *Manajemen Blacklist*\n\n"
@@ -158,6 +158,7 @@ class AdminBot
                 $data === 'admin:queued'      => $this->sendQueued($bot),
                 $data === 'admin:retry_queue' => $this->retryQueue($bot),
                 $data === 'admin:pending'     => $this->sendPendingOrders($bot),
+                $data === 'admin:reports'     => $this->sendReports($bot),
 
                 // ── Customer order callbacks ──
                 str_starts_with($data, 'cust_approve:')   => $this->approveOrder($bot, substr($data, 13)),
@@ -347,6 +348,55 @@ class AdminBot
                 . "👤 @{$customer->username} (`{$customer->telegram_id}`)\n"
                 . "User ini sekarang sudah bisa order lagi.",
             parse_mode: 'Markdown'
+        );
+    }
+
+    private function sendReports(Nutgram $bot): void
+    {
+        if (!$this->isAdmin($bot)) return;
+
+        // --- STATS MINGGUAN (7 HARI TERAKHIR) ---
+        $weeklyOrders = NuestoreOrder::where('created_at', '>=', now()->subDays(7))
+            ->where('status', 'COMPLETED')
+            ->get();
+        
+        $weeklyCount   = $weeklyOrders->count();
+        $weeklyRevenue = $weeklyOrders->sum('total_amount');
+        $weeklyProfit  = $weeklyOrders->sum('profit_estimated');
+
+        // --- STATS BULANAN (BULAN BERJALAN) ---
+        $monthlyOrders = NuestoreOrder::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->where('status', 'COMPLETED')
+            ->get();
+            
+        $monthlyCount   = $monthlyOrders->count();
+        $monthlyRevenue = $monthlyOrders->sum('total_amount');
+        $monthlyProfit  = $monthlyOrders->sum('profit_estimated');
+
+        // --- SUCCESS RATE ---
+        $totalAttempt = NuestoreOrder::whereMonth('created_at', now()->month)->count();
+        $successRate  = $totalAttempt > 0 ? round(($monthlyCount / $totalAttempt) * 100, 1) : 0;
+
+        $text = "📊 *LAPORAN TRANSAKSI NUESTORE*\n"
+              . "━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+              . "🗓 *7 HARI TERAKHIR:*\n"
+              . "📦 Pesanan Sukses: *{$weeklyCount}*\n"
+              . "💰 Total Omzet: *Rp " . number_format($weeklyRevenue, 0, ',', '.') . "*\n"
+              . "📈 Est. Profit: *Rp " . number_format($weeklyProfit, 0, ',', '.') . "*\n\n"
+              . "📅 *BULAN INI (" . now()->format('F') . "):*\n"
+              . "📦 Pesanan Sukses: *{$monthlyCount}*\n"
+              . "💰 Total Omzet: *Rp " . number_format($monthlyRevenue, 0, ',', '.') . "*\n"
+              . "📈 Est. Profit: *Rp " . number_format($monthlyProfit, 0, ',', '.') . "*\n"
+              . "✅ Success Rate: *{$successRate}%*\n\n"
+              . "━━━━━━━━━━━━━━━━━━━━━━━\n"
+              . "_Data dihitung hanya dari pesanan COMPLETED._";
+
+        $bot->sendMessage(
+            text: $text,
+            parse_mode: 'Markdown',
+            reply_markup: InlineKeyboardMarkup::make()
+                ->addRow(InlineKeyboardButton::make('🔄 Refresh Laporan', callback_data: 'admin:reports'))
         );
     }
 
