@@ -37,6 +37,24 @@ class CustomerStatusHandler
             'CANCELLED'       => '🚫 Dibatalkan',
         ];
 
+        // Kumpulkan ID order Lollipop untuk pesanan yang PROCESSING
+        $processingIds = [];
+        foreach ($orders as $order) {
+            if ($order->status === 'PROCESSING' && $order->provider_order_id) {
+                $processingIds[] = $order->provider_order_id;
+            }
+        }
+
+        // Ambil status real-time secara massal dari Lollipop
+        $realtimeData = [];
+        if (!empty($processingIds)) {
+            $smm = new \App\Services\LollipopSmmService();
+            $apiResult = $smm->getStatuses($processingIds);
+            if ($apiResult && is_array($apiResult)) {
+                $realtimeData = $apiResult;
+            }
+        }
+
         $text = "📋 *Riwayat 5 Pesanan Terakhir*\n\n";
 
         foreach ($orders as $idx => $order) {
@@ -46,6 +64,20 @@ class CustomerStatusHandler
 
             $text .= "{$num}. 📦 {$order->service_name}\n";
             $text .= "   💰 Rp {$total} | {$status}\n";
+            
+            // Tambahkan info real-time jika ada
+            if ($order->status === 'PROCESSING' && isset($realtimeData[$order->provider_order_id])) {
+                $rt = $realtimeData[$order->provider_order_id];
+                if (!isset($rt['error'])) {
+                    $remains    = $rt['remains'] ?? '?';
+                    $startCount = $rt['start_count'] ?? '?';
+                    // Hanya tampilkan jika angkanya valid
+                    if ($remains !== '?' || $startCount !== '?') {
+                        $text .= "   📊 _Real-time: Sisa $remains unit (Awal: $startCount)_\n";
+                    }
+                }
+            }
+
             $text .= "   📅 " . $order->created_at->format('d/m/Y H:i') . "\n\n";
         }
 
