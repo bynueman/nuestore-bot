@@ -169,6 +169,10 @@ class AdminBot
                 str_starts_with($data, 'cust_blacklist:') => $this->blacklistCustomer($bot, substr($data, 15)),
                 str_starts_with($data, 'cust_show_proof:') => $this->showProof($bot, substr($data, 16)),
 
+                // ── Manual Override ──
+                str_starts_with($data, 'admin_f_c:') => $this->forceCompleteOrder($bot, substr($data, 10)),
+                str_starts_with($data, 'admin_f_x:') => $this->forceCancelOrder($bot, substr($data, 10)),
+
                 default => null,
             };
         });
@@ -385,23 +389,58 @@ class AdminBot
               . "_(Menampilkan 10 data terbaru)_\n"
               . "━━━━━━━━━━━━━━━━━━━━━━━\n\n";
 
-        foreach ($orders as $order) {
-            $text .= "🆔 `{$order->id}`\n"
+        $markup = InlineKeyboardMarkup::make();
+
+        foreach ($orders as $idx => $order) {
+            $num = $idx + 1;
+            $text .= "{$num}. 🆔 `{$order->id}`\n"
                   . "👤 " . ($order->customer?->username ? "@".$order->customer->username : $order->customer_id) . "\n"
                   . "📦 {$order->service_name}\n"
                   . "🔗 [Target Link]({$order->target_link})\n"
                   . "🔢 Jumlah: *{$order->quantity}*\n"
                   . "🕒 Update: *{$order->updated_at->format('H:i:s')}*\n"
                   . "━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+
+            $markup->addRow(
+                InlineKeyboardButton::make("✅ Selesai #{$num}", callback_data: "admin_f_c:{$order->id}"),
+                InlineKeyboardButton::make("❌ Batal #{$num}", callback_data: "admin_f_x:{$order->id}")
+            );
         }
 
-        $bot->sendMessage(
+        $markup->addRow(InlineKeyboardButton::make('🔄 Refresh List', callback_data: 'admin:processing'));
+
+        $bot->editMessageText(
             text: $text,
             parse_mode: 'Markdown',
             disable_web_page_preview: true,
-            reply_markup: InlineKeyboardMarkup::make()
-                ->addRow(InlineKeyboardButton::make('🔄 Refresh List', callback_data: 'admin:processing'))
+            reply_markup: $markup,
+            chat_id: $bot->callbackQuery()?->message->chat->id ?? $bot->message()?->chat->id,
+            message_id: $bot->callbackQuery()?->message->message_id,
         );
+    }
+
+    private function forceCompleteOrder(Nutgram $bot, string $orderId): void
+    {
+        $order = NuestoreOrder::find($orderId);
+        if ($order && $order->status === 'PROCESSING') {
+            $order->update(['status' => 'COMPLETED']);
+            $bot->answerCallbackQuery(text: "✅ Order ditandai selesai.");
+            $this->sendProcessingOrders($bot);
+        } else {
+            $bot->answerCallbackQuery(text: "❌ Gagal, status sudah berubah.");
+        }
+    }
+
+    private function forceCancelOrder(Nutgram $bot, string $orderId): void
+    {
+        $order = NuestoreOrder::find($orderId);
+        if ($order && $order->status === 'PROCESSING') {
+            $order->update(['status' => 'CANCELLED']); 
+            $bot->answerCallbackQuery(text: "❌ Order ditandai batal.");
+            $this->sendProcessingOrders($bot);
+        } else {
+            $bot->answerCallbackQuery(text: "❌ Gagal, status sudah berubah.");
+        }
     }
 
     private function sendReports(Nutgram $bot): void
