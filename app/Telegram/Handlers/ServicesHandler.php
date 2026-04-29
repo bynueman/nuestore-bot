@@ -179,7 +179,36 @@ class ServicesHandler
 
             return true;
         })
-        ->sortBy('rate') // Urutkan dari yang paling murah
+        ->map(function ($s) {
+            $name = strtolower($s['name']);
+            $score = 0;
+            
+            // Prioritize Refill
+            if (str_contains($name, 'refill') && !str_contains($name, 'no refill')) $score += 20;
+            if (str_contains($name, '♻️')) $score += 20;
+            
+            // Prioritize High Quality & No/Low Drop
+            if (str_contains($name, 'hq') || str_contains($name, 'high quality')) $score += 20;
+            if (str_contains($name, 'low drop') || str_contains($name, 'no drop') || str_contains($name, 'non drop')) $score += 20;
+            if (str_contains($name, 'real')) $score += 15;
+            
+            // Prioritize Speed
+            if (str_contains($name, 'fast') || str_contains($name, 'instant') || str_contains($name, '⚡') || str_contains($name, '🚀')) $score += 10;
+            
+            // Penalize Low Quality
+            if (str_contains($name, 'no refill') || str_contains($name, '🚫')) $score -= 50;
+            if (str_contains($name, 'lq') || str_contains($name, 'low quality') || str_contains($name, 'bot')) $score -= 50;
+            if (str_contains($name, 'slow')) $score -= 20;
+
+            // If API returns "refill" field as true
+            if (!empty($s['refill'])) $score += 10;
+
+            $s['quality_score'] = $score;
+            return $s;
+        })
+        ->sortByDesc(function ($s) {
+            return [$s['quality_score'], $s['rate']];
+        })
         ->take(10)       // Ambil 10 teratas
         ->values();
 
