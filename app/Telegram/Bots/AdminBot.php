@@ -409,14 +409,27 @@ class AdminBot
 
         $markup->addRow(InlineKeyboardButton::make('🔄 Refresh List', callback_data: 'admin:processing'));
 
-        $bot->editMessageText(
-            text: $text,
-            parse_mode: 'Markdown',
-            disable_web_page_preview: true,
-            reply_markup: $markup,
-            chat_id: $bot->callbackQuery()?->message->chat->id ?? $bot->message()?->chat->id,
-            message_id: $bot->callbackQuery()?->message->message_id,
-        );
+        $chatId = $bot->callbackQuery()?->message->chat->id ?? $bot->message()?->chat->id;
+        $messageId = $bot->callbackQuery()?->message->message_id;
+
+        if ($messageId) {
+            $bot->editMessageText(
+                text: $text,
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true,
+                reply_markup: $markup,
+                chat_id: $chatId,
+                message_id: $messageId,
+            );
+        } else {
+            $bot->sendMessage(
+                text: $text,
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true,
+                reply_markup: $markup,
+                chat_id: $chatId,
+            );
+        }
     }
 
     private function forceCompleteOrder(Nutgram $bot, string $orderId): void
